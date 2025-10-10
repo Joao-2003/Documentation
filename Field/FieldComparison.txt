@@ -1,0 +1,63 @@
+Comparação — Talhão (Field)
+
+1) Identificadores
+- Back: id (Long)
+- Front: id (string)
+Status: Consistente (exibição). Ação: manter conversão para string no front.
+
+2) Código do Talhão
+- Back: code (String único). Persiste com sufixo _{farmId}; getter remove sufixo.
+- Front: inexistente em FieldSchema/NewFieldSchema/Field.d.ts.
+Status: Crítico. Ação: 
+  - Rota /api/fields/: adicionar campo 'code' nos formulários/schemas e validar unicidade UX.
+  - Rota /api/fields/from-file/: opcional (back define code=fieldName).
+
+3) Nome do Talhão
+- Back: fieldName (String)
+- Front: name (string)
+Status: Requer Mapeamento. Ação: mapear name → fieldName no payload.
+
+4) Área
+- Back: totalAreaHec (Float, >0)
+- Front: area (string, regex + refine >0)
+Status: Requer Mapeamento. Ação: converter para float (normalizar vírgula/ponto); enviar em totalAreaHec.
+
+5) Fazenda (chave)
+- Back: farmId (Long, obrigatório)
+- Front: não presente nos forms (vem do contexto de Propriedade na UI)
+Status: Crítico. Ação: garantir envio de farmId numérico:
+  - /api/fields/from-file/: @RequestParam("farmId")
+  - /api/fields/: no corpo (CreateFieldRequest)
+
+6) Geometria / Coordenadas
+- Back: coordinates: List<{latitude,longitude}>, mínimo 3
+- Front: coordinatesFile: File (GeoJSON)
+Status: Requer Mapeamento. Ação:
+  - Preferir rota /api/fields/from-file/ (file + farmId).
+  - Alternativa: parsear o GeoJSON no front e enviar coordinates[] para /api/fields/.
+
+7) Somente Leitura / Resposta
+- Back: farmName (String) em FieldResponse
+- Front: — (não modelado)
+Status: Apenas Leitura. Ação: opcional exibir no front (não enviar no payload).
+
+8) Campos exclusivos do front (não persistidos no Field do back)
+- crop, precedingCrop, harvest, description, color, enrollmentDate
+Status: Front-only. Ação: manter para UI/negócio; se houver requisito de persistir, avaliar entidade/analysis apropriada.
+
+Endpoints
+- POST /api/fields/ (CreateFieldRequest)
+- POST /api/fields/from-file/ (GeoJSON: file + farmId)
+- GET /api/fields/{fieldId}/ (FieldResponse)
+- GET /api/fields?farmId={id} (lista por fazenda)
+- DELETE /api/fields/{fieldId}/
+
+Adapters (sugestão)
+- /api/fields/: preencher { fieldName, code, totalAreaHec, coordinates[], farmId }
+- /api/fields/from-file/: FormData com file (.geojson) e farmId
+- Resposta: mapear fieldName→name; coordinates latitude/longitude → lat/lng; id→string
+
+Riscos
+- Falta de 'code' e 'farmId' nos forms: bloqueia /api/fields/.
+- Divergência coordinates vs coordinatesFile: escolher rota (from-file) ou adaptar parser.
+- Campos front-only: alinhar escopo e persistência futura (se necessário).
