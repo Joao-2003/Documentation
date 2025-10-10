@@ -1,0 +1,114 @@
+Fontes de referência (back-end dev)
+
+Farm (entidade): Farm.java
+DTO de criação/atualização: CreateFarmRequest.java
+Serviço: FarmService.java
+Controller/Endpoints: FarmController.java
+Fontes de referência (front-end)
+
+Tipagem de Propriedade: src/types/Propriety.d.ts
+Schema de Propriedade (edição): src/schemas/ProprietySchema.ts
+Formulários de Propriedade:
+ProprietyFormAdd.tsx
+ProprietyFormModify.tsx
+ProprietyFormView.tsx
+ProprietyLayout.tsx
+Campos e mapeamento (lado a lado)
+Identificação
+
+Back: id (Long) – gerado
+Front: id (string, exibição)
+Situação: OK para exibição. Conversão implícita quando necessário.
+Nome da fazenda
+
+Back: farmName (String) — obrigatório (CreateFarmRequest.@NotBlank)
+Front: name (string) — obrigatório no schema
+Situação: Alinhado (mapear name → farmName).
+Localidade
+
+Back: location (String) — obrigatório (CreateFarmRequest.@NotBlank)
+Front: locality (string) — obrigatório no schema
+Situação: Alinhado (mapear locality → location).
+Responsável (nome textual da pessoa responsável pela fazenda)
+
+Back: responsible (String) — obrigatório (CreateFarmRequest.@NotBlank)
+Front: manager (string) — obrigatório no schema
+Situação: Alinhado semanticamente (mapear manager → responsible). Observação: o back também mantém o “userManager” (membro gerente) via autenticação; este responsible é apenas um campo textual cadastral.
+Telefone do Responsável
+
+Back: responsiblePhoneNumber (String) — validação @Pattern("\d{8,9}")
+Front: managerPhone (string) — obrigatório no schema
+Situação: Alinhado semanticamente (mapear managerPhone → responsiblePhoneNumber). Ajustar máscara/formato para 8–9 dígitos (sem DDD e sem separadores), ou alterar regra se quiser aceitar DDD.
+Proprietário da Fazenda
+
+Back: owner (ManyToOne FarmOwner) — no DTO: ownerId (Long) obrigatório em criação (groups = OnCreate)
+Front: owner (string – nome)
+Situação: Divergente. O back exige ownerId (numérico), o front fornece nome. É necessário:
+substituir o campo “owner” (nome) por um seletor de Owner que envie o ownerId (Long), ou
+fazer uma busca por nome e resolver para id antes de enviar.
+E-mail comercial
+
+Back: businessEmail (String) — obrigatório @NotBlank @Email
+Front: não há campo
+Situação: Faltando no front. Adicionar campo “E-mail Comercial” com validação de e-mail.
+CPF/CNPJ da Fazenda
+
+Back: cpfCnpj (String) — obrigatório @NotBlank e @Pattern para formatos “000.000.000-00” ou “00.000.000/0000-00”
+Front: não há campo na Propriety (o CPF/CNPJ aparece no cliente/owner/usuário, não para a fazenda)
+Situação: Faltando no front. Adicionar campo “CPF/CNPJ” com máscara/validação compatível com o padrão do back.
+Área total (hectares)
+
+Back: totalAreaHectares (Float) — obrigatório @NotNull @Positive
+Front: area (string) — obrigatório (validação string→número positiva no zod)
+Situação: Alinhado semanticamente (mapear area → totalAreaHectares). Converter para número (float) no envio.
+Cor (indicador)
+
+Back: color (String, default “#808080”), calculada dinamicamente conforme contadores de lotes ARVA/GHG (arvaBatchCount, ghgBatchCount)
+Front: color (string) — presente no tipo Propriety para exibição
+Situação: Exibição apenas. Não enviar; backend gerencia.
+Metadados (datas)
+
+Back: createdAt, updatedAt — automáticas
+Front: enrollmentDate (string) — exibição apenas
+Situação: Exibição OK; não é campo de entrada para o back.
+Relacionamentos
+
+Back: fields (Set), members (Set), batches (List), owner (FarmOwner)
+Front: exibe conforme páginas e modais; sem envio direto
+Situação: Sem impacto direto no form de criação/edição.
+
+Validações do back-end (CreateFarmRequest)
+farmName: @NotBlank
+location: @NotBlank
+responsible: @NotBlank
+responsiblePhoneNumber: @Pattern("\d{8,9}")
+ownerId: @NotNull(groups = OnCreate) @Positive
+businessEmail: @NotBlank @Email
+cpfCnpj: @NotBlank + @Pattern(formatado)
+totalAreaHectares: @NotNull @Positive
+Endpoints relevantes (FarmController)
+POST /api/farms/ — cria fazenda (validação OnCreate)
+PATCH /api/farms/{farmId}/ — atualiza campos (parcial)
+GET /api/farms/{farmId}/ — detalhes
+DELETE /api/farms/{farmId}/ — remove
+GET /api/farms/ — lista por usuário autenticado
+GET /api/farms/by-owner/{ownerId}/ — lista por proprietário, respeitando membro/perm
+Membros: POST/PATCH/DELETE/GET em /api/farms/{farmId}/members/
+
+Ajustes recomendados no front-end (Propriety forms)
+Incluir campos obrigatórios do back ainda ausentes:
+businessEmail (e-mail comercial da fazenda)
+cpfCnpj (CPF/CNPJ da fazenda, com máscara/validação no padrão do back)
+Trocar owner (nome) por ownerId (Long):
+UI: seletor de proprietário (buscar por owners do usuário e armazenar id)
+Payload: enviar ownerId
+Converter “area” para número antes de enviar:
+Remover separadores/lacunas; converter “12,3” → 12.3 (float) para totalAreaHectares
+Alinhar nomes:
+manager → responsible
+managerPhone → responsiblePhoneNumber
+locality → location
+name → farmName
+Conferir ProprietyFormAdd: havia mapeamentos de register trocados (em versões anteriores):
+“Dono” deve usar register("owner" OU idealmente "ownerId")
+“Localidade” deve usar register("locality")
