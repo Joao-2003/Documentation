@@ -1,0 +1,34 @@
+Comparação de Atributos — Usuário (User)
+
+Principais mapeamentos
+- id: Long (back) ↔ id: string (front) — Consistente para exibição.
+- name vs name+surname: back não possui surname. Concatenar no envio ou evoluir o back. (Crítico)
+- email ↔ contactEmail: mapear; email é único (validação no back). (Requer Mapeamento)
+- username: único, obrigatório no back para autenticação/registro. Ausente nos forms do front. (Crítico)
+- password: necessário no registro e fluxos de senha; ausente nos forms do front de usuário. (Crítico)
+- phone: alinhado. (Consistente)
+- cpfCnpj ↔ cpf: mapear; considerar validação para CNPJ também. (Requer Mapeamento)
+- location ↔ locality: mapear. (Requer Mapeamento)
+- birthday ↔ birthDate: enviar ISO yyyy-MM-dd. (Requer Mapeamento)
+- training ↔ background (Formação). (Requer Mapeamento)
+- academicTitle ↔ degree (Título Acadêmico). (Requer Mapeamento)
+- imageProfileUrl ↔ photo (File): divergência; implementar upload e enviar URL. (Crítico)
+- active (back-only): usado por segurança; opcional expor no front administrativo. (Apenas Leitura)
+- color, items, enrollmentDate (front-only): somente exibição/UI.
+
+Validações (back)
+- username e email: unicidade (UserService.validateUser).
+- registerUser: define campos de perfil e ativa usuário como false (UserToken/ativação).
+- updateUser: atualiza name, phone, birthday, training, academicTitle, imageProfileUrl (não altera email/username).
+
+Recomendações para o front
+1) Incluir `username` e `password` nos fluxos de registro/autenticação.
+2) Implementar upload de foto → obter URL → preencher `imageProfileUrl`.
+3) Adapter para concatenar `name + surname` → `name` do back.
+4) Normalizar/validar `cpf` para suportar CNPJ, se exigido.
+5) Formatar `birthDate` no padrão ISO antes do envio.
+
+Observação de cobertura
+- As buscas podem não cobrir 100% dos arquivos. Verifique a branch dev:
+  - Back: repo=RvCabonApi, termo “User”
+  - Front: repo=RV-Carbon-Front-End, termos “User/Usuário”
