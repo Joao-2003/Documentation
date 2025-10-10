@@ -19,5 +19,3 @@ Esta tabela detalha as diferenças e o mapeamento necessário entre os atributos
 | farms               | List            | fetchedClientProperties | Propriety[]      | ⚠️ Integração Pendente: A relação existe no back, mas a integração com a listagem de propriedades no front não está finalizada.      | Pendente          |
 
 ---
-
-Deseja que eu una essa tabela com a anterior (Farm) em um único documento comparativo padronizado? Isso deixaria o relatório de mapeamento completo e consistente.
