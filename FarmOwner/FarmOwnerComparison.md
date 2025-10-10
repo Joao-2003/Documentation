@@ -1,5 +1,3 @@
----
-
 # Comparação de Atributos: Entidade Proprietário (FarmOwner vs. Client)
 
 Esta tabela detalha as diferenças e o mapeamento necessário entre os atributos da entidade **FarmOwner** no back-end e **Client** no front-end.
@@ -17,5 +15,3 @@ Esta tabela detalha as diferenças e o mapeamento necessário entre os atributos
 | cpfCnpj             | String          | cpfCnpj                 | String           | ✅ OK: Campos alinhados em nome e tipo.                                                                                               | Consistente       |
 | phone               | String          | phone                   | String           | ✅ OK: Campos alinhados em nome e tipo.                                                                                               | Consistente       |
 | farms               | List            | fetchedClientProperties | Propriety[]      | ⚠️ Integração Pendente: A relação existe no back, mas a integração com a listagem de propriedades no front não está finalizada.      | Pendente          |
-
----
