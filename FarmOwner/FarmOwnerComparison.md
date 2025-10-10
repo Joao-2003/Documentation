@@ -1,19 +1,23 @@
-# Comparação de Atributos: Entidade Fazenda (Farm)
+---
 
-Esta tabela detalha as diferenças e o mapeamento necessário entre os atributos da entidade Fazenda no back-end e no front-end.
+# Comparação de Atributos: Entidade Proprietário (FarmOwner vs. Client)
 
-| Atributo (Back-end)    | Tipo (Back-end) | Atributo (Front-end) | Tipo (Front-end) | Observações / Correções Sugeridas                                                                                 | Status            |
-| ---------------------- | --------------- | -------------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------- |
-| id                     | Long            | id                   | string           | ✅ OK: Conversão implícita para exibição.                                                                          | Consistente       |
-| farmName               | String          | name                 | string           | ⚠️ Inconsistente: Mapear name (front) para farmName (back). Padronizar o nome seria o ideal.                      | Requer Mapeamento |
-| location               | String          | locality             | string           | ⚠️ Inconsistente: Mapear locality (front) para location (back). Padronizar seria o ideal.                         | Requer Mapeamento |
-| responsible            | String          | manager              | string           | ⚠️ Inconsistente: Mapear manager (front) para responsible (back). Nomes semanticamente alinhados.                 | Requer Mapeamento |
-| responsiblePhoneNumber | String          | managerPhone         | string           | ⚠️ Inconsistente: Mapear managerPhone para responsiblePhoneNumber e ajustar validação/máscara no front.           | Requer Mapeamento |
-| ownerId (via DTO)      | Long            | owner                | string           | ❌ Divergente: O front-end precisa enviar o ownerId (numérico) em vez do nome. Requer um seletor de proprietários. | Crítico           |
-| businessEmail          | String          | —                    | —                | ❌ Faltando no Front-end: Adicionar o campo "E-mail Comercial" no formulário, com validação de e-mail.             | Crítico           |
-| cpfCnpj                | String          | —                    | —                | ❌ Faltando no Front-end: Adicionar o campo "CPF/CNPJ" da fazenda, com máscara e validação compatíveis.            | Crítico           |
-| totalAreaHectares      | Float           | area                 | string           | ⚠️ Inconsistente: Mapear area para totalAreaHectares e garantir a conversão de string para float antes do envio.  | Requer Mapeamento |
-| color                  | String          | color                | string           | ✅ OK: Campo apenas para exibição no front. O back-end gerencia o valor e não deve ser enviado.                    | Apenas Leitura    |
-| createdAt, updatedAt   | DateTime        | enrollmentDate       | string           | ✅ OK: Campos de metadados apenas para exibição, com nomes diferentes, mas sem impacto nos formulários.            | Apenas Leitura    |
+Esta tabela detalha as diferenças e o mapeamento necessário entre os atributos da entidade **FarmOwner** no back-end e **Client** no front-end.
+
+| Atributo (Back-end) | Tipo (Back-end) | Atributo (Front-end)    | Tipo (Front-end) | Observações / Correções Sugeridas                                                                                                    | Status            |
+| ------------------- | --------------- | ----------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
+| name                | String          | name, surname           | String, String   | ❌ Divergente: O back-end não possui `surname`. Decidir se o front deve concatenar (“nome sobrenome”) ou se o back deve ser evoluído. | Crítico           |
+| profileImageUrl     | String (URL)    | photo                   | File             | ❌ Divergente: O front manipula o arquivo e o back espera uma URL. É necessário implementar um fluxo de upload de arquivos.           | Crítico           |
+| id                  | Long            | id                      | string           | ⚠️ Inconsistente: Converter o id para string no front-end ao receber os dados.                                                       | Requer Mapeamento |
+| email               | String          | contactEmail            | String           | ⚠️ Inconsistente: Mapear `contactEmail` (front) para `email` (back) nas requisições.                                                 | Requer Mapeamento |
+| birthDateFoundation | LocalDate       | birthDate               | string           | ⚠️ Inconsistente: Mapear nomes e garantir que o front envie a data no formato ISO (`yyyy-MM-dd`).                                    | Requer Mapeamento |
+| location            | String          | locality                | String           | ⚠️ Inconsistente: Mapear `locality` (front) para `location` (back) nas requisições.                                                  | Requer Mapeamento |
+| createdDate         | LocalDate       | enrollmentDate          | string           | ⚠️ Inconsistente: Mapear `createdDate` (back) para `enrollmentDate` (front) para exibição. Campo de apenas leitura.                  | Apenas Leitura    |
+| userNameResponsible | String          | —                       | —                | ⚠️ Faltando no Front-end: O back-end retorna este campo, mas não existe no modelo `Client`. Avaliar necessidade de exibição.         | Faltando no Front |
+| cpfCnpj             | String          | cpfCnpj                 | String           | ✅ OK: Campos alinhados em nome e tipo.                                                                                               | Consistente       |
+| phone               | String          | phone                   | String           | ✅ OK: Campos alinhados em nome e tipo.                                                                                               | Consistente       |
+| farms               | List            | fetchedClientProperties | Propriety[]      | ⚠️ Integração Pendente: A relação existe no back, mas a integração com a listagem de propriedades no front não está finalizada.      | Pendente          |
 
 ---
+
+Deseja que eu una essa tabela com a anterior (Farm) em um único documento comparativo padronizado? Isso deixaria o relatório de mapeamento completo e consistente.
