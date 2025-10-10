@@ -17,5 +17,3 @@ Esta tabela detalha as diferenças e o mapeamento necessário entre os atributos
 | createdAt, updatedAt   | DateTime        | enrollmentDate       | string           | ✅ OK: Campos de metadados apenas para exibição, com nomes diferentes, mas sem impacto nos formulários.            | Apenas Leitura    |
 
 ---
-
-Quer que eu adicione **cores ou ícones visuais (por exemplo, emojis ou badges)** para facilitar a leitura (ex: 🟢 Consistente, 🟡 Requer Mapeamento, 🔴 Crítico)? Isso deixaria a tabela mais visual.
