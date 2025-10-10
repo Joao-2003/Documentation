@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comparação de Entidade: Usuário (User)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-code { font-family: 'Fira Code', monospace; }
+    .comparison-grid { grid-template-columns: 1fr 1fr 2fr; }
+    .attribute-box { transition: all .2s ease-in-out; }
+    .attribute-box:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05); }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 p-4 sm:p-8">
+  <div class="max-w-7xl mx-auto">
+    <header class="text-center mb-10">
+      <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Comparação de Atributos</h1>
+      <p class="text-xl text-indigo-600 font-semibold mt-2">Entidade: Usuário (User)</p>
+    </header>
+
+    <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 mb-8 text-sm">
+      <div class="flex items-center"><span class="h-4 w-4 rounded-full bg-green-200 border border-green-400 mr-2"></span>Consistente / Apenas Leitura</div>
+      <div class="flex items-center"><span class="h-4 w-4 rounded-full bg-yellow-200 border border-yellow-400 mr-2"></span>Requer Mapeamento</div>
+      <div class="flex items-center"><span class="h-4 w-4 rounded-full bg-red-200 border border-red-400 mr-2"></span>Crítico / Divergente</div>
+      <div class="flex items-center"><span class="h-4 w-4 rounded-full bg-gray-200 border border-gray-400 mr-2"></span>Front-only</div>
+    </div>
+
+    <div class="hidden sm:grid comparison-grid gap-6 font-semibold text-lg text-center mb-2 px-4">
+      <h2>Back-end</h2>
+      <h2>Front-end</h2>
+      <h2 class="text-left">Observações / Ações Sugeridas</h2>
+    </div>
+
+    <main class="space-y-4">
+      <!-- Crítico: name vs name+surname -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-red-100 border-l-4 border-red-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>name:</strong> String</div>
+        <div class="font-code bg-white p-2 rounded text-center"><strong>name, surname:</strong> string</div>
+        <div class="text-red-800"><b>Crítico:</b> O back não possui <code>surname</code>. Concatenar <code>name + " " + surname</code> no envio ou evoluir o back.</div>
+      </div>
+
+      <!-- Crítico: username -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-red-100 border-l-4 border-red-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>username:</strong> String (único)</div>
+        <div class="font-code bg-gray-200 p-2 rounded text-center text-gray-500">-- Faltando --</div>
+        <div class="text-red-800"><b>Crítico:</b> Necessário para registro/autenticação. Incluir no front (registro de usuário).</div>
+      </div>
+
+      <!-- Crítico: password -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-red-100 border-l-4 border-red-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>password:</strong> String</div>
+        <div class="font-code bg-gray-200 p-2 rounded text-center text-gray-500">-- Faltando --</div>
+        <div class="text-red-800"><b>Crítico:</b> Necessário no registro e reset de senha.</div>
+      </div>
+
+      <!-- Mapeamento: email -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>email:</strong> String</div>
+        <div class="font-code bg-white p-2 rounded text-center"><strong>contactEmail:</strong> string</div>
+        <div class="text-yellow-800">Mapear <code>contactEmail</code> → <code>email</code>; respeitar unicidade.</div>
+      </div>
+
+      <!-- Mapeamento: cpfCnpj -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>cpfCnpj:</strong> String</div>
+        <div class="font-code bg-white p-2 rounded text-center"><strong>cpf:</strong> string</div>
+        <div class="text-yellow-800">Mapear <code>cpf</code> → <code>cpfCnpj</code>; considerar CNPJ.</div>
+      </div>
+
+      <!-- Mapeamento: birthday -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>birthday:</strong> LocalDate</div>
+        <div class="font-code bg-white p-2 rounded text-center"><strong>birthDate:</strong> string</div>
+        <div class="text-yellow-800">Enviar formato ISO <code>yyyy-MM-dd</code>.</div>
+      </div>
+
+      <!-- Mapeamento: location -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>location:</strong> String</div>
+        <div class="font-code bg-white p-2 rounded text-center"><strong>locality:</strong> string</div>
+        <div class="text-yellow-800">Mapear <code>locality</code> → <code>location</code>.</div>
+      </div>
+
+      <!-- Mapeamento: training/academicTitle -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>training / academicTitle:</strong> String</div>
+        <div class="font-code bg-white p-2 rounded text-center"><strong>background / degree:</strong> string</div>
+        <div class="text-yellow-800"><code>background</code> → <code>training</code> (Formação); <code>degree</code> → <code>academicTitle</code> (Título Acadêmico).</div>
+      </div>
+
+      <!-- Crítico: imageProfileUrl vs photo -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-red-100 border-l-4 border-red-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>imageProfileUrl:</strong> String (URL)</div>
+        <div class="font-code bg-white p-2 rounded text-center"><strong>photo:</strong> File | null</div>
+        <div class="text-red-800"><b>Crítico:</b> Implementar upload; enviar apenas a URL ao back.</div>
+      </div>
+
+      <!-- Consistente: phone -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-green-100 border-l-4 border-green-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>phone:</strong> String</div>
+        <div class="font-code bg-white p-2 rounded text-center"><strong>phone:</strong> string</div>
+        <div class="text-green-800">Campos alinhados.</div>
+      </div>
+
+      <!-- Apenas Leitura: active -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-green-100 border-l-4 border-green-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>active:</strong> boolean</div>
+        <div class="font-code bg-gray-200 p-2 rounded text-center text-gray-500">-- N/A --</div>
+        <div class="text-green-800">Usado para autenticação; exibição opcional.</div>
+      </div>
+
+      <!-- Front-only -->
+      <div class="grid sm:comparison-grid gap-4 items-center bg-gray-100 border-l-4 border-gray-500 p-4 rounded-lg attribute-box">
+        <div class="font-code bg-white p-2 rounded text-center"><strong>color / items / enrollmentDate</strong></div>
+        <div class="font-code bg-white p-2 rounded text-center"><strong>presentes no Front</strong></div>
+        <div class="text-gray-800">Campos apenas de UI no front; não enviar ao back.</div>
+      </div>
+    </main>
+
+    <footer class="mt-10 text-sm text-gray-600">
+      <p>Back-end (dev): 
+        <a class="text-indigo-600 underline" href="https://github.com/prisma-rv-carbon/RvCabonApi/blob/62ed0c391ebdb36cbdc0c54462ff692017e15b35/src/main/java/org/prisma/rvcarbonapi/User/User.java" target="_blank" rel="noreferrer">User.java</a> ·
+        <a class="text-indigo-600 underline" href="https://github.com/prisma-rv-carbon/RvCabonApi/blob/62ed0c391ebdb36cbdc0c54462ff692017e15b35/src/main/java/org/prisma/rvcarbonapi/User/UserService.java" target="_blank" rel="noreferrer">UserService.java</a>
+      </p>
+      <p>Front-end:
+        <a class="text-indigo-600 underline" href="https://github.com/prisma-rv-carbon/RV-Carbon-Front-End/blob/a2bcb8b26266879a548cd3d71091f0544684fdc9/src/types/User.d.ts" target="_blank" rel="noreferrer">User.d.ts</a> ·
+        <a class="text-indigo-600 underline" href="https://github.com/prisma-rv-carbon/RV-Carbon-Front-End/blob/a2bcb8b26266879a548cd3d71091f0544684fdc9/src/schemas/UserSchema.ts" target="_blank" rel="noreferrer">UserSchema.ts</a> ·
+        <a class="text-indigo-600 underline" href="https://github.com/prisma-rv-carbon/RV-Carbon-Front-End/blob/a2bcb8b26266879a548cd3d71091f0544684fdc9/src/forms/User/UserFormModify.tsx" target="_blank" rel="noreferrer">UserFormModify.tsx</a>
+      </p>
+      <p class="mt-2">Observação: resultados de busca podem estar incompletos. Explore mais resultados na dev:
+        <a class="text-indigo-600 underline" href="https://github.com/search?q=repo%3Aprisma-rv-carbon%2FRV-Carbon-Front-End%20ref%3Arefs%2Fheads%2Fdev%20%28User%20OR%20Usu%C3%A1rio%20OR%20Usuario%29&type=code" target="_blank" rel="noreferrer">Buscar no Front (dev)</a>
+      </p>
+    </footer>
+  </div>
+</body>
+</html>
