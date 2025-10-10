@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Comparação de Emissões GHG — Back vs Front</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-code { font-family: 'Fira Code', monospace; }
+    .grid-cols-headers { grid-template-columns: 1fr 1fr 2fr; }
+    .card { transition: all .2s ease-in-out; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05); }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 p-6">
+  <div class="max-w-7xl mx-auto">
+    <header class="mb-8 text-center">
+      <h1 class="text-3xl font-bold">Emissões GHG — Comparação Back vs Front</h1>
+      <p class="text-indigo-600 mt-2">Lotes (EmissionBatch) e Entradas (EmissionGHG)</p>
+    </header>
+
+    <section class="mb-6 text-sm text-gray-600">
+      <p>Nota: A busca pode estar incompleta. Verifique mais resultados:</p>
+      <ul class="list-disc ml-5">
+        <li><a href="https://github.com/search?q=repo%3Aprisma-rv-carbon%2FRvCabonApi%20ref%3Arefs%2Fheads%2Fdev%20EmissionsGHG&type=code" class="text-indigo-600 underline" target="_blank">Back (dev) — EmissionsGHG</a></li>
+        <li><a href="https://github.com/search?q=repo%3Aprisma-rv-carbon%2FRV-Carbon-Front-End%20ref%3Arefs%2Fheads%2Fdev%20%28GHG%20OR%20Emission%20OR%20emissions%29&type=code" class="text-indigo-600 underline" target="_blank">Front (dev) — GHG/Emissions</a></li>
+      </ul>
+    </section>
+
+    <h2 class="text-xl font-semibold mb-2">EmissionBatch</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-headers gap-4 mb-4 font-semibold text-center hidden sm:grid">
+      <div>Back-end</div><div>Front-end</div><div class="text-left">Observações</div>
+    </div>
+    <div class="space-y-3">
+      <div class="card bg-red-100 p-4 border-l-4 border-red-500 rounded">
+        <div class="grid grid-cols-1 sm:grid-cols-headers gap-3 items-center">
+          <div class="font-code bg-white p-2 rounded text-center"><b>fieldId (Field)</b></div>
+          <div class="font-code bg-white p-2 rounded text-center"><b>contexto (talhão)</b></div>
+          <div class="text-red-800"><b>Crítico:</b> Enviar <code>fieldId</code> ao criar o batch (POST /api/emissions/batch/).</div>
+        </div>
+      </div>
+      <div class="card bg-yellow-100 p-4 border-l-4 border-yellow-500 rounded">
+        <div class="grid grid-cols-1 sm:grid-cols-headers gap-3 items-center">
+          <div class="font-code bg-white p-2 rounded text-center"><b>emissionBatchName</b></div>
+          <div class="font-code bg-white p-2 rounded text-center"><b>nome do lote</b></div>
+          <div class="text-yellow-800">Coletar no front e enviar.</div>
+        </div>
+      </div>
+      <div class="card bg-green-100 p-4 border-l-4 border-green-500 rounded">
+        <div class="grid grid-cols-1 sm:grid-cols-headers gap-3 items-center">
+          <div class="font-code bg-white p-2 rounded text-center"><b>co2/ch4/... co2eTotal</b></div>
+          <div class="font-code bg-gray-200 p-2 rounded text-center text-gray-500">—</div>
+          <div class="text-green-800">Totais calculados pelo back. Leitura apenas.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="text-xl font-semibold mt-10 mb-2">EmissionGHG</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-headers gap-4 mb-4 font-semibold text-center hidden sm:grid">
+      <div>Back-end</div><div>Front-end</div><div class="text-left">Observações</div>
+    </div>
+    <div class="space-y-3">
+      <div class="card bg-red-100 p-4 border-l-4 border-red-500 rounded">
+        <div class="grid grid-cols-1 sm:grid-cols-headers gap-3 items-center">
+          <div class="font-code bg-white p-2 rounded text-center"><b>emissionType (Enum)</b></div>
+          <div class="font-code bg-white p-2 rounded text-center"><b>tipo (enum)</b></div>
+          <div class="text-red-800"><b>Crítico:</b> Expor enum no front alinhado ao back.</div>
+        </div>
+      </div>
+      <div class="card bg-yellow-100 p-4 border-l-4 border-yellow-500 rounded">
+        <div class="grid grid-cols-1 sm:grid-cols-headers gap-3 items-center">
+          <div class="font-code bg-white p-2 rounded text-center"><b>co2 (obrig.), ch4, n2o(n2ho), sf6, nf3</b></div>
+          <div class="font-code bg-white p-2 rounded text-center"><b>co2, ch4, n2o, sf6, nf3</b></div>
+          <div class="text-yellow-800">Mapear <code>n2o</code> → <code>n2ho</code> no payload. co2 ≥ 0 obrigatório.</div>
+        </div>
+      </div>
+      <div class="card bg-yellow-100 p-4 border-l-4 border-yellow-500 rounded">
+        <div class="grid grid-cols-1 sm:grid-cols-headers gap-3 items-center">
+          <div class="font-code bg-white p-2 rounded text-center"><b>emiCo2Bio, remoCo2Bio</b></div>
+          <div class="font-code bg-white p-2 rounded text-center"><b>biogênico</b></div>
+          <div class="text-yellow-800">Opcional; validar ≥ 0.</div>
+        </div>
+      </div>
+      <div class="card bg-red-100 p-4 border-l-4 border-red-500 rounded">
+        <div class="grid grid-cols-1 sm:grid-cols-headers gap-3 items-center">
+          <div class="font-code bg-white p-2 rounded text-center"><b>HFCs / PFCs detalhados</b></div>
+          <div class="font-code bg-gray-200 p-2 rounded text-center text-gray-500">—</div>
+          <div class="text-red-800"><b>Faltando no Front:</b> Criar formulário avançado para gases específicos.</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="mt-10">
+      <h3 class="text-lg font-semibold mb-2">Adapters sugeridos</h3>
+      <pre class="bg-gray-900 text-gray-100 p-4 rounded overflow-auto text-sm"><code>// Criar Batch
+POST /api/emissions/batch/
+{ fieldId, emissionBatchName }
+
+// Criar Emission GHG
+POST /api/emissions
+{
+  emissionBatchId,
+  emissionType,
+  co2, ch4, n2ho, sf6, nf3,
+  emiCo2Bio, remoC02Bio,
+  ...hfc/pfc detalhados
+}</code></pre>
+    </section>
+
+    <footer class="mt-8 text-sm text-gray-600">
+      <p>Back-end: <a class="text-indigo-600 underline" href="https://github.com/prisma-rv-carbon/RvCabonApi/blob/62ed0c391ebdb36cbdc0c54462ff692017e15b35/src/main/java/org/prisma/rvcarbonapi/EmissionsGHG/EmissionGHG.java" target="_blank" rel="noreferrer">EmissionGHG.java</a> · <a class="text-indigo-600 underline" href="https://github.com/prisma-rv-carbon/RvCabonApi/blob/62ed0c391ebdb36cbdc0c54462ff692017e15b35/src/main/java/org/prisma/rvcarbonapi/EmissionsGHG/EmissionBatch.java" target="_blank">EmissionBatch.java</a></p>
+      <p>Front-end: <a class="text-indigo-600 underline" href="https://github.com/prisma-rv-carbon/RV-Carbon-Front-End/blob/a2bcb8b26266879a548cd3d71091f0544684fdc9/src/forms/Protocols/GHG/GHGWizard.tsx" target="_blank">GHGWizard.tsx</a> · <a class="text-indigo-600 underline" href="https://github.com/prisma-rv-carbon/RV-Carbon-Front-End/blob/a2bcb8b26266879a548cd3d71091f0544684fdc9/src/forms/Protocols/GHG/GHGCommonData.tsx" target="_blank">GHGCommonData.tsx</a></p>
+    </footer>
+  </div>
+</body>
+</html>
