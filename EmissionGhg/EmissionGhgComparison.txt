@@ -1,0 +1,31 @@
+Comparação — Emissões GHG (Back vs Front)
+
+Resumo
+- Back possui dois níveis: EmissionBatch (lote por talhão) e EmissionGHG (entradas por tipo de emissão).
+- Front tem navegação e um wizard GHG (dados comuns), porém faltam:
+  - Tela/fluxo para criar batch (fieldId, emissionBatchName).
+  - Form(s) para lançar EmissionGHG por tipo com gases principais (CO2 obrigatório) e HFC/PFC.
+  - Enum emissionType alinhado ao back.
+  - Mapeamento de N2O → n2ho no payload.
+
+Mapeamentos importantes
+- EmissionBatchRequest: fieldId (obrig.), emissionBatchName (obrig.).
+- EmissionGHGRequest: emissionBatchId (obrig.), emissionType (obrig.), co2 (obrig., ≥0). ch4, n2o (n2ho no back), sf6, nf3, biogênicos, HFCs e PFCs (≥0).
+- Totais e co2e no batch são calculados automaticamente (somente leitura).
+
+Riscos
+- Divergência n2o vs n2ho no DTO.
+- Ausência de formulário detalhado no front para HFC/PFC.
+- Falta do fluxo de criação de batch pode bloquear o registro de emissões.
+
+Recomendações
+- Adicionar schemas: GHGEmissionBatchSchema e GHGEmissionSchema.
+- Implementar telas para:
+  1) Criar lote (POST /api/emissions/batch/).
+  2) Lançar emissões por tipo (POST /api/emissions).
+- Expor enum emissionType no front com valores do back.
+- Construir adapters para conversão (ex.: n2o → n2ho).
+
+Links
+- Back-end: EmissionGHG, EmissionBatch, Requests, Controller, Service.
+- Front-end: FieldEmissionsPage, GHGWizard, GHGCommonData, ProprietyEmissionsNavigate, ProprietyAllEmissionsNavigate.
