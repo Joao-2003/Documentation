@@ -1,6 +1,6 @@
 "Atributo (Back-end)","Tipo (Back-end)","Atributo (Front-end)","Tipo (Front-end)","Observações / Correções Sugeridas","Status"
 "id","Long","id","string","OK: Exibição no front como string.","Consistente"
-"name","String","name, surname","string, string","Divergência: o back não possui surname. Concatenar name + \" \" + surname no envio, ou evoluir o back.","Crítico"
+"name","String","name, surname","string, string","Divergência: o back não possui surname. Concatenar name + surname no envio, ou evoluir o back.","Crítico"
 "email","String (único, obrigatório)","contactEmail","string (email)","Mapear contactEmail → email nas requisições. Email é único no back (validação).","Requer Mapeamento"
 "username","String (único)","-","-","Faltando no Front (forms de usuário): necessário para registro/autenticação no back.","Crítico"
 "password","String","-","-","Faltando no Front (forms de usuário): necessário no registro e fluxos de troca de senha.","Crítico"
