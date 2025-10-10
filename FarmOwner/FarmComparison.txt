@@ -1,0 +1,109 @@
+Conceito no back-end: FarmOwner (proprietário de fazenda).
+Entidade: FarmOwner.javaFarmOwner.java
+DTOs de resposta usados pelo controller:FarmOwnerResponseWithoutFarm: link
+FarmOwnerResponseWithoutUserResponsible (inclui farms): link
+Controller (endpoints sob /api/owners/):FarmOwnerController.java
+Service e Repository:FarmOwnerService.java
+FarmOwnerRepository.java
+Conceito no front-end: Client (cliente, que corresponde ao proprietário).
+Tipo/Interface:src/types/Client.d.ts
+Formulários e telas principais que manipulam “Client”:Add: ClientFormAdd.tsx
+Modify: ClientFormModify.tsx
+View: ClientFormView.tsx
+Página do cliente: ClientPage.tsx
+Validação (edição): ClientSchema.ts
+Mapeamento de campos: Back (FarmOwner) x Front (Client)
+id
+Back: Long (FarmOwner.id, aparece no DTO como id)
+Front: string (Client.id)
+Ação: converter para string no front (ou tipar como number se preferir alinhar).
+name
+Back: name (String)
+Front: name (String) e surname (String)
+Diferença: o back não tem surname. Hoje o front separa nome e sobrenome; ao enviar para o back, é preciso decidir se concatena name + " " + surname para preencher FarmOwner.name, ou evoluir o back para ter surname.
+cpfCnpj
+Back: cpfCnpj (String)
+Front: cpfCnpj (String)
+Alinhado.
+email
+Back: email (String)
+Front: contactEmail (String)
+Diferença: apenas nome. Mapear contactEmail -> email ao chamar a API.
+birthDateFoundation
+Back: birthDateFoundation (LocalDate) — representa “data de nascimento/fundação”.
+Front: birthDate (string, validada como data)
+Diferença: nome e tipo. No front enviar birthDate como string no formato ISO (yyyy-MM-dd) que o back aceite como LocalDate. No retorno, o back expõe como birthDateFoundation; no front, mapear para birthDate.
+location
+Back: location (String)
+Front: locality (String)
+Diferença: nome. Mapear locality -> location.
+phone
+Back: phone (String)
+Front: phone (String)
+Alinhado.
+profileImageUrl vs photo
+Back: profileImageUrl (String – URL)
+Front: photo (File | null) — upload bruto
+Diferença: tipo e responsabilidade. O back espera URL, já o front possui o arquivo. Será necessário:ou criar endpoint de upload no back para receber multipart/form-data e retornar a URL a ser salva em profileImageUrl;
+ou fazer upload a um storage (S3/Cloud/etc.) no front e enviar apenas a URL para o back.
+createdDate x enrollmentDate
+Back: createdDate (LocalDate) — gerado automaticamente (@CreatedDate)
+Front: enrollmentDate (string)
+Diferença: nome. No consumo, mapear createdDate -> enrollmentDate.
+userNameResponsible
+Back: presente em FarmOwnerResponseWithoutFarm (username do responsável)
+Front: não existe campo equivalente em Client
+Ação: se necessário exibir no front, criar campo transient no tipo de resposta (ex.: userNameResponsible?: string) ou manter separado no estado.
+Relação farms (List<Farm>)
+Back: existe como referência (no DTO “WithoutFarm” ela não é enviada; no “WithoutUserResponsible” ela aparece mapeada para FarmResponse).
+Front: a UI de ClientPage mostra propriedades (fetchedClientProperties) de forma estática; integração real ainda não mapeada.
+Endpoints do back e como se conectam com as telas do front
+GET /api/owners/
+Retorna List<FarmOwnerResponseWithoutFarm>
+Uso esperado no front:“Meus Clientes” (Nav dropdown) e lista de clientes do usuário (UserPage) — hoje populado com mocks estáticos.
+POST /api/owners/
+Corpo esperado (CreateFarmOwnerRequest): email, name, location, phone, cpfCnpj, birthDate, profileImageUrl
+Front: ClientFormAdd.tsx (atualmente só faz console.log e TODO). Necessário mapear:name = ${name} ${surname} (se optar por concatenar)
+email = contactEmail
+location = locality
+birthDate = birthDate (string ISO)
+profileImageUrl: primeiro resolver upload (ver acima) e então enviar a URL
+PATCH /api/owners/{ownerId}/
+Corpo esperado (UpdateFarmOwnerRequest) com os mesmos campos opcionais.
+Front: ClientFormModify.tsx (hoje TODO). Mesmo mapeamento do POST.
+DELETE /api/owners/{ownerId}/
+Front: não há ação de remover cliente hoje. Se necessário, criar.
+PUT /api/owners/{ownerId}/transfer/
+PUT /api/owners/transfer-all/
+Front: não há UI para transferência de responsável. Se fizer parte dos requisitos, adicionar telas/ações.
+Principais divergências e riscos de integração
+Campo surname só existe no front.
+Decidir: concatenar no envio ao back (name = “nome sobrenome”) ou evoluir o back para armazenar sobrenome.
+Nomes divergentes:
+contactEmail ↔ email
+locality ↔ location
+birthDate ↔ birthDateFoundation
+enrollmentDate ↔ createdDate
+Solução: criar um adaptador no front que normalize os nomes na ida/volta.
+Tipos divergentes:
+id: string (front) vs Long (back) — converter no front.
+Datas: string vs LocalDate — usar ISO yyyy-MM-dd.
+Foto: File (front) vs URL (back) — exigir fluxo de upload + URL.
+Responsável pelo Owner:
+Resposta traz userNameResponsible (back), inexistente no modelo Client (front). Avaliar se precisa exibir/armazenar.
+Integração ausente:
+Os formulários Add/Modify de Client estão com TODO (sem POST/PATCH).
+Listagens ainda usam mocks.
+Recomendações objetivas para alinhar
+No front, criar um “Owner/Client adapter” para requests/responses:
+Request (POST/PATCH): { name, contactEmail, locality, phone, cpfCnpj, birthDate, photo }Mapear para back: { name: ${name} ${surname}, email: contactEmail, location: locality, phone, cpfCnpj, birthDate, profileImageUrl }
+Response (GET): mapear { id, name, cpfCnpj, email, birthDateFoundation, location, phone, profileImageUrl, createdDate, userNameResponsible? }Para o modelo Client: { id: string(id), name: primeiro nome (ou nome completo), surname: extraído se fizer sentido, cpfCnpj, contactEmail: email, birthDate: birthDateFoundation, locality: location, phone, enrollmentDate: createdDate, photo: null (ou derivado de profileImageUrl) }
+Implementar upload de foto:
+Estratégia A (recomendado): endpoint de upload multipart no back → retorna URL → enviar profileImageUrl nos endpoints de owner.
+Estratégia B: upload direto do front para storage externo → back recebe apenas a URL.
+Ajustar a UI:
+Substituir mocks por chamadas a GET /api/owners/.
+Implementar POST/PATCH/DELETE conforme formulários e ações.
+Links para explorar mais resultados na interface do GitHub (pesquisa de código)
+Back-end (FarmOwner) com ref:dev:Pesquisar “FarmOwner” no repo da API: https://github.com/search?q=repo%3Aprisma-rv-carbon%2FRvCabonApi%20ref%3Arefs%2Fheads%2Fdev%20FarmOwner&type=code
+Front-end (Client) com ref:dev:Pesquisar “Client” no repo do front: https://github.com/search?q=repo%3Aprisma-rv-carbon%2FRV-Carbon-Front-End%20ref%3Arefs%2Fheads%2Fdev%20Client&type=code
