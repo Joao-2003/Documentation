@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparação de Entidade: Fazenda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-code { font-family: 'Fira Code', monospace; }
+        .comparison-grid { grid-template-columns: 1fr 1fr 2fr; }
+        .attribute-box { transition: all 0.2s ease-in-out; }
+        .attribute-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 p-4 sm:p-8">
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Comparação de Atributos</h1>
+            <p class="text-xl text-indigo-600 font-semibold mt-2">Entidade: Fazenda (Farm)</p>
+        </header>
+
+        <main>
+            <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 mb-8 text-sm">
+                <div class="flex items-center"><span class="h-4 w-4 rounded-full bg-green-200 border border-green-400 mr-2"></span>Consistente / Apenas Leitura</div>
+                <div class="flex items-center"><span class="h-4 w-4 rounded-full bg-yellow-200 border border-yellow-400 mr-2"></span>Requer Mapeamento</div>
+                <div class="flex items-center"><span class="h-4 w-4 rounded-full bg-red-200 border border-red-400 mr-2"></span>Crítico / Faltando</div>
+            </div>
+
+            <div class="hidden sm:grid comparison-grid gap-6 font-semibold text-lg text-center mb-2 px-4">
+                <h2>Back-end</h2>
+                <h2>Front-end</h2>
+                <h2 class="text-left">Observações / Ações Sugeridas</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="grid sm:comparison-grid gap-4 items-center bg-red-100 border-l-4 border-red-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>ownerId:</strong> Long</div>
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>owner:</strong> string</div>
+                    <div class="text-red-800"><b>Crítico:</b> O front deve enviar `ownerId` (ID numérico). É necessário substituir o campo de texto por um seletor de proprietários.</div>
+                </div>
+
+                <div class="grid sm:comparison-grid gap-4 items-center bg-red-100 border-l-4 border-red-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>businessEmail:</strong> String</div>
+                    <div class="font-code bg-gray-200 p-2 rounded text-center text-gray-500">-- Faltando --</div>
+                    <div class="text-red-800"><b>Crítico:</b> Adicionar campo "E-mail Comercial" obrigatório no formulário do front-end.</div>
+                </div>
+
+                <div class="grid sm:comparison-grid gap-4 items-center bg-red-100 border-l-4 border-red-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>cpfCnpj:</strong> String</div>
+                    <div class="font-code bg-gray-200 p-2 rounded text-center text-gray-500">-- Faltando --</div>
+                    <div class="text-red-800"><b>Crítico:</b> Adicionar campo "CPF/CNPJ" obrigatório no formulário, com máscara e validação.</div>
+                </div>
+
+                <div class="grid sm:comparison-grid gap-4 items-center bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>farmName:</strong> String</div>
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>name:</strong> string</div>
+                    <div class="text-yellow-800">Mapear `name` para `farmName` no payload. Considerar padronizar o nome no front.</div>
+                </div>
+
+                <div class="grid sm:comparison-grid gap-4 items-center bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>location:</strong> String</div>
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>locality:</strong> string</div>
+                    <div class="text-yellow-800">Mapear `locality` para `location` no payload.</div>
+                </div>
+
+                <div class="grid sm:comparison-grid gap-4 items-center bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>responsible:</strong> String</div>
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>manager:</strong> string</div>
+                    <div class="text-yellow-800">Mapear `manager` para `responsible` no payload.</div>
+                </div>
+                
+                <div class="grid sm:comparison-grid gap-4 items-center bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>responsiblePhoneNumber:</strong> String</div>
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>managerPhone:</strong> string</div>
+                    <div class="text-yellow-800">Mapear `managerPhone` para `responsiblePhoneNumber` e alinhar a validação de formato.</div>
+                </div>
+
+                <div class="grid sm:comparison-grid gap-4 items-center bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>totalAreaHectares:</strong> Float</div>
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>area:</strong> string</div>
+                    <div class="text-yellow-800">Mapear `area` para `totalAreaHectares` e converter para float antes de enviar.</div>
+                </div>
+
+                <div class="grid sm:comparison-grid gap-4 items-center bg-green-100 border-l-4 border-green-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>id:</strong> Long</div>
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>id:</strong> string</div>
+                    <div class="text-green-800">OK para exibição. Nenhuma ação necessária no formulário.</div>
+                </div>
+
+                <div class="grid sm:comparison-grid gap-4 items-center bg-green-100 border-l-4 border-green-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>color:</strong> String</div>
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>color:</strong> string</div>
+                    <div class="text-green-800">Campo de exibição. O valor é calculado e gerenciado pelo back-end. Não enviar no payload.</div>
+                </div>
+                
+                <div class="grid sm:comparison-grid gap-4 items-center bg-green-100 border-l-4 border-green-500 p-4 rounded-lg shadow-sm attribute-box">
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>createdAt, updatedAt:</strong> DateTime</div>
+                    <div class="font-code bg-white p-2 rounded text-center"><strong>enrollmentDate:</strong> string</div>
+                    <div class="text-green-800">Campos de exibição. Gerenciados automaticamente pelo back-end. Não enviar no payload.</div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
