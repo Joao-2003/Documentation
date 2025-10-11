@@ -1,0 +1,17 @@
+{
+	"id": 7,
+	"collectedBy": null,
+	"notes": "Manejo de pastagem",
+	"startDate": "29/08/2004",
+	"endDate": "29/08/2004",
+	"createdAt": "10/10/2025 23:38:51",
+	"updatedAt": "10/10/2025 23:38:51",
+	"attachments": [
+		"pastagem.pdf"
+	],
+	"stockingRate": 3.5,
+	"animalType": "GADO_VACA",
+	"analysisType": "MANAGEMENT_GRAZING",
+	"userResponsibleId": 2,
+	"batchId": 2
+}
