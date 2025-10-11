@@ -1,0 +1,18 @@
+{
+	"id": 4,
+	"collectedBy": null,
+	"notes": "Plantio de cobertura",
+	"startDate": "29/08/2004",
+	"endDate": "30/08/2004",
+	"createdAt": "10/10/2025 23:38:26",
+	"updatedAt": "10/10/2025 23:38:26",
+	"attachments": [
+		"cobertura.pdf"
+	],
+	"cropType": "FEIJAO",
+	"coverCroppingFamily": "GRAMINEAS",
+	"isInterspersed": true,
+	"analysisType": "COVER_CROPPING",
+	"userResponsibleId": 2,
+	"batchId": 2
+}
