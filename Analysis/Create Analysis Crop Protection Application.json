@@ -1,0 +1,25 @@
+{
+	"id": 11,
+	"collectedBy": "Carlos Pereira",
+	"notes": "Aplicação de defensivo agrícola",
+	"startDate": "29/08/2004",
+	"endDate": "30/08/2004",
+	"createdAt": "10/10/2025 23:39:31",
+	"updatedAt": "10/10/2025 23:39:31",
+	"attachments": [
+		"foto1.jpg",
+		"foto2.jpg"
+	],
+	"unity": "ML_PER_HA",
+	"rate": 2.5,
+	"cost": 150,
+	"applicationMethod": "FOLIAR",
+	"pestControlType": "HERBICIDE",
+	"productName": "Glifosato 480 SL",
+	"analysisType": "CROP_PROTECTION_APPLICATION",
+	"forDiseaseControl": false,
+	"forWeedControl": true,
+	"forPestControl": true,
+	"userResponsibleId": 2,
+	"batchId": 2
+}
