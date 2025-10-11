@@ -1,0 +1,17 @@
+{
+	"id": 13,
+	"collectedBy": null,
+	"notes": "Amostra coletada em área de cultivo de soja",
+	"startDate": "29/08/2004",
+	"endDate": "30/08/2004",
+	"createdAt": "10/10/2025 23:39:44",
+	"updatedAt": "10/10/2025 23:39:44",
+	"attachments": [
+		"foto1.jpg",
+		"foto2.jpg"
+	],
+	"soilSampleType": "GRADE",
+	"analysisType": "SOIL_SAMPLE",
+	"userResponsibleId": 2,
+	"batchId": 2
+}
