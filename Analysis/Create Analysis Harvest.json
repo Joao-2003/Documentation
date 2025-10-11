@@ -1,0 +1,21 @@
+{
+	"id": 6,
+	"collectedBy": null,
+	"notes": "Colheita de milho",
+	"startDate": "29/08/2004",
+	"endDate": "29/08/2004",
+	"createdAt": "10/10/2025 23:38:44",
+	"updatedAt": "10/10/2025 23:38:44",
+	"attachments": [
+		"colheita.pdf"
+	],
+	"season": "2024/2025",
+	"cropType": "MILHO",
+	"harvestType": "GRAO",
+	"residueRemovalCount": 2,
+	"residueBurning": false,
+	"yield": 5.6,
+	"analysisType": "HARVEST",
+	"userResponsibleId": 2,
+	"batchId": 2
+}
