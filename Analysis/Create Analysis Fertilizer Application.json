@@ -1,0 +1,30 @@
+{
+	"id": 10,
+	"collectedBy": "Joao",
+	"notes": "Aplicação de fertilizante de",
+	"startDate": "29/08/2004",
+	"endDate": "30/08/2004",
+	"createdAt": "10/10/2025 23:39:22",
+	"updatedAt": "10/10/2025 23:39:22",
+	"attachments": [
+		"foto1.jpg",
+		"foto2.jpg"
+	],
+	"rate": 120.5,
+	"cost": 350,
+	"applicationMethod": "A_LANCO",
+	"hasFertilityPlan": true,
+	"productName": "Ureia 45%",
+	"n": 45,
+	"p": 10,
+	"k": 20,
+	"s": 5,
+	"unity": "KG_PER_HA",
+	"inhibitor": false,
+	"slowRelease": true,
+	"analysisType": "FERTILIZER_APPLICATION",
+	"variableRate": true,
+	"precisionApplication": false,
+	"userResponsibleId": 2,
+	"batchId": 2
+}
