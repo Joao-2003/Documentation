@@ -1,0 +1,17 @@
+{
+  "batchId": 2,
+  "startDate": "29/08/2004",
+	"collectedBy":"João",
+  "endDate": "29/08/2004",
+  "notes": "Irrigação do talhão",
+  "attachments": "irrigacao.pdf",
+  "analysisType": "IRRIGATION",
+  "method": "GOTEJAMENTO",
+  "quantity": 100.5,
+  "unity": "mm_gh",
+  "awdTimes": 2,
+  "drainage": 1.2,
+  "waterSourceType": "POCO",
+  "irrigationCategory": "REPRESAMENTO",
+  "isWildlifeFlooded": false
+}
