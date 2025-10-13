@@ -1,0 +1,20 @@
+{
+	"id": 2,
+	"farmName": "Fazenda Boa Vista",
+	"ownerId": 1,
+	"businessEmail": "contato@boavista.com",
+	"cpfCnpj": "12.345.678/0001-90",
+	"totalAreaHectares": 150.5,
+	"createdAt": "13/10/2025 10:35:57",
+	"updatedAt": "13/10/2025 10:37:23",
+	"userManagerName": "fathos812",
+	"managerMembers": [
+		{
+			"memberId": 2,
+			"username": "fathos812",
+			"completeName": "Amadeus Neto",
+			"email": "fathos812@gmail.com",
+			"role": "MANAGER_ROLE"
+		}
+	]
+}
