@@ -1,0 +1,36 @@
+{
+	"content": [
+		{
+			"id": 1,
+			"username": "amadeus123",
+			"name": "Amadeus Neto",
+			"email": "lordamadeus@gmail.com",
+			"imageProfileUrl": "https://example.com/profile.jpg"
+		}
+	],
+	"pageable": {
+		"pageNumber": 0,
+		"pageSize": 5,
+		"sort": {
+			"empty": true,
+			"sorted": false,
+			"unsorted": true
+		},
+		"offset": 0,
+		"paged": true,
+		"unpaged": false
+	},
+	"last": true,
+	"totalPages": 1,
+	"totalElements": 1,
+	"first": true,
+	"size": 5,
+	"number": 0,
+	"sort": {
+		"empty": true,
+		"sorted": false,
+		"unsorted": true
+	},
+	"numberOfElements": 1,
+	"empty": false
+}
