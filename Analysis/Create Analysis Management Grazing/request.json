@@ -1,0 +1,11 @@
+{
+  "batchId": 2,
+  "startDate": "29/08/2004",
+  "endDate": "29/08/2004",
+  "notes": "Manejo de pastagem",
+  "attachments": ["pastagem.pdf"],
+  "analysisType": "MANAGEMENT_GRAZING",
+
+  "stockingRate": 3.5,
+  "animalType": "gado_vaca"
+}
