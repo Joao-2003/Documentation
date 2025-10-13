@@ -1,0 +1,19 @@
+{
+	"id": 1,
+	"batchName": "Ola",
+	"createdAt": "13/10/2025 10:44:23",
+	"updatedAt": "13/10/2025 10:48:06",
+	"co2": 0,
+	"ch4": 0,
+	"hfc": 0,
+	"pfc": 0,
+	"sf6": 0,
+	"nf3": 0,
+	"n2ho": 0,
+	"co2eTotal": 0,
+	"biogenicCo2Emissions": 0,
+	"biogenicCo2Removals": 0,
+	"color": "#bcbc68",
+	"userCreatorId": 2,
+	"farmId": 2
+}
