@@ -1,0 +1,72 @@
+Users (/api/users)
+- GET /api/users/search — busca paginada por prefixo de username
+  - Query params: username (obrigatório), page=0, size=5
+
+Auth (/api/auth)
+- POST /api/auth/login/ — login (gera par de tokens)
+- POST /api/auth/register/ — registro de usuário
+- POST /api/auth/refresh/ — refresh do token
+- POST /api/auth/logout/ — logout (invalida refresh token)
+- GET /api/auth/me/ — informações do usuário autenticado
+- GET /api/auth/confirm-email — confirmação de email via token (redireciona)
+- GET /api/auth/resend-email/ — reenviar email de confirmação
+- POST /api/auth/forgot-password/ — solicitar email para resetar senha
+- POST /api/auth/reset-password/ — resetar senha
+- PATCH /api/auth/me/ — atualizar dados do usuário autenticado
+- POST /api/auth/delete-account/ — solicitar exclusão de conta (envio de email)
+- GET /api/auth/confirm-delete-account — confirmar exclusão de conta via token (redireciona)
+
+Fields (/api/fields/)
+- POST /api/fields/ — criar talhão (field)
+- POST /api/fields/from-file/ — criar talhões a partir de arquivo (upload)
+- GET /api/fields/{fieldId}/ — buscar talhão por ID
+- GET /api/fields/ — listar talhões por farmId (paginado)
+  - Query params: page=0, size=10, farmId (obrigatório)
+- DELETE /api/fields/{fieldId}/ — excluir talhão
+- GET /api/fields/{fieldId}/batches/ — listar batches do talhão (paginado)
+  - Query params: page=0, size=10
+- PATCH /api/fields/{fieldId}/ — atualizar talhão
+
+Owners (/api/owners/)
+- POST /api/owners/ — criar proprietário (owner)
+- GET /api/owners/{ownerId}/ — buscar proprietário por ID
+- PATCH /api/owners/{ownerId}/ — atualizar proprietário
+- DELETE /api/owners/{ownerId}/ — excluir proprietário
+- GET /api/owners/ — listar proprietários do usuário autenticado
+- PUT /api/owners/{ownerId}/transfer/ — transferir proprietário para outro responsável
+  - Ação de negócio: transfer
+- PUT /api/owners/transfer-all/ — transferir TODOS os proprietários para outro responsável
+  - Ação de negócio: transfer-all
+
+Farms (/api/farms/)
+- POST /api/farms/ — criar fazenda
+- PATCH /api/farms/{farmId}/ — atualizar fazenda
+- GET /api/farms/{farmId}/ — buscar fazenda por ID
+- DELETE /api/farms/{farmId}/ — excluir fazenda
+- GET /api/farms/ — listar fazendas do usuário autenticado
+- GET /api/farms/by-owner/{ownerId}/ — listar fazendas por ownerId
+- POST /api/farms/{farmId}/members/ — adicionar membro na fazenda
+- PATCH /api/farms/{farmId}/members/ — alterar papel do membro na fazenda
+- DELETE /api/farms/{farmId}/members/{memberId}/ — remover membro da fazenda
+- GET /api/farms/{farmId}/members/ — listar membros da fazenda
+- GET /api/farms/{farmId}/owner/ — obter proprietário da fazenda
+- GET /api/farms/{farmId}/batches/ — listar batches da fazenda (paginado via Pageable)
+
+Emissions GHG (/api/emissions/)
+- POST /api/emissions/ — criar emissão GHG para um batch
+- PATCH /api/emissions/{emissionId}/ — atualizar emissão GHG
+- DELETE /api/emissions/{emissionId}/ — excluir emissão GHG
+- GET /api/emissions/ — listar emissões por batchId
+  - Query params: batchId (obrigatório)
+
+Analysis (/api/analysis/)
+- POST /api/analysis/ — criar análise (ARVA) para batch/field
+- PATCH /api/analysis/{analysisId}/ — atualizar análise
+- DELETE /api/analysis/{analysisId}/ — excluir análise
+- GET /api/analysis/{id}/ — obter análise por ID
+- GET /api/analysis/mine/ — listar análises do usuário autenticado (paginado, filtros)
+  - Query params: page=0, size=10, fieldId (opcional), analysisType (opcional)
+- GET /api/analysis/ — listar análises por batchId
+  - Query params: batchId (obrigatório)
+- GET /api/analysis/by-field/ — listar análises por fieldId (paginado, filtro por tipo)
+  - Query params: page=0, size=10, fieldId (obrigatório), analysisType (opcional)
