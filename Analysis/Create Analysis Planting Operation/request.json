@@ -1,0 +1,17 @@
+{
+  "batchId": 2,
+  "userResponsibleId": 1,
+  "notes": "Aplicação de defensivo agrícola",
+	"analysisType":"planting_operation",
+  "startDate": "20/08/2004",
+  "endDate": "20/08/2004",
+  "attachments": [
+    "foto1.jpg",
+    "foto2.jpg"
+  ],
+  "unity": "kgs_per_ha",
+	"cultivationType": "milho",
+	"costPerBeg":1.9,
+	"hybridVariation": "variation-01",
+	"biologicals":"biotonico"
+}
