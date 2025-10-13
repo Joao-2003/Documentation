@@ -1,0 +1,10 @@
+{
+  "farmName": "Fazenda Boa Esperança",
+  "location": "Zona Rural - Uberaba, MG",
+  "responsible": "Carlos Souza",
+  "responsiblePhoneNumber": "987654321",
+  "ownerId": 1,
+  "businessEmail": "contato@boaesperanca.com.br",
+  "cpfCnpj": "12.345.678/0001-99",
+  "totalAreaHectares": 250.5
+}
