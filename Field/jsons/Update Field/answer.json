@@ -1,0 +1,25 @@
+{
+	"id": 1,
+	"fieldName": "Talhão Exemplo",
+	"farmId": 1,
+	"farmName": "Fazenda Modelo",
+	"totalAreaHec": 12.5,
+	"coordinates": [
+		{
+			"latitude": -23.55052,
+			"longitude": -46.633308
+		},
+		{
+			"latitude": -23.551,
+			"longitude": -46.634
+		},
+		{
+			"latitude": -23.552,
+			"longitude": -46.632
+		},
+		{
+			"latitude": -23.552,
+			"longitude": -46.632
+		}
+	]
+}
