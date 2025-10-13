@@ -1,0 +1,52 @@
+{
+	"content": [
+		{
+			"id": 1,
+			"collectedBy": "João",
+			"notes": "Irrigação do talhão",
+			"startDate": "29/08/2004",
+			"endDate": "29/08/2004",
+			"createdAt": "13/10/2025 10:45:50",
+			"updatedAt": "13/10/2025 10:45:50",
+			"attachments": [
+				"irrigacao.pdf"
+			],
+			"method": "GOTEJAMENTO",
+			"quantity": 100.5,
+			"unity": "MM_GH",
+			"awdTimes": 2,
+			"drainage": 1.2,
+			"waterSourceType": "POCO",
+			"irrigationCategory": "REPRESAMENTO",
+			"analysisType": "IRRIGATION",
+			"wildlifeFlooded": false,
+			"batchId": 2,
+			"userResponsibleId": 2
+		}
+	],
+	"pageable": {
+		"pageNumber": 0,
+		"pageSize": 10,
+		"sort": {
+			"empty": true,
+			"sorted": false,
+			"unsorted": true
+		},
+		"offset": 0,
+		"paged": true,
+		"unpaged": false
+	},
+	"totalPages": 1,
+	"totalElements": 1,
+	"last": true,
+	"size": 10,
+	"number": 0,
+	"sort": {
+		"empty": true,
+		"sorted": false,
+		"unsorted": true
+	},
+	"numberOfElements": 1,
+	"first": true,
+	"empty": false
+}
