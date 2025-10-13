@@ -1,0 +1,24 @@
+{
+	"farmId":1,
+  "fieldName": "Talhão Exemplo",
+	"code": "TALHAO-AJ3",
+  "totalAreaHec": 12.5,
+  "coordinates": [
+    {
+      "latitude": -23.55052,
+      "longitude": -46.633308
+    },
+    {
+      "latitude": -23.55100,
+      "longitude": -46.634000
+    },
+    {
+      "latitude": -23.55200,
+      "longitude": -46.632000
+    },    
+		{
+      "latitude": -23.55200,
+      "longitude": -46.632000
+    }
+  ]
+}
