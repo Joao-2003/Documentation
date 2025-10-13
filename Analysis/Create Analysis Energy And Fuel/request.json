@@ -1,0 +1,14 @@
+{
+  "batchId": 2,
+  "startDate": "29/08/2004",
+  "endDate": "29/08/2004",
+  "notes": "Consumo de energia e combustível",
+  "attachments": ["energia.pdf"],
+  "analysisType": "ENERGY_AND_FUEL",
+
+  "diesel": 123.45,
+  "gasoline": 67.89,
+  "naturalGas": 50.12,
+  "lpg": 30.0,
+  "electricityKw": 250.5
+}
