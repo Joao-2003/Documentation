@@ -1,0 +1,17 @@
+{
+  "batchId": 2,
+  "startDate": "29/08/2004",
+  "endDate": "29/08/2004",
+  "notes": "Observações sobre conservação",
+  "attachments": ["arquivo1.pdf"],
+  "analysisType": "CONSERVATION_PROGRAM",
+
+  "rccp": true,
+  "cscg": false,
+  "csp": true,
+  "practices": true,
+  "noDeforestation": true,
+  "carbonCredit": false,
+  "otherScope": false,
+  "biodiversity": true
+}
