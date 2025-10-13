@@ -1,0 +1,11 @@
+{
+  "batchId": 2,
+  "startDate": "29/08/2004",
+  "endDate": "29/08/2004",
+	 "collectedBy": "Maria Oliveira",
+  "notes": "Irrigação do talhão",
+  "attachments": "irrigacao.pdf",
+  "analysisType": "crop_corrective_application",
+  "quantity": 150.5,
+  "correctiveType": "CALCARIO_CALCITICO"
+}
