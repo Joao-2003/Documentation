@@ -1,0 +1,11 @@
+{
+  "batchId": 1,
+	"emissionType": "use_of_sold_products",
+  "remoC02Bio": 12,
+  "emiCo2Bio": 12,
+  "sf6": 12,
+  "co2": 12,
+  "n2ho": 12,
+	"ch4":12,
+  "nf3": 12
+}
