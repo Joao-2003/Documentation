@@ -1,0 +1,19 @@
+{
+	"id": 1,
+	"batchName": "Calculando 2025",
+	"createdAt": "10/10/2025 23:33:41",
+	"updatedAt": "10/10/2025 23:35:06",
+	"co2": 192,
+	"ch4": 192,
+	"hfc": 5550204,
+	"pfc": 12621840,
+	"sf6": 144,
+	"nf3": 144,
+	"n2ho": 180,
+	"co2eTotal": 32436528,
+	"biogenicCo2Emissions": 192,
+	"biogenicCo2Removals": 84,
+	"color": "#bcbc68",
+	"userCreatorId": 2,
+	"farmId": 2
+}
