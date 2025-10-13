@@ -1,0 +1,12 @@
+{
+  "batchId": 2,
+  "startDate": "29/08/2004",
+  "endDate": "29/08/2004",
+  "notes": "Preparação do solo",
+  "attachments": ["solo.pdf"],
+  "analysisType": "soil_preparation",
+
+  "depth": 15.0,
+  "implementUsed": "ARADO_DE_DISCO",
+  "tillagePractice": "plantio_direto"
+}
