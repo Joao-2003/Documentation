@@ -1,0 +1,13 @@
+{
+  "batchId": 2,
+  "startDate": "29/08/2004",
+  "endDate": "29/08/2004",
+  "notes": "Agricultura de precisão",
+  "attachments": ["precision.pdf"],
+  "analysisType": "PRECISION_AGRICULTURE",
+
+  "sectionControl": true,
+  "managementSoftware": false,
+  "opticalSensors": true,
+  "autotracAutosteer": false
+}
