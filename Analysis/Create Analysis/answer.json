@@ -1,0 +1,21 @@
+{
+	"id": 1,
+	"collectedBy": null,
+	"notes": null,
+	"startDate": "29/08/2004",
+	"endDate": "30/08/2004",
+	"createdAt": "13/10/2025 11:01:53",
+	"updatedAt": "13/10/2025 11:01:53",
+	"attachments": [],
+	"method": "SUPERFICIE",
+	"quantity": 100.5,
+	"unity": "MM_GH",
+	"awdTimes": 2,
+	"drainage": 10,
+	"waterSourceType": "POCO",
+	"irrigationCategory": "REPRESAMENTO",
+	"analysisType": "IRRIGATION",
+	"wildlifeFlooded": false,
+	"userResponsibleId": 2,
+	"batchId": 2
+}
