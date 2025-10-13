@@ -1,0 +1,15 @@
+{
+	"batchId":2,
+  "fieldId": 3,
+  "startDate": "29/08/2004",
+  "endDate": "30/08/2004",
+  "method": "superficie",
+  "quantity": 100.5,
+  "unity": "mm_gh",
+  "awdTimes": 2,
+  "drainage": 10.0,
+  "waterSourceType": "poco",
+  "irrigationCategory": "represamento",
+  "isWildlifeFlooded": false,
+	"analysisType": "irrigation"
+}
