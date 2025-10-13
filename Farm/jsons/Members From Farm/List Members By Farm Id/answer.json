@@ -1,0 +1,16 @@
+[
+	{
+		"memberId": 4,
+		"username": "amadeus123",
+		"completeName": "Amadeus Neto",
+		"email": "lordamadeus@gmail.com",
+		"role": "RESTRICTED_ROLE"
+	},
+	{
+		"memberId": 3,
+		"username": "fathos812",
+		"completeName": "Amadeus Neto",
+		"email": "fathos812@gmail.com",
+		"role": "MANAGER_ROLE"
+	}
+]
