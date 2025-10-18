@@ -5,7 +5,7 @@
   "notes": "Colheita de milho",
   "attachments": ["colheita.pdf"],
   "analysisType": "HARVEST",
-
+	"unity": "kg_per_ha",
   "season": "2024/2025",
   "cropType": "milho",
   "harvestType": "grao",
