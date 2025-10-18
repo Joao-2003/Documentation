@@ -2,18 +2,21 @@
 	"id": 2,
 	"farmName": "Fazenda Boa Vista",
 	"ownerId": 1,
+	"responsible": "Carlos Souza",
+	"responsiblePhoneNumber": "987654321",
 	"businessEmail": "contato@boavista.com",
 	"cpfCnpj": "12.345.678/0001-90",
 	"totalAreaHectares": 150.5,
-	"createdAt": "13/10/2025 10:35:57",
-	"updatedAt": "13/10/2025 10:37:23",
-	"userManagerName": "fathos812",
+	"location": "Zona Rural - Uberaba, MG",
+	"createdAt": "17/10/2025 17:57:13",
+	"updatedAt": "17/10/2025 17:57:48",
+	"userManagerName": "amadeus123",
 	"managerMembers": [
 		{
-			"memberId": 2,
-			"username": "fathos812",
+			"memberId": 3,
+			"username": "amadeus123",
 			"completeName": "Amadeus Neto",
-			"email": "fathos812@gmail.com",
+			"email": "lordamadeus@gmail.com",
 			"role": "MANAGER_ROLE"
 		}
 	]
