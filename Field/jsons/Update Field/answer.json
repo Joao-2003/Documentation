@@ -1,9 +1,12 @@
 {
-	"id": 1,
-	"fieldName": "Talhão Exemplo",
-	"farmId": 1,
-	"farmName": "Fazenda Modelo",
+	"id": 3,
+	"fieldName": "TALHAO-AJ3",
+	"farmId": 2,
+	"farmName": "Fazenda Boa Vista",
+	"season": "season",
 	"totalAreaHec": 12.5,
+	"currentCulture": "Soja",
+	"previousCulture": "Soja",
 	"coordinates": [
 		{
 			"latitude": -23.55052,
