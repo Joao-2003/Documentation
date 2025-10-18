@@ -1,0 +1,28 @@
+Relatório de validações — Field DTOs
+
+CreateFieldRequest:
+- fieldName: obrigatório; NotBlank; Size(min=2)
+- totalAreaHec: obrigatório; NotNull; Positive (>0)
+- currentCulture: obrigatório; NotBlank; Size(min=3)
+- season: obrigatório; NotBlank; Size(min=3)
+- coordinates: obrigatório; NotNull; Size(min=3) — mínimo 3 itens; sem @Valid na lista
+- farmId: obrigatório; NotNull; Positive (>0)
+
+UpdateFieldRequest:
+- fieldName: opcional; Size(min=2)
+- totalAreaHec: opcional; Positive (>0)
+- season: opcional; Size(min=3)
+- currentCulture: opcional; Size(min=3)
+- coordinates: opcional; Size(min=3) — se enviado, ao menos 3 itens; sem @Valid
+
+CoordinateDto:
+- latitude: Double; sem validação; pode ser null; sem checagem de intervalo
+- longitude: Double; sem validação; pode ser null; sem checagem de intervalo
+
+FieldResponse:
+- DTO de saída; sem validações Bean Validation.
+
+Notas frontend:
+- Create: exigir todos os campos listados como obrigatórios e validar mínimos/positividade.
+- Update: validar somente quando valores forem enviados; não envie "" para campos com mínimo, prefira null.
+- Coordinates: validar localmente latitude ∈ [-90, 90], longitude ∈ [-180, 180]; garantir >= 3 pontos.
