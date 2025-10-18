@@ -1,8 +1,11 @@
 {
   "farmName": "Fazenda Boa Vista",
   "businessEmail": "contato@boavista.com",
+	"responsible": "Carlos Souza",
+	"responsiblePhoneNumber": "987654321",
   "cpfCnpj": "12.345.678/0001-90",
-  "totalAreaHectares": 150.5,
 	"location": "Zona Rural - Uberaba, MG",
-  "responsible": "Carlos Souza"
+
+  "totalAreaHectares": 150.5
 }
+
