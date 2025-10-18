@@ -1,25 +1,28 @@
 {
-	"id": 3,
-	"fieldName": "Talhão Exemplo",
-	"farmId": 2,
-	"farmName": "Fazenda Boa Vista",
-	"totalAreaHec": 12.5,
+	"id": 2,
+	"fieldName": "Talhão 2",
+	"farmId": 1,
+	"farmName": "Fazenda Modelo",
+	"season": null,
+	"totalAreaHec": 70.5,
+	"currentCulture": null,
+	"previousCulture": null,
 	"coordinates": [
 		{
-			"latitude": -23.55052,
-			"longitude": -46.633308
+			"latitude": -17.82,
+			"longitude": -49.31
 		},
 		{
-			"latitude": -23.551,
-			"longitude": -46.634
+			"latitude": -17.82,
+			"longitude": -49.305
 		},
 		{
-			"latitude": -23.552,
-			"longitude": -46.632
+			"latitude": -17.825,
+			"longitude": -49.305
 		},
 		{
-			"latitude": -23.552,
-			"longitude": -46.632
+			"latitude": -17.825,
+			"longitude": -49.31
 		}
 	]
 }
