@@ -1,9 +1,10 @@
 {
-	"id": 3,
-	"batchName": "JI JOE",
-	"createdAt": "13/10/2025 10:49:38",
-	"updatedAt": "13/10/2025 10:54:17",
-	"userCreatorId": 2,
+	"id": 2,
+	"batchName": "Calculando 2025",
+	"note": "Para o fim do mes!",
+	"createdAt": "17/10/2025 18:09:59",
+	"updatedAt": "17/10/2025 18:09:59",
+	"userCreatorId": 1,
 	"farmId": 2,
-	"fieldId": 3
+	"fieldId": 4
 }
