@@ -1,18 +1,16 @@
 {
-	"id": 9,
+	"id": 18,
 	"collectedBy": null,
-	"notes": "Preparação do solo",
-	"startDate": "29/08/2004",
-	"endDate": "29/08/2004",
-	"createdAt": "10/10/2025 23:39:04",
-	"updatedAt": "10/10/2025 23:39:04",
-	"attachments": [
-		"solo.pdf"
-	],
-	"depth": 15,
-	"implementUsed": "ARADO_DE_DISCO",
-	"tillagePractice": "PLANTIO_DIRETO",
+	"notes": "Preparo de solo",
+	"startDate": "21/09/2025",
+	"endDate": "21/09/2025",
+	"createdAt": "17/10/2025 18:18:51",
+	"updatedAt": "17/10/2025 18:18:51",
+	"attachments": [],
+	"depth": 30,
+	"implementUsed": "GRADE_PESADA",
+	"tillagePractice": "CULTIVO_MINIMO",
 	"analysisType": "SOIL_PREPARATION",
-	"userResponsibleId": 2,
+	"userResponsibleId": 1,
 	"batchId": 2
 }
