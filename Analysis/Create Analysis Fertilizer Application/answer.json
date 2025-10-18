@@ -1,11 +1,11 @@
 {
-	"id": 10,
+	"id": 20,
 	"collectedBy": "Joao",
 	"notes": "Aplicação de fertilizante de",
 	"startDate": "29/08/2004",
 	"endDate": "30/08/2004",
-	"createdAt": "10/10/2025 23:39:22",
-	"updatedAt": "10/10/2025 23:39:22",
+	"createdAt": "17/10/2025 18:19:15",
+	"updatedAt": "17/10/2025 18:19:15",
 	"attachments": [
 		"foto1.jpg",
 		"foto2.jpg"
@@ -23,8 +23,8 @@
 	"inhibitor": false,
 	"slowRelease": true,
 	"analysisType": "FERTILIZER_APPLICATION",
-	"variableRate": true,
 	"precisionApplication": false,
-	"userResponsibleId": 2,
+	"variableRate": true,
+	"userResponsibleId": 1,
 	"batchId": 2
 }
