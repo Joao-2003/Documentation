@@ -1,20 +1,53 @@
 [
 	{
-		"id": 2,
-		"farmName": "Fazenda Boa Vista",
+		"id": 1,
+		"farmName": "Fazenda Modelo",
 		"ownerId": 1,
-		"businessEmail": "contato@boavista.com",
-		"cpfCnpj": "12.345.678/0001-90",
-		"totalAreaHectares": 150.5,
-		"createdAt": "13/10/2025 10:35:57",
-		"updatedAt": "13/10/2025 10:37:23",
+		"responsible": null,
+		"responsiblePhoneNumber": null,
+		"businessEmail": "fazenda@gmail.com",
+		"cpfCnpj": "12.345.678/0001-95",
+		"totalAreaHectares": 120.5,
+		"location": null,
+		"createdAt": "17/10/2025 14:45:23",
+		"updatedAt": "17/10/2025 14:45:23",
 		"userManagerName": "fathos812",
 		"managerMembers": [
+			{
+				"memberId": 1,
+				"username": "amadeus123",
+				"completeName": "Amadeus Neto",
+				"email": "lordamadeus@gmail.com",
+				"role": "VIEWER_ROLE"
+			},
 			{
 				"memberId": 2,
 				"username": "fathos812",
 				"completeName": "Amadeus Neto",
 				"email": "fathos812@gmail.com",
+				"role": "MANAGER_ROLE"
+			}
+		]
+	},
+	{
+		"id": 2,
+		"farmName": "Fazenda Boa Vista",
+		"ownerId": 1,
+		"responsible": "Carlos Souza",
+		"responsiblePhoneNumber": "987654321",
+		"businessEmail": "contato@boavista.com",
+		"cpfCnpj": "12.345.678/0001-90",
+		"totalAreaHectares": 150.5,
+		"location": "Zona Rural - Uberaba, MG",
+		"createdAt": "17/10/2025 17:57:13",
+		"updatedAt": "17/10/2025 17:57:48",
+		"userManagerName": "amadeus123",
+		"managerMembers": [
+			{
+				"memberId": 3,
+				"username": "amadeus123",
+				"completeName": "Amadeus Neto",
+				"email": "lordamadeus@gmail.com",
 				"role": "MANAGER_ROLE"
 			}
 		]
