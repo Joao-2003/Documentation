@@ -1,9 +1,12 @@
 {
-	"id": 3,
-	"fieldName": "Talhão Exemplo",
+	"id": 4,
+	"fieldName": "Talhão ",
 	"farmId": 2,
-	"farmName": "Fazenda Boa Esperança",
+	"farmName": "Fazenda Boa Vista",
+	"season": "season",
 	"totalAreaHec": 12.5,
+	"currentCulture": "Soja",
+	"previousCulture": null,
 	"coordinates": [
 		{
 			"latitude": -23.55052,
