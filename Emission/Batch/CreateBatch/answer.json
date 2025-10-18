@@ -1,8 +1,9 @@
 {
 	"id": 1,
 	"batchName": "Calculando 2025",
-	"createdAt": "10/10/2025 23:33:41",
-	"updatedAt": "10/10/2025 23:33:41",
+	"note": "Para o fim do mes!",
+	"createdAt": "17/10/2025 18:01:44",
+	"updatedAt": "17/10/2025 18:01:44",
 	"co2": 0,
 	"ch4": 0,
 	"hfc": 0,
@@ -14,6 +15,6 @@
 	"biogenicCo2Emissions": 0,
 	"biogenicCo2Removals": 0,
 	"color": "#bcbc68",
-	"userCreatorId": 2,
+	"userCreatorId": 1,
 	"farmId": 2
 }
