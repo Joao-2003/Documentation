@@ -1,0 +1,22 @@
+Relatório de validações — Emissions GHG
+
+EmissionGHGRequest (Create):
+- batchId: obrigatório (OnCreate); NotNull; Positive (>0)
+- emissionType: obrigatório (OnCreate); NotNull
+- co2: obrigatório (OnCreate); NotNull; PositiveOrZero (>=0)
+
+Opcionais (se enviados, >=0 via PositiveOrZero):
+- ch4, sf6, nf3, n2o, emiCo2Bio, remoCo2Bio
+- HFCs: hfc23, hfc32, hfc41, hfc125, hfc134, hfc134a, hfc143, hfc143a, hfc152, hfc152a, hfc161, hfc227ea, hfc236cb, hfc236ea, hfc236fa, hfc245ca, hfc245fa, hfc365mfc, hfc4310mee
+- PFCs: pfc, pfc14, pfc116, pfc218, pfc318, pfc3110, pfc412, pfc514, pfc918
+- Outros: trifluorometilPentafluoretoEnxofre, perfluorociclopropano
+
+EmissionGHGUpdateRequest (Update):
+- Todos os campos opcionais; PositiveOrZero (>=0) para cada campo enviado:
+  co2, ch4, sf6, nf3, n2ho, emiCo2Bio, remoC02Bio, hfc, hfc23, hfc32, hfc41, hfc125, hfc134, hfc134a, hfc143, hfc143a, hfc152, hfc152a, hfc161, hfc227ea, hfc236cb, hfc236ea, hfc236fa, hfc245ca, hfc245fa, hfc365mfc, hfc4310mee, pfc, pfc14, pfc116, pfc218, pfc318, pfc3110, pfc412, pfc514, pfc918, trifluorometilPentafluoretoEnxofre, perfluorociclopropano
+
+Observações:
+- Possíveis typos em Update:
+  - n2ho (provável n2o)
+  - remoC02Bio (usa “02” com zero) vs. remoCo2Bio no Create
+- EmissionBatchRequest está comentado no código — não vigente.
