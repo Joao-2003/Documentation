@@ -1,11 +1,11 @@
 {
-	"id": 11,
+	"id": 21,
 	"collectedBy": "Carlos Pereira",
 	"notes": "Aplicação de defensivo agrícola",
 	"startDate": "29/08/2004",
 	"endDate": "30/08/2004",
-	"createdAt": "10/10/2025 23:39:31",
-	"updatedAt": "10/10/2025 23:39:31",
+	"createdAt": "17/10/2025 18:19:30",
+	"updatedAt": "17/10/2025 18:19:30",
 	"attachments": [
 		"foto1.jpg",
 		"foto2.jpg"
@@ -17,9 +17,9 @@
 	"pestControlType": "HERBICIDE",
 	"productName": "Glifosato 480 SL",
 	"analysisType": "CROP_PROTECTION_APPLICATION",
-	"forDiseaseControl": false,
-	"forWeedControl": true,
 	"forPestControl": true,
-	"userResponsibleId": 2,
+	"forWeedControl": true,
+	"forDiseaseControl": false,
+	"userResponsibleId": 1,
 	"batchId": 2
 }
