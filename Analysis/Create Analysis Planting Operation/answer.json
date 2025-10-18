@@ -1,11 +1,11 @@
 {
-	"id": 12,
+	"id": 23,
 	"collectedBy": null,
 	"notes": "Aplicação de defensivo agrícola",
 	"startDate": "20/08/2004",
 	"endDate": "20/08/2004",
-	"createdAt": "10/10/2025 23:39:37",
-	"updatedAt": "10/10/2025 23:39:37",
+	"createdAt": "17/10/2025 18:19:52",
+	"updatedAt": "17/10/2025 18:19:52",
 	"attachments": [
 		"foto1.jpg",
 		"foto2.jpg"
@@ -13,12 +13,12 @@
 	"seedsPerBeg": 0,
 	"costPerBeg": 1.9,
 	"unity": "KGS_PER_HA",
-	"biologicals": [
-		"biotonico"
-	],
+	"brand": "Marca",
+	"plantingRate": 1.2,
+	"biologicals": "biotonico",
 	"cultivationType": "MILHO",
 	"hybridVariation": "variation-01",
 	"analysisType": "PLANTING_OPERATION",
-	"userResponsibleId": 2,
+	"userResponsibleId": 1,
 	"batchId": 2
 }
