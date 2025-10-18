@@ -1,0 +1,31 @@
+Relatório de validações — FarmOwner DTOs
+
+CreateFarmOwnerRequest:
+- name: obrigatório; NotBlank; Size(3–150)
+- cpfCnpj: obrigatório; NotBlank; Pattern (CPF 000.000.000-00 ou CNPJ 00.000.000/0000-00)
+- phone: opcional; Pattern(\d{8,9}) — somente dígitos, 8 ou 9
+- location: obrigatório; NotBlank; Size(min=2)
+- email: obrigatório; NotBlank; Email; Size(min=5)
+- birthDateFoundation: obrigatório; NotNull; Past (formato padrão Jackson, ex. ISO yyyy-MM-dd se não houver config customizada)
+- profileImageUrl: opcional; Size(min=5)
+
+UpdateFarmOwnerRequest:
+- name: opcional; Size(3–150)
+- cpfCnpj: opcional; Pattern (CPF/CNPJ formatado)
+- phone: opcional; Pattern(\d{8,9})
+- location: opcional; Size(min=2)
+- email: opcional; Email; Size(min=5)
+- birthDateFoundation: opcional; Past; JsonFormat dd/MM/yyyy
+- profileImageUrl: opcional; Size(min=5)
+
+TransferUserResponsibleRequest:
+- userResponsibleUserName: sem validações; opcional
+
+DTOs de resposta (sem Bean Validation):
+- FarmOwnerResponseWithoutFarm (@JsonInclude NON_NULL)
+- FarmOwnerResponseWithoutUserResponsible (@JsonInclude NON_NULL)
+
+Notas frontend:
+- Para campos opcionais com Size/Pattern, prefira null a "".
+- cpfCnpj deve vir com pontuação (não apenas dígitos).
+- Datas em Update: dd/MM/yyyy e no passado; em Create: seguir formato padrão Jackson da API.
