@@ -1,7 +1,7 @@
 {
 	"id": 2,
-	"createdAt": "10/10/2025 23:34:09",
-	"updatedAt": "10/10/2025 23:34:09",
+	"createdAt": "17/10/2025 18:03:47",
+	"updatedAt": "17/10/2025 18:03:47",
 	"emissionType": "CAPITAL_GOODS",
 	"co2": 12,
 	"ch4": 12,
@@ -44,6 +44,6 @@
 	"co2eT": 2130732,
 	"totalBiogenicRemoval": 12,
 	"totalCatCO2Biomassa": 12,
-	"userCreatorId": 2,
+	"userCreatorId": 1,
 	"batchId": 1
 }
