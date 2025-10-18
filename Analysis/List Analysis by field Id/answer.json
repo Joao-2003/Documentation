@@ -2,72 +2,47 @@
 	"content": [
 		{
 			"id": 1,
-			"collectedBy": "João",
-			"notes": "Irrigação do talhão",
-			"startDate": "29/08/2004",
-			"endDate": "29/08/2004",
-			"createdAt": "13/10/2025 10:45:50",
-			"updatedAt": "13/10/2025 10:45:50",
-			"attachments": [
-				"irrigacao.pdf"
-			],
-			"method": "GOTEJAMENTO",
-			"quantity": 100.5,
-			"unity": "MM_GH",
-			"awdTimes": 2,
-			"drainage": 1.2,
-			"waterSourceType": "POCO",
-			"irrigationCategory": "REPRESAMENTO",
-			"analysisType": "IRRIGATION",
-			"wildlifeFlooded": false,
-			"batchId": 2,
-			"userResponsibleId": 2
-		},
-		{
-			"id": 2,
 			"collectedBy": null,
 			"notes": null,
 			"startDate": "29/08/2004",
 			"endDate": "30/08/2004",
-			"createdAt": "13/10/2025 10:51:45",
-			"updatedAt": "13/10/2025 10:51:45",
+			"createdAt": "17/10/2025 18:11:12",
+			"updatedAt": "17/10/2025 18:11:12",
 			"attachments": [],
 			"method": "SUPERFICIE",
 			"quantity": 100.5,
 			"unity": "MM_GH",
-			"awdTimes": 2,
 			"drainage": 10,
 			"waterSourceType": "POCO",
 			"irrigationCategory": "REPRESAMENTO",
 			"analysisType": "IRRIGATION",
-			"wildlifeFlooded": false,
-			"batchId": 3,
-			"userResponsibleId": 2
+			"userResponsibleId": 1,
+			"batchId": 2
 		}
 	],
 	"pageable": {
 		"pageNumber": 0,
 		"pageSize": 10,
 		"sort": {
-			"empty": true,
 			"sorted": false,
-			"unsorted": true
+			"unsorted": true,
+			"empty": true
 		},
 		"offset": 0,
 		"paged": true,
 		"unpaged": false
 	},
 	"totalPages": 1,
-	"totalElements": 2,
+	"totalElements": 1,
 	"last": true,
+	"numberOfElements": 1,
 	"size": 10,
 	"number": 0,
 	"sort": {
-		"empty": true,
 		"sorted": false,
-		"unsorted": true
+		"unsorted": true,
+		"empty": true
 	},
-	"numberOfElements": 2,
 	"first": true,
 	"empty": false
 }
