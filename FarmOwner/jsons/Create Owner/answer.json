@@ -1,10 +1,15 @@
 {
 	"id": 3,
-	"userNameResponsible": "fathos812",
+	"userResponsibleId": 1,
+	"userNameResponsible": "amadeus123",
 	"name": "Davi Ferreira",
 	"cpfCnpj": "811.731.281-58",
 	"email": "davi@gmail.com",
 	"birthDateFoundation": "29/08/2004",
-	"location": "Goias",
-	"createdDate": "13/10/2025"
+	"locality": "Goias",
+	"profileImageUrl": "https://example.com/nova-imagem.png",
+	"createdDate": "17/10/2025",
+	"qtyFarms": 0,
+	"farmsTotalAreaHectares": 0,
+	"color": "#808080"
 }
