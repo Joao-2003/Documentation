@@ -1,26 +1,48 @@
 [
 	{
 		"id": 1,
+		"userResponsibleId": 1,
 		"userNameResponsible": "amadeus123",
-		"name": "Empresa AgroTech",
+		"name": "Davi F. Duarte",
 		"cpfCnpj": "12.345.678/0001-99",
-		"email": "contato@agrotech.com",
-		"birthDateFoundation": "15/03/2005",
-		"location": "Campinas, SP",
-		"phone": "987654321",
-		"profileImageUrl": "https://example.com/logoa.png",
-		"createdDate": "13/10/2025"
+		"email": "davi.ferreira@gmail.com",
+		"birthDateFoundation": "15/01/2005",
+		"locality": "Goiânia",
+		"phone": "928877665",
+		"profileImageUrl": "https://example.com/nova-imagem.png",
+		"createdDate": "17/10/2025",
+		"qtyFarms": 0,
+		"farmsTotalAreaHectares": 0,
+		"color": "#808080"
 	},
 	{
 		"id": 2,
-		"userNameResponsible": "fathos812",
-		"name": "Davi F. Duarte",
+		"userResponsibleId": 1,
+		"userNameResponsible": "amadeus123",
+		"name": "Davi Ferreira",
 		"cpfCnpj": "811.731.281-58",
-		"email": "davi.ferreira@gmail.com",
+		"email": "davi@gmail.com",
 		"birthDateFoundation": "29/08/2004",
-		"location": "Goiânia",
-		"phone": "998877665",
+		"locality": "Goias",
 		"profileImageUrl": "https://example.com/nova-imagem.png",
-		"createdDate": "13/10/2025"
+		"createdDate": "17/10/2025",
+		"qtyFarms": 0,
+		"farmsTotalAreaHectares": 0,
+		"color": "#808080"
+	},
+	{
+		"id": 3,
+		"userResponsibleId": 1,
+		"userNameResponsible": "amadeus123",
+		"name": "Davi Ferreira",
+		"cpfCnpj": "811.731.281-58",
+		"email": "davi@gmail.com",
+		"birthDateFoundation": "29/08/2004",
+		"locality": "Goias",
+		"profileImageUrl": "https://example.com/nova-imagem.png",
+		"createdDate": "17/10/2025",
+		"qtyFarms": 0,
+		"farmsTotalAreaHectares": 0,
+		"color": "#808080"
 	}
 ]
