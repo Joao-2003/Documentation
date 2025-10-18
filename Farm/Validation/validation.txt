@@ -1,0 +1,35 @@
+Relatório de validações — Farm DTOs
+
+AddMemberInFarm:
+- username: obrigatório; NotBlank
+- role: obrigatório; NotNull
+
+CreateOrUpdateFarmRequest (Criação — grupo OnCreate):
+- farmName: obrigatório; NotBlank (OnCreate); Size(min=3)
+- location: obrigatório; NotBlank (OnCreate); Size(min=2)
+- responsible: opcional; Size(min=2)
+- responsiblePhoneNumber: obrigatório; NotBlank (OnCreate); Pattern(\d{8,9})
+- ownerId: obrigatório; NotNull (OnCreate); Positive (>0)
+- businessEmail: obrigatório; NotBlank (OnCreate); Email; Size(min=3)
+- cpfCnpj: obrigatório; NotBlank (OnCreate); Pattern (CPF 000.000.000-00 ou CNPJ 00.000.000/0000-00)
+- totalAreaHectares: obrigatório; NotNull (OnCreate); Positive (>0)
+
+CreateOrUpdateFarmRequest (Atualização — sem OnCreate):
+- Nenhum campo é obrigatório; se enviado, validar:
+  - farmName: Size(min=3)
+  - location: Size(min=2)
+  - responsible: Size(min=2)
+  - responsiblePhoneNumber: Pattern(\d{8,9})
+  - ownerId: Positive (>0)
+  - businessEmail: Email; Size(min=3)
+  - cpfCnpj: Pattern (formatado com pontuação)
+  - totalAreaHectares: Positive (>0)
+
+DTOs de resposta (sem validações Bean Validation):
+- FarmMemberResponse, FarmResponse, FarmWithFieldsResponse
+- IFieldResponse: interface marcador
+
+Notas frontend:
+- Em atualização, prefira null a "" para campos opcionais com Size/Pattern.
+- responsiblePhoneNumber: somente dígitos (8 ou 9).
+- cpfCnpj: sempre com pontuação (regex não aceita somente dígitos).
