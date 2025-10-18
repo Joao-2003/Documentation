@@ -1,0 +1,40 @@
+Relatório de validações — User DTOs
+
+UserInfo:
+- totalFarmOwnerByUser (long)
+  - Bean Validation: nenhuma
+  - Jackson: nenhuma
+  - Outras: nenhuma
+  - Implicações: não nulo (primitivo); inteiro
+- totalFarmsByUser (long)
+  - Bean Validation: nenhuma
+  - Jackson: nenhuma
+  - Outras: nenhuma
+  - Implicações: não nulo (primitivo); inteiro
+
+UserSearchDTO:
+- id (Long)
+  - Bean Validation: nenhuma
+  - Jackson: nenhuma
+  - Outras: nenhuma
+  - Implicações: pode ser null (wrapper)
+- username (String)
+  - Bean Validation: nenhuma
+  - Jackson: nenhuma
+  - Outras: nenhuma
+  - Implicações: pode ser null
+- name (String)
+  - Bean Validation: nenhuma
+  - Jackson: nenhuma
+  - Outras: nenhuma
+  - Implicações: pode ser null
+- email (String)
+  - Bean Validation: nenhuma
+  - Jackson: nenhuma
+  - Outras: nenhuma
+  - Implicações: pode ser null; sem validação de formato
+- imageProfileUrl (String)
+  - Bean Validation: nenhuma
+  - Jackson: nenhuma
+  - Outras: nenhuma
+  - Implicações: pode ser null; sem validação de URL
