@@ -1,0 +1,92 @@
+Relatório de validações — Analysis ARVA
+
+Base (DataAnalysisBaseRequest):
+- batchId: NotNull (OnCreate); Positive (>0)
+- notes: Size(min=3)
+- startDate: NotNull (OnCreate); PastOrPresent; JsonFormat dd/MM/yyyy
+- endDate: PastOrPresent; JsonFormat dd/MM/yyyy
+- attachments: sem validação
+- analysisType: NotNull (OnCreate)
+- collectedBy: Size(min=2)
+
+ConservationProgramRequest:
+- baseRequest: @Valid
+- rccp, cscg, csp, practices, noDeforestation, carbonCredit, otherScope, biodiversity: opcionais (NotNull comentados)
+
+CoverCroppingRequest:
+- baseRequest: @Valid
+- cropType: NotNull (OnCreate)
+- coverCroppingFamily: opcional
+- isInterspersed: opcional
+
+CropCorrectiveApplicationRequest:
+- baseRequest: @Valid
+- correctiveType: opcional
+- quantity: PositiveOrZero (>=0)
+
+CropProtectionApplicationRequest:
+- baseRequest: @Valid
+- unity: NotNull (OnCreate)
+- productName: opcional
+- rate: PositiveOrZero (>=0)
+- cost: PositiveOrZero (>=0)
+- pestControlType, applicationMethod, isForPestControl, isForDiseaseControl, isForWeedControl: opcionais
+
+EnergyAndFuelRequest:
+- baseRequest: @Valid
+- diesel, gasoline, naturalGas, lpg, electricityKw: Min(0) (>=0)
+
+FertilizerApplicationRequest:
+- baseRequest: @Valid
+- rate: PositiveOrZero (>=0)
+- cost: sem validação (anotação comentada)
+- unity, productName, applicationMethod, hasFertilityPlan, isPrecisionApplication, isVariableRate: opcionais
+- n, p, k, s: PositiveOrZero (>=0)
+- inhibitor, slowRelease: opcionais
+
+HarvestRequest:
+- baseRequest: @Valid
+- cropType, harvestType, unity: opcionais
+- residueRemovalCount: PositiveOrZero (>=0) (int)
+- residueBurning: boolean (sem validação)
+- yield: Positive (>0) (float)
+
+IrrigationAnalysisRequest:
+- baseRequest: @Valid
+- method, unity, waterSourceType, irrigationCategory: opcionais
+- quantity: PositiveOrZero (>=0) (float)
+- drainage: PositiveOrZero (>=0) (float)
+
+ManagementGrazingRequest:
+- baseRequest: @Valid
+- stockingRate: Positive (>0) (float)
+- animalType: opcional
+
+PlantingOperationRequest:
+- baseRequest: @Valid
+- seedsPerBeg: PositiveOrZero (>=0) (int)
+- costPerBeg: sem validação
+- unity: opcional
+- brand: opcional
+- plantingRate: sem validação
+- cultivationType: opcional
+- hybridVariation: opcional
+- biologicals: opcional
+
+PrecisionAgricultureRequest:
+- baseRequest: @Valid
+- sectionControl, managementSoftware, opticalSensors, autotracAutosteer: opcionais
+
+SoilPreparationRequest:
+- baseRequest: @Valid
+- depth: Positive (>0) (Float)
+- implementUsed, tillagePractice: opcionais
+
+SoilSampleAnalysisRequest:
+- baseRequest: @Valid
+- soilSampleType: NotNull (OnCreate)
+
+Notas:
+- Em criação (OnCreate), sempre exigir baseRequest: batchId (>0), startDate (dd/MM/yyyy e passado/presente), analysisType.
+- Tipos primitivos com @Positive (ex.: yield, stockingRate) não aceitam 0 — efetivamente obrigatórios com valor > 0.
+- Muitos campos @NotNull específicos estão comentados; atualmente são opcionais no backend.
