@@ -1,11 +1,11 @@
 {
-	"id": 4,
+	"id": 6,
 	"collectedBy": null,
 	"notes": "Plantio de cobertura",
 	"startDate": "29/08/2004",
 	"endDate": "30/08/2004",
-	"createdAt": "10/10/2025 23:38:26",
-	"updatedAt": "10/10/2025 23:38:26",
+	"createdAt": "17/10/2025 18:15:18",
+	"updatedAt": "17/10/2025 18:15:18",
 	"attachments": [
 		"cobertura.pdf"
 	],
@@ -13,6 +13,6 @@
 	"coverCroppingFamily": "GRAMINEAS",
 	"isInterspersed": true,
 	"analysisType": "COVER_CROPPING",
-	"userResponsibleId": 2,
+	"userResponsibleId": 1,
 	"batchId": 2
 }
