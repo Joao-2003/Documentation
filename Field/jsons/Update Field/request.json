@@ -1,8 +1,8 @@
 {
-	"farmId":1,
-  "fieldName": "Talhão Exemplo",
-	"code": "TALHAO-AJ3",
+  "fieldName": "TALHAO-AJ3",
   "totalAreaHec": 12.5,
+	"currentCulture": "Soja",
+	"season": "season",
   "coordinates": [
     {
       "latitude": -23.55052,
@@ -22,3 +22,4 @@
     }
   ]
 }
+
