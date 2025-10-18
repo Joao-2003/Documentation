@@ -4,9 +4,9 @@
 		"pageNumber": 0,
 		"pageSize": 20,
 		"sort": {
-			"empty": true,
 			"sorted": false,
-			"unsorted": true
+			"unsorted": true,
+			"empty": true
 		},
 		"offset": 0,
 		"paged": true,
@@ -15,14 +15,14 @@
 	"totalPages": 0,
 	"totalElements": 0,
 	"last": true,
+	"numberOfElements": 0,
 	"size": 20,
 	"number": 0,
 	"sort": {
-		"empty": true,
 		"sorted": false,
-		"unsorted": true
+		"unsorted": true,
+		"empty": true
 	},
-	"numberOfElements": 0,
 	"first": true,
 	"empty": true
 }
