@@ -1,17 +1,17 @@
 {
-	"id": 2,
+	"id": 4,
 	"collectedBy": "Maria Oliveira",
 	"notes": "Irrigação do talhão",
 	"startDate": "29/08/2004",
 	"endDate": "29/08/2004",
-	"createdAt": "10/10/2025 23:38:12",
-	"updatedAt": "10/10/2025 23:38:12",
+	"createdAt": "17/10/2025 18:14:08",
+	"updatedAt": "17/10/2025 18:14:08",
 	"attachments": [
 		"irrigacao.pdf"
 	],
 	"quantity": 150.5,
 	"correctiveType": "CALCARIO_CALCITICO",
 	"analysisType": "CROP_CORRECTIVE_APPLICATION",
-	"userResponsibleId": 2,
+	"userResponsibleId": 1,
 	"batchId": 2
 }
