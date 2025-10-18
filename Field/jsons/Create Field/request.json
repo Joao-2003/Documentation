@@ -1,7 +1,9 @@
 {
-	"farmId":2,
-  "fieldName": "Talhão Exemplo",
+	"farmId":1,
+  "fieldName": "Talhão ",
   "totalAreaHec": 12.5,
+	"currentCulture":"Soja",
+	"season":"season",
   "coordinates": [
     {
       "latitude": -23.55052,
