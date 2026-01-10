@@ -15,11 +15,12 @@
             background: #e5e5e5; 
             -webkit-print-color-adjust: exact; 
             color: #1f2937;
+            margin: 0; /* Garante que não haja margens padrão atrapalhando a impressão */
         }
         
         .a4-page {
             width: 210mm;
-            min-height: 297mm;
+            height: 297mm; /* Altura fixa para simular A4 na tela */
             padding: 15mm;
             margin: 20px auto;
             background: white;
@@ -28,6 +29,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden; /* Evita que conteúdo estoure na tela */
+            box-sizing: border-box; /* Garante que padding conte na largura total */
         }
 
         /* Classes utilitárias RV Carbon */
@@ -36,15 +38,24 @@
         .border-rv-green { border-color: #059669; }
 
         @media print {
-            body { background: white; margin: 0; }
+            @page {
+                size: A4;
+                margin: 0; /* Remove margens do navegador */
+            }
+            body { 
+                background: white; 
+                margin: 0; 
+                padding: 0;
+            }
             .a4-page { 
                 margin: 0; 
                 box-shadow: none; 
-                width: 100%; 
-                height: auto; /* Altura automática para impressão */
-                min-height: 297mm;
+                width: 210mm;
+                height: 297mm; /* Força altura exata A4 */
                 page-break-after: always; /* Força quebra após cada div de página */
-                padding: 15mm;
+                page-break-inside: avoid;
+                padding: 12mm; /* Margem interna ligeiramente menor para segurança na impressão */
+                overflow: hidden; /* Corta qualquer excesso que geraria página extra */
             }
             .a4-page:last-child {
                 page-break-after: auto;
@@ -67,7 +78,7 @@
     <div class="a4-page">
         
         <!-- Cabeçalho -->
-        <header class="flex justify-between items-end border-b-4 border-emerald-600 pb-4 mb-8">
+        <header class="flex justify-between items-end border-b-4 border-emerald-600 pb-3 mb-6">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 uppercase tracking-tight leading-none">Relatório de Emissões</h1>
                 <p class="text-emerald-700 font-semibold text-lg mt-1">GHG Protocol - Escopo 3</p>
@@ -79,21 +90,21 @@
         </header>
 
         <!-- Informações do Proprietário / Batch -->
-        <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 mb-8 shadow-sm">
-            <div class="grid grid-cols-2 gap-x-8 gap-y-4">
+        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 mb-6 shadow-sm">
+            <div class="grid grid-cols-2 gap-x-8 gap-y-3">
                 <!-- Coluna 1 -->
                 <div>
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Proprietário / Cliente</p>
-                    <p class="text-xl font-bold text-gray-800 leading-tight" id="ownerName">Carregando...</p>
+                    <p class="text-lg font-bold text-gray-800 leading-tight" id="ownerName">Carregando...</p>
                     
-                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5 mt-4">Propriedade</p>
-                    <p class="text-lg font-semibold text-gray-700 leading-tight" id="propertyName">Carregando...</p>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5 mt-3">Propriedade</p>
+                    <p class="text-base font-semibold text-gray-700 leading-tight" id="propertyName">Carregando...</p>
                 </div>
                 <!-- Coluna 2 -->
                 <div class="text-right border-l border-gray-200 pl-6">
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Batch de Análise</p>
-                    <p class="text-lg font-bold text-gray-800" id="batchName">Carregando...</p>
-                    <p class="text-sm text-gray-500 italic mb-3" id="batchNote">...</p>
+                    <p class="text-base font-bold text-gray-800" id="batchName">Carregando...</p>
+                    <p class="text-sm text-gray-500 italic mb-2" id="batchNote">...</p>
                     
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Período de Referência</p>
                     <p class="text-sm font-medium text-gray-800" id="dateRange">--/--/---- a --/--/----</p>
@@ -102,35 +113,35 @@
         </div>
 
         <!-- Conteúdo Principal Pág 1 -->
-        <div class="flex-grow grid grid-cols-12 gap-8">
+        <div class="flex-grow grid grid-cols-12 gap-6">
             
             <!-- Coluna Esquerda: Gráficos (Ocupa 7 colunas) -->
-            <div class="col-span-7 flex flex-col gap-8">
+            <div class="col-span-7 flex flex-col gap-5">
                 
                 <!-- KPIs Biogênicos -->
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="p-5 bg-white border border-emerald-100 rounded-lg shadow-sm">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="p-4 bg-white border border-emerald-100 rounded-lg shadow-sm">
                         <div class="text-[10px] text-gray-500 uppercase font-bold mb-1">CO2 Biogênico (Emissão)</div>
-                        <div class="text-2xl font-bold text-gray-700"><span id="bioEmission">0</span> <span class="text-xs font-normal text-gray-400">t</span></div>
+                        <div class="text-xl font-bold text-gray-700"><span id="bioEmission">0</span> <span class="text-xs font-normal text-gray-400">t</span></div>
                     </div>
-                    <div class="p-5 bg-white border border-emerald-100 rounded-lg shadow-sm">
+                    <div class="p-4 bg-white border border-emerald-100 rounded-lg shadow-sm">
                         <div class="text-[10px] text-gray-500 uppercase font-bold mb-1">CO2 Biogênico (Remoção)</div>
-                        <div class="text-2xl font-bold text-emerald-600"><span id="bioRemoval">0</span> <span class="text-xs font-normal text-gray-400">t</span></div>
+                        <div class="text-xl font-bold text-emerald-600"><span id="bioRemoval">0</span> <span class="text-xs font-normal text-gray-400">t</span></div>
                     </div>
                 </div>
 
-                <!-- Gráfico Biogênico (Agora posicionado acima do Donut) -->
-                <div class="border border-gray-100 rounded-lg p-5 bg-white shadow-sm h-48">
+                <!-- Gráfico Biogênico -->
+                <div class="border border-gray-100 rounded-lg p-4 bg-white shadow-sm h-40">
                     <h3 class="text-sm font-bold text-gray-800 mb-2 border-l-4 border-yellow-500 pl-2">Balanço Biogênico</h3>
-                    <div class="h-32">
+                    <div class="h-24">
                         <canvas id="bioChart"></canvas>
                     </div>
                 </div>
 
-                <!-- Gráfico de Donut (Maior e no final) -->
-                <div class="border border-gray-100 rounded-lg p-5 bg-white shadow-sm flex-grow min-h-[250px]">
-                    <h3 class="text-sm font-bold text-gray-800 mb-4 border-l-4 border-emerald-500 pl-2">Participação Relativa (Top 5)</h3>
-                    <div class="h-full max-h-[280px]">
+                <!-- Gráfico de Donut -->
+                <div class="border border-gray-100 rounded-lg p-4 bg-white shadow-sm flex-grow relative">
+                    <h3 class="text-sm font-bold text-gray-800 mb-2 border-l-4 border-emerald-500 pl-2">Participação Relativa (Top 5)</h3>
+                    <div class="absolute inset-x-4 bottom-4 top-10">
                         <canvas id="donutChart"></canvas>
                     </div>
                 </div>
@@ -139,9 +150,9 @@
 
             <!-- Coluna Direita: Tabela de Gases (Ocupa 5 colunas) -->
             <div class="col-span-5 flex flex-col">
-                <div class="bg-gray-900 text-white rounded-t-lg p-4 text-center">
+                <div class="bg-gray-900 text-white rounded-t-lg p-3 text-center">
                     <p class="text-xs font-bold uppercase tracking-widest opacity-80">Emissões Totais</p>
-                    <p class="text-3xl font-bold mt-2" id="totalCo2eHeader">0</p>
+                    <p class="text-2xl font-bold mt-1" id="totalCo2eHeader">0</p>
                     <p class="text-[10px] opacity-60 mt-1">tCO2e (Toneladas Métricas)</p>
                 </div>
                 
@@ -149,8 +160,8 @@
                     <table class="w-full text-sm">
                         <thead>
                             <tr class="bg-emerald-50 text-emerald-800 border-b border-emerald-100">
-                                <th class="py-3 px-4 text-left text-xs font-bold uppercase">Gás</th>
-                                <th class="py-3 px-4 text-right text-xs font-bold uppercase">Quant. (t)</th>
+                                <th class="py-2 px-3 text-left text-xs font-bold uppercase">Gás</th>
+                                <th class="py-2 px-3 text-right text-xs font-bold uppercase">Quant. (t)</th>
                             </tr>
                         </thead>
                         <tbody id="gasTableBody" class="divide-y divide-gray-100 text-gray-700">
@@ -159,15 +170,15 @@
                     </table>
                 </div>
 
-                <!-- Nota explicativa (Reintegrada) -->
-                <div class="mt-4 p-3 bg-blue-50 border border-blue-100 rounded text-[10px] text-blue-800 leading-relaxed shadow-sm">
+                <!-- Nota explicativa -->
+                <div class="mt-3 p-3 bg-blue-50 border border-blue-100 rounded text-[10px] text-blue-800 leading-relaxed shadow-sm">
                     <strong>Nota Técnica:</strong> A tabela acima detalha a composição dos gases do efeito estufa convertidos ou apresentados em suas unidades originais. O CO2e representa o impacto consolidado.
                 </div>
             </div>
         </div>
         
         <!-- Footer Pág 1 -->
-        <div class="mt-8 pt-4 border-t border-gray-100 text-[10px] text-gray-400 flex justify-between uppercase">
+        <div class="mt-4 pt-2 border-t border-gray-100 text-[10px] text-gray-400 flex justify-between uppercase">
             <span>Página 1 de 2</span>
             <span>RV Carbon</span>
         </div>
@@ -177,23 +188,23 @@
     <div class="a4-page">
         
         <!-- Cabeçalho Simplificado Pág 2 -->
-        <div class="flex justify-between items-center border-b border-gray-200 pb-2 mb-8 opacity-60">
+        <div class="flex justify-between items-center border-b border-gray-200 pb-2 mb-6 opacity-60">
             <h2 class="text-sm font-bold text-gray-500 uppercase">Detalhamento Técnico</h2>
             <span class="text-xs text-gray-400">Continuação</span>
         </div>
 
         <!-- Gráfico de Categorias (Grande) -->
         <div class="flex-grow flex flex-col">
-            <h3 class="text-lg font-bold text-gray-800 mb-6 border-l-4 border-emerald-500 pl-3">Detalhamento por Categoria (tCO2e)</h3>
+            <h3 class="text-lg font-bold text-gray-800 mb-4 border-l-4 border-emerald-500 pl-3">Detalhamento por Categoria (tCO2e)</h3>
             
-            <!-- Container bem alto para o gráfico -->
-            <div class="flex-grow w-full bg-white border border-gray-100 rounded-lg p-4 shadow-sm min-h-[500px]">
+            <!-- Container do gráfico -->
+            <div class="flex-grow w-full bg-white border border-gray-100 rounded-lg p-4 shadow-sm relative">
                 <canvas id="barChart"></canvas>
             </div>
         </div>
 
         <!-- Seção de Texto Institucional -->
-        <div class="mt-8 pt-4 border-t border-gray-300">
+        <div class="mt-6 pt-4 border-t border-gray-300">
             <h4 class="text-[10px] font-bold text-gray-600 mb-2 uppercase tracking-wide">Sobre o Programa Brasileiro GHG Protocol</h4>
             <div class="grid grid-cols-12 gap-4">
                 <div class="col-span-12 text-[10px] text-gray-500 leading-relaxed text-justify">
@@ -209,7 +220,7 @@
         </div>
 
         <!-- Rodapé Final -->
-        <footer class="mt-6 pt-2 border-t border-gray-100 text-[9px] text-gray-400 flex justify-between uppercase font-semibold tracking-wide">
+        <footer class="mt-4 pt-2 border-t border-gray-100 text-[9px] text-gray-400 flex justify-between uppercase font-semibold tracking-wide">
             <div>
                 Gerado por: <span id="creatorUsername">Sistema</span>
             </div>
@@ -310,8 +321,8 @@
             const isBold = gas.bold ? "font-bold text-gray-900 bg-gray-50" : "";
             const row = `
                 <tr class="${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} ${isBold}">
-                    <td class="py-3 px-4 text-left font-medium">${gas.label}</td>
-                    <td class="py-3 px-4 text-right font-mono">${formatNumber(gas.value)}</td>
+                    <td class="py-2 px-3 text-left font-medium">${gas.label}</td>
+                    <td class="py-2 px-3 text-right font-mono">${formatNumber(gas.value)}</td>
                 </tr>
             `;
             gasTbody.innerHTML += row;
@@ -342,6 +353,9 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    padding: { bottom: 10 } // Espaço extra para não cortar
+                },
                 plugins: {
                     legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10, family: 'Inter' } } }
                 }
@@ -382,6 +396,13 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    padding: { 
+                        left: 20, // Garante que a primeira letra não corte
+                        right: 20,
+                        bottom: 10 
+                    }
+                },
                 plugins: {
                     legend: { display: false }
                 },
@@ -400,9 +421,6 @@
                         beginAtZero: true,
                         grid: { borderDash: [2, 4], color: '#f3f4f6' }
                     }
-                },
-                layout: {
-                    padding: { bottom: 10 }
                 }
             }
         });
