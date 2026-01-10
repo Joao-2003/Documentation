@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RV Carbon - Relatório Moderno</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f8fafc; color: #334155; }
+        .a4-page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 20px auto;
+            background: #fff;
+            padding: 0; /* Full bleed layout handling inside */
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .header-bg { background: linear-gradient(135deg, #064e3b 0%, #059669 100%); }
+        @media print {
+            body { background: none; }
+            .a4-page { margin: 0; box-shadow: none; width: 100%; height: auto; }
+            .no-print { display: none; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print fixed top-4 right-4 z-50">
+        <button onclick="window.print()" class="bg-black text-white px-4 py-2 rounded-full font-bold hover:bg-gray-800 transition">Imprimir PDF</button>
+    </div>
+
+    <div class="a4-page flex flex-col">
+        
+        <!-- Header Moderno com Fundo Escuro -->
+        <div class="header-bg text-white p-8 pb-12">
+            <div class="flex justify-between items-start">
+                <div>
+                    <div class="bg-white/20 inline-block px-2 py-1 rounded text-xs font-bold mb-2 tracking-wider">GHG PROTOCOL - ESCOPO 3</div>
+                    <h1 class="text-4xl font-bold mb-1">Relatório de Emissões</h1>
+                    <p class="opacity-80 text-sm">Batch: <span id="batchName">Calculando 2025</span></p>
+                </div>
+                <div class="text-right">
+                    <h2 class="text-2xl font-bold tracking-tight">RV Carbon</h2>
+                    <p class="text-xs opacity-70 mt-1">Sustentabilidade & Dados</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal sobrepondo o Header -->
+        <div class="px-8 -mt-8 flex-grow">
+            
+            <!-- Cards Flutuantes -->
+            <div class="grid grid-cols-3 gap-4 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-emerald-500">
+                    <p class="text-xs text-gray-400 font-bold uppercase">Total CO2e</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1" id="totalCo2e">4,261,464</h3>
+                    <p class="text-[10px] text-gray-400 mt-2">toneladas métricas</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-yellow-500">
+                    <p class="text-xs text-gray-400 font-bold uppercase">Emissão Biogênica</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1" id="bioEmission">24.0</h3>
+                    <p class="text-[10px] text-gray-400 mt-2">toneladas métricas</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500">
+                    <p class="text-xs text-gray-400 font-bold uppercase">Remoção Biogênica</p>
+                    <h3 class="text-2xl font-bold text-gray-800 mt-1" id="bioRemoval">24.0</h3>
+                    <p class="text-[10px] text-gray-400 mt-2">toneladas métricas</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-12 gap-8 mb-8">
+                <!-- Coluna Esquerda: Gráficos -->
+                <div class="col-span-8 space-y-8">
+                    
+                    <!-- Gráfico Principal -->
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Share de Emissões (Top 5 Categorias)
+                        </h4>
+                        <div class="bg-white p-4 rounded-lg border border-gray-100 h-64">
+                            <canvas id="mainChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico Secundário -->
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Distribuição Completa (Escopo 3)
+                        </h4>
+                        <div class="bg-white p-4 rounded-lg border border-gray-100 h-64">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Coluna Direita: Dados Detalhados -->
+                <div class="col-span-4 flex flex-col gap-6">
+                    
+                    <!-- Tabela Resumo Gases -->
+                    <div class="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                        <h4 class="text-xs font-bold text-gray-500 uppercase mb-4 border-b pb-2">Gases (t)</h4>
+                        <div class="space-y-3 text-sm" id="gasList">
+                            <!-- Inserido via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Comparativo Bio Pequeno -->
+                    <div class="bg-gray-50 rounded-xl p-5 border border-gray-100 flex-grow">
+                        <h4 class="text-xs font-bold text-gray-500 uppercase mb-2">Balanço Biogênico</h4>
+                        <div class="h-40">
+                            <canvas id="bioChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-100 px-8 py-4 text-[10px] text-gray-500 flex justify-between items-center">
+            <div>
+                <span class="font-bold">Nota:</span> <span id="noteText">...</span>
+            </div>
+            <div>
+                ID: <span id="batchId"></span> | Criado por: <span id="creator"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Dados (Mesma lógica, visualização diferente) -->
+    <script>
+        const data = {
+            batchName: "Calculando 2025", note: "Para o fim do mes!", id: 52,
+            cozeTotal: 4261464.0, biogeniccozEmissions: 24.0, biogenicCo2Removals: 500.0,
+            gases: { co2: 24, ch4: 24, n2o: 24, hfc: 1009128, pfc: 2294880, sf6: 24, nf3: 24.8 },
+            creator: "amadeus123"
+        };
+
+        // Categorias Mockadas (Escopo 3)
+        const categories = [
+            { name: "Bens e serviços", value: 1200000 },
+            { name: "Bens de capital", value: 500000 },
+            { name: "Energia não E1/E2", value: 300000 },
+            { name: "Transporte Upstream", value: 800000 },
+            { name: "Resíduos", value: 50000 },
+            { name: "Viagens Negócios", value: 20000 },
+            { name: "Deslocamento", value: 15000 },
+            { name: "Arrendados Up", value: 100000 },
+            { name: "Transporte Down", value: 600000 },
+            { name: "Proc. Vendidos", value: 400000 },
+            { name: "Uso Vendidos", value: 200000 },
+            { name: "Fim de Vida", value: 50000 },
+            { name: "Arrendados Down", value: 10000 },
+            { name: "Franquias", value: 5000 },
+            { name: "Investimentos", value: 11464 }
+        ];
+
+        // Populando Textos
+        document.getElementById('batchName').innerText = data.batchName;
+        document.getElementById('totalCo2e').innerText = data.cozeTotal.toLocaleString('pt-BR');
+        document.getElementById('bioEmission').innerText = data.biogeniccozEmissions.toLocaleString('pt-BR');
+        document.getElementById('bioRemoval').innerText = data.biogenicCo2Removals.toLocaleString('pt-BR');
+        document.getElementById('noteText').innerText = data.note;
+        document.getElementById('batchId').innerText = data.id;
+        document.getElementById('creator').innerText = data.creator;
+
+        // Lista de Gases Lateral
+        const gasContainer = document.getElementById('gasList');
+        Object.entries(data.gases).forEach(([key, value]) => {
+            if(value > 0) {
+                gasContainer.innerHTML += `
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold text-gray-700 uppercase">${key}</span>
+                        <span class="font-mono text-gray-500">${value.toLocaleString('pt-BR')}</span>
+                    </div>
+                `;
+            }
+        });
+
+        // Configuração de Cores
+        Chart.defaults.font.family = 'Poppins';
+        Chart.defaults.color = '#64748b';
+
+        // 1. Donut Chart (Main)
+        const sorted = [...categories].sort((a,b) => b.value - a.value);
+        const top5 = sorted.slice(0,5);
+        new Chart(document.getElementById('mainChart'), {
+            type: 'doughnut',
+            data: {
+                labels: top5.map(c => c.name),
+                datasets: [{
+                    data: top5.map(c => c.value),
+                    backgroundColor: ['#059669', '#10b981', '#34d399', '#6ee7b7', '#a7f3d0'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                cutout: '70%',
+                plugins: { legend: { position: 'left', labels: { boxWidth: 8, usePointStyle: true } } }
+            }
+        });
+
+        // 2. Bar Chart (Detalhado)
+        new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: categories.map(c => c.name.substring(0,10) + '..'),
+                datasets: [{
+                    label: 'tCO2e',
+                    data: categories.map(c => c.value),
+                    backgroundColor: '#e2e8f0',
+                    hoverBackgroundColor: '#059669',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { 
+                    x: { grid: { display: false } }, 
+                    y: { grid: { borderDash: [2, 2] } } 
+                }
+            }
+        });
+
+        // 3. Bio Chart (Minimalist Bar)
+        new Chart(document.getElementById('bioChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Emi', 'Rem'],
+                datasets: [{
+                    data: [data.biogeniccozEmissions, data.biogenicCo2Removals],
+                    backgroundColor: ['#f59e0b', '#3b82f6'],
+                    borderRadius: 10,
+                    barThickness: 20
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: { x: { display: false }, y: { display: true } }
+            }
+        });
+    </script>
+</body>
+</html>
