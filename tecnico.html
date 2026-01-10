@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RV Carbon - Relatório Técnico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background: #555; }
+        .a4-page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 20px auto;
+            background: white;
+            padding: 10mm;
+            position: relative;
+        }
+        
+        /* Estilo Técnico de Tabela */
+        .tech-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+        .tech-table th { background: #000; color: #fff; text-transform: uppercase; padding: 4px; text-align: left; }
+        .tech-table td { border: 1px solid #ccc; padding: 4px; }
+        .tech-table tr:nth-child(even) { background: #f3f3f3; }
+        
+        .section-title { 
+            border-bottom: 2px solid black; 
+            font-size: 14px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            margin-bottom: 10px; 
+            padding-bottom: 2px;
+            margin-top: 20px;
+        }
+
+        @media print {
+            body { background: white; }
+            .a4-page { margin: 0; width: 100%; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="no-print fixed top-4 right-4 z-50">
+        <button onclick="window.print()" class="bg-white border-2 border-black px-4 py-1 font-bold uppercase text-xs hover:bg-black hover:text-white">Imprimir Dados</button>
+    </div>
+
+    <div class="a4-page">
+        
+        <!-- Header Técnico -->
+        <div class="border-2 border-black p-4 mb-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold uppercase">Relatório de Inventário GHG</h1>
+                <p class="text-xs">Protocolo: GHG Escopo 3 | Versão: 2.1 | Ref: <span id="batchRef">...</span></p>
+            </div>
+            <div class="text-right">
+                <div class="font-bold text-lg">RV CARBON</div>
+                <div class="text-xs">Relatório Técnico Automático</div>
+            </div>
+        </div>
+
+        <!-- Dados do Batch (Grid) -->
+        <div class="grid grid-cols-4 gap-0 border border-black mb-6 text-xs">
+            <div class="p-2 border-r border-black font-bold bg-gray-100">Batch Name</div>
+            <div class="p-2 border-r border-black" id="t_name">...</div>
+            <div class="p-2 border-r border-black font-bold bg-gray-100">Data Início</div>
+            <div class="p-2" id="t_start">...</div>
+
+            <div class="p-2 border-r border-black border-t border-black font-bold bg-gray-100">Criado Por</div>
+            <div class="p-2 border-r border-black border-t border-black" id="t_user">...</div>
+            <div class="p-2 border-r border-black border-t border-black font-bold bg-gray-100">Data Fim</div>
+            <div class="p-2 border-t border-black" id="t_end">...</div>
+        </div>
+
+        <!-- Seção 1: Totais Consolidados -->
+        <div class="grid grid-cols-2 gap-8">
+            <div>
+                <div class="section-title">01. Consolidação de Gases (Ton. Métricas)</div>
+                <table class="tech-table">
+                    <thead>
+                        <tr><th>Gás</th><th class="text-right">Quantidade</th></tr>
+                    </thead>
+                    <tbody id="gasTable">
+                        <!-- JS -->
+                    </tbody>
+                    <tfoot>
+                        <tr class="font-bold bg-black text-white">
+                            <td class="border-black">TOTAL CO2e</td>
+                            <td class="border-black text-right" id="t_total">...</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="section-title">02. Dados Biogênicos</div>
+                <table class="tech-table">
+                    <tr><td>Emissão Biogênica</td><td class="text-right font-bold" id="t_bio_e">...</td></tr>
+                    <tr><td>Remoção Biogênica</td><td class="text-right font-bold text-green-700" id="t_bio_r">...</td></tr>
+                </table>
+            </div>
+
+            <div>
+                <div class="section-title">03. Gráfico Comparativo (Gases)</div>
+                <!-- Gráfico de barras simples para comparar HFC vs PFC vs CO2 -->
+                <div class="h-48 border border-gray-300 p-2">
+                    <canvas id="gasChart"></canvas>
+                </div>
+                
+                <div class="section-title">04. Share Categorias</div>
+                <div class="h-48 border border-gray-300 p-2">
+                    <canvas id="shareChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção 2: Detalhamento Categorias -->
+        <div class="section-title">05. Detalhamento Escopo 3 (15 Categorias)</div>
+        <div class="h-64 border border-black p-2 mb-4">
+            <canvas id="mainBarChart"></canvas>
+        </div>
+        
+        <table class="tech-table">
+            <thead>
+                <tr>
+                    <th style="width: 5%">#</th>
+                    <th>Categoria</th>
+                    <th class="text-right">Emissão (tCO2e)</th>
+                    <th class="text-right">% Total</th>
+                </tr>
+            </thead>
+            <tbody id="catTable">
+                <!-- JS -->
+            </tbody>
+        </table>
+
+        <!-- Footer -->
+        <div class="mt-8 text-[10px] text-center font-mono border-t border-black pt-2">
+            Página 1 de 1 - RV Carbon System - <span id="printDate"></span>
+        </div>
+
+    </div>
+
+    <script>
+        // Dados
+        const rawData = {
+            batchName: "Calculando 2025", startDate: "2025-06-06", endDate: "2025-06-86",
+            creator: "amadeus123", id: 52,
+            cozeTotal: 4261464.0, bioE: 24.0, bioR: 500.0,
+            gases: { CO2: 24, CH4: 24, N2O: 24, HFC: 1009128, PFC: 2294880, SF6: 24, NF3: 24.8 }
+        };
+
+        const cats = [
+            { name: "1. Bens/Serviços Comprados", val: 1200000 },
+            { name: "2. Bens de Capital", val: 500000 },
+            { name: "3. Ativ. Combustível/Energia", val: 300000 },
+            { name: "4. Transporte Upstream", val: 800000 },
+            { name: "5. Resíduos Operação", val: 50000 },
+            { name: "6. Viagens Negócios", val: 20000 },
+            { name: "7. Deslocamento Funcionário", val: 15000 },
+            { name: "8. Bens Arrendados (Up)", val: 100000 },
+            { name: "9. Transporte Downstream", val: 600000 },
+            { name: "10. Proc. Produtos Vendidos", val: 400000 },
+            { name: "11. Uso de Produtos", val: 200000 },
+            { name: "12. Fim de Vida", val: 50000 },
+            { name: "13. Bens Arrendados (Down)", val: 10000 },
+            { name: "14. Franquias", val: 5000 },
+            { name: "15. Investimentos", val: 11464 }
+        ];
+
+        // Format
+        const fmt = n => n.toLocaleString('pt-BR', {minimumFractionDigits: 1});
+
+        // Fill Text
+        document.getElementById('batchRef').innerText = `BATCH-${rawData.id}`;
+        document.getElementById('t_name').innerText = rawData.batchName;
+        document.getElementById('t_start').innerText = rawData.startDate;
+        document.getElementById('t_end').innerText = rawData.endDate;
+        document.getElementById('t_user').innerText = rawData.creator;
+        document.getElementById('t_total').innerText = fmt(rawData.cozeTotal);
+        document.getElementById('t_bio_e').innerText = fmt(rawData.bioE);
+        document.getElementById('t_bio_r').innerText = fmt(rawData.bioR);
+        document.getElementById('printDate').innerText = new Date().toLocaleDateString();
+
+        // Fill Tables
+        const gasTbody = document.getElementById('gasTable');
+        Object.entries(rawData.gases).forEach(([k, v]) => {
+            gasTbody.innerHTML += `<tr><td>${k}</td><td class="text-right">${fmt(v)}</td></tr>`;
+        });
+
+        const catTbody = document.getElementById('catTable');
+        cats.forEach((c, i) => {
+            const pct = ((c.val / rawData.cozeTotal) * 100).toFixed(2);
+            catTbody.innerHTML += `
+                <tr>
+                    <td>${i+1}</td>
+                    <td>${c.name}</td>
+                    <td class="text-right">${fmt(c.val)}</td>
+                    <td class="text-right">${pct}%</td>
+                </tr>`;
+        });
+
+        // Charts
+        Chart.defaults.font.family = 'Courier New';
+        Chart.defaults.color = '#000';
+
+        // Gas Comparison (Logarithmic because HFC/PFC are huge compared to CO2)
+        new Chart(document.getElementById('gasChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(rawData.gases),
+                datasets: [{
+                    label: 'Ton',
+                    data: Object.values(rawData.gases),
+                    backgroundColor: '#555'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { type: 'logarithmic' } }, // Escala Logarítmica para ver os dados pequenos
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Share Pie
+        const top5 = [...cats].sort((a,b)=>b.val-a.val).slice(0,5);
+        new Chart(document.getElementById('shareChart'), {
+            type: 'pie',
+            data: {
+                labels: top5.map(c=>c.name.split(' ')[1]), // Short label
+                datasets: [{
+                    data: top5.map(c=>c.val),
+                    backgroundColor: ['#000', '#333', '#666', '#999', '#ccc']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+        });
+
+        // Main Categories Bar
+        new Chart(document.getElementById('mainBarChart'), {
+            type: 'bar',
+            data: {
+                labels: cats.map(c=>c.name.split(' ')[0] + ' ' + c.name.split(' ')[1]), // Shorten
+                datasets: [{
+                    label: 'Emissão tCO2e',
+                    data: cats.map(c=>c.val),
+                    backgroundColor: 'black'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { x: { ticks: { maxRotation: 90, minRotation: 90, font: {size: 9} } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+    </script>
+</body>
+</html>
