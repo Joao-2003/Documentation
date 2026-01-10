@@ -119,19 +119,19 @@
                     </div>
                 </div>
 
-                <!-- Gráfico de Donut (Maior) -->
-                <div class="border border-gray-100 rounded-lg p-5 bg-white shadow-sm flex-grow min-h-[250px]">
-                    <h3 class="text-sm font-bold text-gray-800 mb-4 border-l-4 border-emerald-500 pl-2">Participação Relativa (Top 5)</h3>
-                    <div class="h-full max-h-[280px]">
-                        <canvas id="donutChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Gráfico Biogênico -->
+                <!-- Gráfico Biogênico (Agora posicionado acima do Donut) -->
                 <div class="border border-gray-100 rounded-lg p-5 bg-white shadow-sm h-48">
                     <h3 class="text-sm font-bold text-gray-800 mb-2 border-l-4 border-yellow-500 pl-2">Balanço Biogênico</h3>
                     <div class="h-32">
                         <canvas id="bioChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Donut (Maior e no final) -->
+                <div class="border border-gray-100 rounded-lg p-5 bg-white shadow-sm flex-grow min-h-[250px]">
+                    <h3 class="text-sm font-bold text-gray-800 mb-4 border-l-4 border-emerald-500 pl-2">Participação Relativa (Top 5)</h3>
+                    <div class="h-full max-h-[280px]">
+                        <canvas id="donutChart"></canvas>
                     </div>
                 </div>
 
@@ -145,7 +145,7 @@
                     <p class="text-[10px] opacity-60 mt-1">tCO2e (Toneladas Métricas)</p>
                 </div>
                 
-                <div class="border-x border-b border-gray-200 rounded-b-lg bg-white overflow-hidden shadow-sm flex-grow">
+                <div class="border-x border-b border-gray-200 rounded-b-lg bg-white overflow-hidden shadow-sm">
                     <table class="w-full text-sm">
                         <thead>
                             <tr class="bg-emerald-50 text-emerald-800 border-b border-emerald-100">
@@ -157,6 +157,11 @@
                             <!-- Preenchido via JS -->
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Nota explicativa (Reintegrada) -->
+                <div class="mt-4 p-3 bg-blue-50 border border-blue-100 rounded text-[10px] text-blue-800 leading-relaxed shadow-sm">
+                    <strong>Nota Técnica:</strong> A tabela acima detalha a composição dos gases do efeito estufa convertidos ou apresentados em suas unidades originais. O CO2e representa o impacto consolidado.
                 </div>
             </div>
         </div>
