@@ -51,9 +51,9 @@
             justify-content: space-between;
             align-items: flex-end;
             border-bottom: 4px solid #059669;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            height: 80px; /* Trava altura do header */
+            padding-bottom: 15px; /* Aumentado para afastar a linha */
+            margin-bottom: 30px; /* Aumentado para empurrar conteúdo para baixo */
+            height: 95px; /* Altura aumentada para acomodar o espaçamento */
         }
         
         .header-title h1 { font-size: 28px; font-weight: 800; line-height: 1; text-transform: uppercase; color: #111; }
@@ -80,10 +80,10 @@
         .value-sm { font-size: 13px; font-weight: 600; color: #374151; }
         .row { display: flex; gap: 30px; margin-top: 8px; }
 
-        /* GRID PRINCIPAL */
+        /* GRID PRINCIPAL - ALTERADO PROPORÇÃO */
         .main-grid {
             display: grid;
-            grid-template-columns: 1.4fr 1fr; /* 58% esq / 42% dir aprox */
+            grid-template-columns: 2fr 1fr; /* Coluna esquerda mais larga (2/3), direita mais estreita (1/3) */
             gap: 25px;
             flex-grow: 1;
             overflow: hidden;
@@ -207,7 +207,7 @@
         <!-- 3. Grid Principal -->
         <div class="main-grid">
             
-            <!-- Coluna Esquerda -->
+            <!-- Coluna Esquerda (Mais larga agora - 2fr) -->
             <div class="col-left">
                 
                 <!-- KPIs -->
@@ -233,14 +233,14 @@
                 <!-- Gráfico Detalhamento (Travado em baixo com flex-grow) -->
                 <div class="chart-box" style="flex-grow: 1; display: flex; flex-direction: column;">
                     <div class="chart-title green" style="border-color: #059669;">Detalhamento por Categoria (tCO2e)</div>
-                    <div style="flex-grow: 1; position: relative; min-height: 200px;">
+                    <div style="flex-grow: 1; position: relative; min-height: 320px;">
                         <canvas id="barChart"></canvas>
                     </div>
                 </div>
 
             </div>
 
-            <!-- Coluna Direita -->
+            <!-- Coluna Direita (Mais estreita agora - 1fr) -->
             <div class="col-right">
                 
                 <!-- Tabela Gases -->
@@ -268,8 +268,8 @@
                 <!-- Gráfico Participação (Donut) -->
                 <div class="chart-box" style="flex-grow: 1; display: flex; flex-direction: column;">
                     <div class="chart-title green" style="border-color: #059669;">Participação Relativa (Top 5)</div>
-                    <!-- Altura aumentada para 280px para caber todas as legendas -->
-                    <div style="height: 280px; position: relative; width: 100%;">
+                    <!-- Altura aumentada para 340px para aproveitar o espaço inferior -->
+                    <div style="height: 340px; position: relative; width: 100%;">
                         <canvas id="donutChart"></canvas>
                     </div>
                 </div>
