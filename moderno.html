@@ -57,9 +57,6 @@
                 padding: 12mm; 
                 overflow: hidden; 
             }
-            .a4-page:last-child {
-                page-break-after: auto;
-            }
             .no-print { display: none; }
         }
     </style>
@@ -69,16 +66,16 @@
     <!-- Botão de Impressão -->
     <div class="no-print fixed top-4 right-4 z-50">
         <button onclick="window.print()" class="bg-emerald-900 text-white px-6 py-2 rounded-full font-bold shadow hover:bg-emerald-700 transition flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
             Salvar PDF
         </button>
     </div>
 
-    <!-- ========================= PÁGINA 1 ========================= -->
+    <!-- ========================= PÁGINA ÚNICA ========================= -->
     <div class="a4-page">
         
         <!-- Cabeçalho -->
-        <header class="flex justify-between items-end border-b-4 border-emerald-600 pb-3 mb-6">
+        <header class="flex justify-between items-end border-b-4 border-emerald-600 pb-3 mb-4">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900 uppercase tracking-tight leading-none">Relatório de Emissões</h1>
                 <p class="text-emerald-700 font-semibold text-lg mt-1">GHG Protocol - Escopo 3</p>
@@ -90,21 +87,21 @@
         </header>
 
         <!-- Informações do Proprietário / Batch -->
-        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 mb-6 shadow-sm">
-            <div class="grid grid-cols-2 gap-x-8 gap-y-3">
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-4 shadow-sm">
+            <div class="grid grid-cols-2 gap-x-8 gap-y-2">
                 <!-- Coluna 1 -->
                 <div>
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Proprietário / Cliente</p>
                     <p class="text-lg font-bold text-gray-800 leading-tight" id="ownerName">Carregando...</p>
                     
-                    <div class="flex gap-8 mt-3">
+                    <div class="flex gap-8 mt-2">
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Propriedade</p>
-                            <p class="text-base font-semibold text-gray-700 leading-tight" id="propertyName">Carregando...</p>
+                            <p class="text-sm font-semibold text-gray-700 leading-tight" id="propertyName">Carregando...</p>
                         </div>
                         <div>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Área Total</p>
-                            <p class="text-base font-semibold text-gray-700 leading-tight" id="totalArea">-- ha</p>
+                            <p class="text-sm font-semibold text-gray-700 leading-tight" id="totalArea">-- ha</p>
                         </div>
                     </div>
                 </div>
@@ -112,7 +109,7 @@
                 <div class="text-right border-l border-gray-200 pl-6">
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Batch de Análise</p>
                     <p class="text-base font-bold text-gray-800" id="batchName">Carregando...</p>
-                    <p class="text-sm text-gray-500 italic mb-2" id="batchNote">...</p>
+                    <p class="text-xs text-gray-500 italic mb-2" id="batchNote">...</p>
                     
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-0.5">Período de Referência</p>
                     <p class="text-sm font-medium text-gray-800" id="dateRange">--/--/---- a --/--/----</p>
@@ -120,123 +117,97 @@
             </div>
         </div>
 
-        <!-- Conteúdo Principal Pág 1 -->
+        <!-- Conteúdo Principal -->
         <div class="flex-grow grid grid-cols-12 gap-6">
             
-            <!-- Coluna Esquerda: Gráficos (Ocupa 7 colunas) -->
-            <div class="col-span-7 flex flex-col gap-5">
+            <!-- Coluna Esquerda: KPIs, Bio e Categorias (Ocupa 7 colunas) -->
+            <div class="col-span-7 flex flex-col gap-4">
                 
                 <!-- KPIs Biogênicos -->
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="p-4 bg-white border border-emerald-100 rounded-lg shadow-sm">
-                        <div class="text-[10px] text-gray-500 uppercase font-bold mb-1">CO2 Biogênico (Emissão)</div>
-                        <div class="text-xl font-bold text-gray-700"><span id="bioEmission">0</span> <span class="text-xs font-normal text-gray-400">t</span></div>
+                    <div class="p-3 bg-white border border-emerald-100 rounded-lg shadow-sm">
+                        <div class="text-[9px] text-gray-500 uppercase font-bold mb-1">CO2 Biogênico (Emissão)</div>
+                        <div class="text-lg font-bold text-gray-700"><span id="bioEmission">0</span> <span class="text-[10px] font-normal text-gray-400">t</span></div>
                     </div>
-                    <div class="p-4 bg-white border border-emerald-100 rounded-lg shadow-sm">
-                        <div class="text-[10px] text-gray-500 uppercase font-bold mb-1">CO2 Biogênico (Remoção)</div>
-                        <div class="text-xl font-bold text-emerald-600"><span id="bioRemoval">0</span> <span class="text-xs font-normal text-gray-400">t</span></div>
+                    <div class="p-3 bg-white border border-emerald-100 rounded-lg shadow-sm">
+                        <div class="text-[9px] text-gray-500 uppercase font-bold mb-1">CO2 Biogênico (Remoção)</div>
+                        <div class="text-lg font-bold text-emerald-600"><span id="bioRemoval">0</span> <span class="text-[10px] font-normal text-gray-400">t</span></div>
                     </div>
                 </div>
 
-                <!-- Gráfico Biogênico (Vertical e Maior) -->
-                <div class="border border-gray-100 rounded-lg p-5 bg-white shadow-sm flex-grow flex flex-col">
-                    <h3 class="text-sm font-bold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-2">Balanço Biogênico (Comparativo)</h3>
+                <!-- Gráfico Biogênico (Vertical - Altura Reduzida) -->
+                <div class="border border-gray-100 rounded-lg p-3 bg-white shadow-sm h-32 flex flex-col">
+                    <h3 class="text-xs font-bold text-gray-800 mb-1 border-l-4 border-yellow-500 pl-2">Balanço Biogênico</h3>
                     <div class="flex-grow relative w-full">
                         <canvas id="bioChart"></canvas>
                     </div>
                 </div>
 
+                <!-- Gráfico Detalhamento por Categoria (Movido para cá) -->
+                <div class="border border-gray-100 rounded-lg p-3 bg-white shadow-sm flex-grow flex flex-col min-h-[220px]">
+                    <h3 class="text-xs font-bold text-gray-800 mb-2 border-l-4 border-emerald-500 pl-2">Detalhamento por Categoria (tCO2e)</h3>
+                    <div class="flex-grow relative w-full">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- Coluna Direita: Tabela de Gases (Ocupa 5 colunas) -->
-            <div class="col-span-5 flex flex-col">
-                <!-- Cabeçalho agora Verde -->
-                <div class="bg-emerald-900 text-white rounded-t-lg p-3 text-center">
-                    <p class="text-xs font-bold uppercase tracking-widest opacity-80">Emissões Totais</p>
-                    <p class="text-2xl font-bold mt-1" id="totalCo2eHeader">0</p>
-                    <p class="text-[10px] opacity-60 mt-1">tCO2e (Toneladas Métricas)</p>
-                </div>
+            <!-- Coluna Direita: Tabela de Gases e Share (Ocupa 5 colunas) -->
+            <div class="col-span-5 flex flex-col gap-4">
                 
-                <div class="border-x border-b border-gray-200 rounded-b-lg bg-white overflow-hidden shadow-sm flex-grow">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="bg-emerald-50 text-emerald-800 border-b border-emerald-100">
-                                <th class="py-2 px-3 text-left text-xs font-bold uppercase">Gás</th>
-                                <th class="py-2 px-3 text-right text-xs font-bold uppercase">Quant. (t)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="gasTableBody" class="divide-y divide-gray-100 text-gray-700">
-                            <!-- Preenchido via JS -->
-                        </tbody>
-                    </table>
+                <!-- Tabela de Gases -->
+                <div class="flex flex-col">
+                    <div class="bg-emerald-900 text-white rounded-t-lg p-2 text-center">
+                        <p class="text-[10px] font-bold uppercase tracking-widest opacity-80">Emissões Totais</p>
+                        <p class="text-xl font-bold mt-1" id="totalCo2eHeader">0</p>
+                        <p class="text-[9px] opacity-60 mt-0.5">tCO2e (Toneladas Métricas)</p>
+                    </div>
+                    
+                    <div class="border-x border-b border-gray-200 rounded-b-lg bg-white overflow-hidden shadow-sm">
+                        <table class="w-full text-xs">
+                            <thead>
+                                <tr class="bg-emerald-50 text-emerald-800 border-b border-emerald-100">
+                                    <th class="py-2 px-3 text-left font-bold uppercase">Gás</th>
+                                    <th class="py-2 px-3 text-right font-bold uppercase">Quant. (t)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gasTableBody" class="divide-y divide-gray-100 text-gray-700">
+                                <!-- Preenchido via JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <!-- Nota explicativa agora Verde -->
-                <div class="mt-3 p-3 bg-emerald-50 border border-emerald-100 rounded text-[10px] text-emerald-800 leading-relaxed shadow-sm">
-                    <strong>Nota Técnica:</strong> A tabela acima detalha a composição dos gases do efeito estufa convertidos ou apresentados em suas unidades originais. O CO2e representa o impacto consolidado.
+                <!-- Gráfico de Donut (Movido para cá) -->
+                <div class="border border-gray-100 rounded-lg p-3 bg-white shadow-sm flex-grow flex flex-col min-h-[200px]">
+                    <h3 class="text-xs font-bold text-gray-800 mb-2 border-l-4 border-emerald-500 pl-2">Participação Relativa (Top 5)</h3>
+                    <div class="flex-grow relative">
+                        <canvas id="donutChart"></canvas>
+                    </div>
                 </div>
+
             </div>
         </div>
         
-        <!-- Footer Pág 1 -->
-        <div class="mt-4 pt-2 border-t border-gray-100 text-[10px] text-gray-400 flex justify-between uppercase">
-            <span>Página 1 de 2</span>
-            <span>RV Carbon</span>
-        </div>
-    </div>
-
-    <!-- ========================= PÁGINA 2 ========================= -->
-    <div class="a4-page">
-        
-        <!-- Cabeçalho Simplificado Pág 2 -->
-        <div class="flex justify-between items-center border-b border-gray-200 pb-2 mb-6 opacity-60">
-            <h2 class="text-sm font-bold text-gray-500 uppercase">Detalhamento Técnico & Gráficos</h2>
-            <span class="text-xs text-gray-400">Continuação</span>
-        </div>
-
-        <div class="flex-grow flex flex-col gap-6">
-            
-            <!-- Gráfico de Donut (Movido para Página 2) -->
-            <div class="w-full bg-white border border-gray-100 rounded-lg p-4 shadow-sm min-h-[250px] flex flex-col">
-                <h3 class="text-sm font-bold text-gray-800 mb-2 border-l-4 border-emerald-500 pl-2">Participação Relativa (Top 5 Categorias)</h3>
-                <div class="flex-grow relative">
-                     <canvas id="donutChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Gráfico de Categorias (Reduzido em altura) -->
-            <div class="w-full bg-white border border-gray-100 rounded-lg p-4 shadow-sm h-[350px] flex flex-col">
-                <h3 class="text-sm font-bold text-gray-800 mb-4 border-l-4 border-emerald-500 pl-2">Detalhamento por Categoria (tCO2e)</h3>
-                <div class="flex-grow relative">
-                    <canvas id="barChart"></canvas>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Seção de Texto Institucional -->
-        <div class="mt-6 pt-4 border-t border-gray-300">
-            <h4 class="text-[10px] font-bold text-gray-600 mb-2 uppercase tracking-wide">Sobre o Programa Brasileiro GHG Protocol</h4>
-            <div class="grid grid-cols-12 gap-4">
-                <div class="col-span-12 text-[10px] text-gray-500 leading-relaxed text-justify">
-                    <p class="mb-2">
-                        O Programa Brasileiro GHG Protocol foi criado em 2008 e é responsável pela adaptação do método GHG Protocol ao contexto brasileiro e desenvolvimento de ferramentas de cálculo para estimativas de emissões de gases do efeito estufa (GEE). 
-                        Foi desenvolvido pelo FGVces e WRI, em parceria com o Ministério do Meio Ambiente, Conselho Empresarial Brasileiro para o Desenvolvimento Sustentável (CEBDS), World Business Council for Sustainable Development (WBSCD) e 27 Empresas Fundadoras.
-                    </p>
-                    <p>
-                        <strong>Objetivo:</strong> Estimular a cultura corporativa de inventário de emissões de GEE no Brasil para uma agenda de enfrentamento às mudanças climáticas nas organizações; Proporcionar instrumentos e padrões de qualidade internacional para contabilização das emissões e publicação dos inventários. | <strong>Contato: ghg@fgv.br</strong>
-                    </p>
-                </div>
+        <!-- Rodapé Institucional (Compacto) -->
+        <div class="mt-4 pt-3 border-t border-gray-300">
+            <h4 class="text-[9px] font-bold text-gray-600 mb-1 uppercase tracking-wide">Sobre o Programa Brasileiro GHG Protocol</h4>
+            <div class="text-[9px] text-gray-500 leading-snug text-justify">
+                <p>
+                    O Programa Brasileiro GHG Protocol foi criado em 2008 e é responsável pela adaptação do método GHG Protocol ao contexto brasileiro. Desenvolvido pelo FGVces e WRI, em parceria com o MMA, CEBDS, WBSCD e Empresas Fundadoras.
+                    <strong>Objetivo:</strong> Estimular a cultura de inventário de GEE no Brasil. | <strong>Contato: ghg@fgv.br</strong>
+                </p>
             </div>
         </div>
 
         <!-- Rodapé Final -->
-        <footer class="mt-4 pt-2 border-t border-gray-100 text-[9px] text-gray-400 flex justify-between uppercase font-semibold tracking-wide">
+        <footer class="mt-2 pt-2 border-t border-gray-100 text-[9px] text-gray-400 flex justify-between uppercase font-semibold tracking-wide">
             <div>
                 Gerado por: <span id="creatorUsername">Sistema</span>
             </div>
             <div>
-                RV Carbon &copy; 2026 - Soluções em Sustentabilidade | Página 2 de 2
+                RV Carbon &copy; 2026 | Página 1 de 1
             </div>
         </footer>
 
@@ -248,7 +219,7 @@
             "id": 52,
             "ownerName": "Roberto Vasconcelos",
             "propertyName": "Fazenda Esperança - Gleba B",
-            "totalArea": "1.250 ha", // Novo campo
+            "totalArea": "1.250 ha",
             "batchName": "Calculando 2025",
             "note": "Para o fim do mês!",
             "startDate": "2025-06-06",
@@ -289,7 +260,6 @@
         // 2. FUNÇÕES AUXILIARES
         const formatNumber = (num) => new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 }).format(num);
         
-        // Função para formatar data (YYYY-MM-DD -> DD/MM/AAAA)
         const formatDateBR = (isoString) => {
             if (!isoString) return '--/--/----';
             const parts = isoString.split('-');
@@ -301,11 +271,10 @@
         document.getElementById('headerDate').innerText = new Date().toLocaleDateString('pt-BR');
         document.getElementById('ownerName').innerText = ghgData.ownerName;
         document.getElementById('propertyName').innerText = ghgData.propertyName;
-        document.getElementById('totalArea').innerText = ghgData.totalArea; // Populando área
+        document.getElementById('totalArea').innerText = ghgData.totalArea;
         document.getElementById('batchName').innerText = ghgData.batchName;
         document.getElementById('batchNote').innerText = `"${ghgData.note}"`;
         
-        // Aplicação da data BR
         const startBR = formatDateBR(ghgData.startDate);
         const endBR = formatDateBR(ghgData.endDate);
         document.getElementById('dateRange').innerText = `${startBR} a ${endBR}`;
@@ -331,11 +300,11 @@
 
         const gasTbody = document.getElementById('gasTableBody');
         gases.forEach((gas, index) => {
-            const isBold = gas.bold ? "font-bold text-gray-900 bg-gray-50" : "";
+            const isBold = gas.bold ? "font-bold text-gray-900 bg-emerald-50" : "";
             const row = `
                 <tr class="${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} ${isBold}">
-                    <td class="py-2 px-3 text-left font-medium">${gas.label}</td>
-                    <td class="py-2 px-3 text-right font-mono">${formatNumber(gas.value)}</td>
+                    <td class="py-1.5 px-3 text-left font-medium">${gas.label}</td>
+                    <td class="py-1.5 px-3 text-right font-mono">${formatNumber(gas.value)}</td>
                 </tr>
             `;
             gasTbody.innerHTML += row;
@@ -366,16 +335,14 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                layout: {
-                    padding: { bottom: 10 } 
-                },
+                layout: { padding: { bottom: 10 } },
                 plugins: {
-                    legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10, family: 'Inter' } } }
+                    legend: { position: 'right', labels: { boxWidth: 10, font: { size: 9, family: 'Inter' } } }
                 }
             }
         });
 
-        // Gráfico Biogênico agora Vertical (indexAxis: x)
+        // Biogênico Vertical
         new Chart(document.getElementById('bioChart'), {
             type: 'bar',
             data: {
@@ -383,15 +350,18 @@
                 datasets: [{
                     data: [ghgData.biogeniccozEmissions, ghgData.biogenicCo2Removals],
                     backgroundColor: ['#f59e0b', '#059669'],
-                    barPercentage: 0.5
+                    barPercentage: 0.6
                 }]
             },
             options: {
-                indexAxis: 'x', // Mudado para vertical
+                indexAxis: 'x',
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
-                scales: { x: { grid: { display: false } } }
+                scales: { 
+                    x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+                    y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#f3f4f6' }, ticks: { font: { size: 9 } } }
+                }
             }
         });
 
@@ -412,8 +382,8 @@
                 maintainAspectRatio: false,
                 layout: {
                     padding: { 
-                        left: 20, 
-                        right: 20,
+                        left: 10, 
+                        right: 10,
                         bottom: 10 
                     }
                 },
@@ -423,7 +393,7 @@
                 scales: {
                     x: {
                         ticks: {
-                            font: { size: 10, family: 'Inter', weight: '600' }, // Fonte levemente menor para caber melhor
+                            font: { size: 9, family: 'Inter', weight: '600' },
                             color: '#374151',
                             maxRotation: 45,
                             minRotation: 45,
@@ -433,7 +403,8 @@
                     },
                     y: {
                         beginAtZero: true,
-                        grid: { borderDash: [2, 4], color: '#f3f4f6' }
+                        grid: { borderDash: [2, 4], color: '#f3f4f6' },
+                        ticks: { font: { size: 9 } }
                     }
                 }
             }
