@@ -1,261 +1,547 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RV Carbon - Relatório Técnico</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>RV Carbon - Relatório GHG Escopo 3</title>
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+    <!-- Fonte Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: 'Courier New', Courier, monospace; background: #555; }
-        .a4-page {
-            width: 210mm;
-            min-height: 297mm;
-            margin: 20px auto;
-            background: white;
-            padding: 10mm;
-            position: relative;
-        }
-        
-        /* Estilo Técnico de Tabela */
-        .tech-table { width: 100%; border-collapse: collapse; font-size: 10px; }
-        .tech-table th { background: #000; color: #fff; text-transform: uppercase; padding: 4px; text-align: left; }
-        .tech-table td { border: 1px solid #ccc; padding: 4px; }
-        .tech-table tr:nth-child(even) { background: #f3f3f3; }
-        
-        .section-title { 
-            border-bottom: 2px solid black; 
-            font-size: 14px; 
-            font-weight: bold; 
-            text-transform: uppercase; 
-            margin-bottom: 10px; 
-            padding-bottom: 2px;
-            margin-top: 20px;
+        /* RESET E GERAL */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e5e5e5;
+            color: #1f2937;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
+        /* CORES */
+        .text-green-dark { color: #064e3b; }
+        .text-green-main { color: #059669; }
+        .bg-green-dark { background-color: #064e3b; }
+        .bg-green-light { background-color: #ecfdf5; }
+        .border-green { border-color: #059669; }
+        .text-gray { color: #6b7280; }
+        .text-gray-dark { color: #374151; }
+
+        /* PAGINA A4 */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12mm 15mm;
+            margin: 20px auto;
+            background: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* LAYOUT HEADER (Compactado) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 4px solid #059669;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            height: auto;
+        }
+
+        .header-title h1 { font-size: 24px; font-weight: 800; line-height: 1; text-transform: uppercase; color: #111; }
+        .header-title p { color: #047857; font-weight: 600; font-size: 14px; margin-top: 2px; }
+        .header-logo { text-align: right; }
+        .header-logo .brand { font-size: 20px; font-weight: 800; color: #064e3b; }
+        .header-logo .date { font-size: 9px; color: #6b7280; margin-top: 2px; }
+
+        /* INFO BOX */
+        .info-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            display: flex;
+        }
+        .info-col { flex: 1; }
+        .info-col.right { border-left: 1px solid #d1d5db; padding-left: 20px; text-align: right; }
+
+        .label { font-size: 8px; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin-bottom: 2px; }
+        .value { font-size: 14px; font-weight: 700; color: #1f2937; line-height: 1.2; }
+        .value-sm { font-size: 12px; font-weight: 600; color: #374151; }
+        .row { display: flex; gap: 30px; margin-top: 6px; }
+
+        /* GRID SUPERIOR */
+        .split-section {
+            display: grid;
+            grid-template-columns: 0.38fr 0.62fr;
+            gap: 20px;
+            margin-bottom: 15px;
+            align-items: stretch; /* Garante que as colunas tenham a mesma altura */
+        }
+
+        .col-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100%; /* Ocupa altura total do grid */
+        }
+
+        /* KPIs - AUMENTADOS */
+        .kpi-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            height: auto; 
+            flex-shrink: 0; /* Impede que encolha */
+        } 
+        .kpi-card { 
+            border: 1px solid #d1fae5; 
+            border-radius: 8px; 
+            padding: 12px; 
+            background: white; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            min-height: 80px;
+        }
+        /* Fonte Aumentada conforme pedido */
+        .kpi-card .label { font-size: 10px; margin-bottom: 4px; }
+        .kpi-val { font-size: 24px; font-weight: 700; margin-top: 2px; line-height: 1; }
+        .kpi-unit { font-size: 12px; font-weight: 500; color: #9ca3af; margin-left: 2px;}
+
+        /* CHART BOXES */
+        .chart-box {
+            border: 1px solid #f3f4f6;
+            border-radius: 8px;
+            padding: 10px;
+            background: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 5px;
+            padding-left: 8px;
+            border-left: 4px solid #f59e0b;
+            flex-shrink: 0;
+        }
+        .chart-title.green { border-color: #059669; }
+
+        /* Canvas Container Wrapper */
+        .chart-content {
+            flex-grow: 1;
+            position: relative;
+            width: 100%;
+            min-height: 0; /* Importante para flexbox */
+        }
+
+        /* TABELA GASES HORIZONTAL */
+        .h-gas-container {
+            margin-bottom: 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .h-gas-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9px;
+            table-layout: fixed;
+        }
+        .h-gas-table th {
+            background-color: #064e3b;
+            color: white;
+            padding: 6px 2px;
+            text-align: center;
+            font-weight: 600;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        .h-gas-table td {
+            background-color: #fff;
+            color: #374151;
+            padding: 8px 2px;
+            text-align: center;
+            border-right: 1px solid #f3f4f6;
+            font-weight: 500;
+        }
+        .h-gas-table th:last-child, .h-gas-table td:last-child { border-right: none; }
+        .h-gas-table th.total-col { background-color: #059669; font-weight: 800; width: 18%; }
+        .h-gas-table td.total-col { background-color: #ecfdf5; font-weight: 800; color: #064e3b; }
+
+        /* Gráfico de Barra Inferior (Full Width) */
+        .bottom-chart-section {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
+        }
+
+        /* RODAPÉ */
+        .footer-inst {
+            margin-top: auto;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 8px;
+            font-size: 7px;
+            color: #6b7280;
+            line-height: 1.3;
+            text-align: justify;
+        }
+        .footer-meta {
+            margin-top: 5px;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #9ca3af;
+        }
+
+        /* PRINT */
         @media print {
-            body { background: white; }
-            .a4-page { margin: 0; width: 100%; }
+            body { background: none; margin: 0; }
+            .page { margin: 0; width: 210mm; min-height: 297mm; box-shadow: none; page-break-after: always; padding: 10mm; }
             .no-print { display: none; }
+            button { display: none; }
         }
     </style>
 </head>
 <body>
-    
-    <div class="no-print fixed top-4 right-4 z-50">
-        <button onclick="window.print()" class="bg-white border-2 border-black px-4 py-1 font-bold uppercase text-xs hover:bg-black hover:text-white">Imprimir Dados</button>
+
+<!-- Botão Salvar (Apenas tela) -->
+<div class="no-print" style="position: fixed; top: 10px; right: 10px; z-index: 999;">
+    <button onclick="window.print()" style="background: #064e3b; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">SALVAR PDF</button>
+</div>
+
+<div class="page">
+
+    <!-- 1. Header -->
+    <header class="header">
+        <div class="header-title">
+            <h1>Relatório de Emissões</h1>
+            <p>GHG Protocol - Escopo 3</p>
+        </div>
+        <div class="header-logo">
+            <div class="brand">RV Carbon</div>
+            <div class="date">Gerado em: <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">24/05/2026</span></div>
+        </div>
+    </header>
+
+    <!-- 2. Info Box -->
+    <div class="info-box">
+        <div class="info-col">
+            <div class="label">Proprietário / Cliente</div>
+            <div class="value" th:text="${batch.farm.owner != null ? batch.farm.owner.name : 'Não informado'}" style="margin-bottom: 4px;">Roberto Vasconcelos</div>
+            <div class="row">
+                <div>
+                    <div class="label">Propriedade</div>
+                    <div class="value-sm" th:text="${batch.farm.farmName}">Fazenda Esperança - Gleba B</div>
+                    <div class="label" style="margin-top: 2px; font-size: 8px;">
+                        <span th:text="${batch.farm.city ?: ''}">Rio Verde</span>
+                        <span th:if="${batch.farm.city != null and batch.farm.state != null}"> - </span>
+                        <span th:text="${batch.farm.state ?: ''}">GO</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="label">Área Total</div>
+                    <div class="value-sm" th:text="${#numbers.formatDecimal(batch.farm.totalAreaHectares, 1, 'POINT', 2, 'COMMA')} + ' ha'">1.250,00 ha</div>
+                </div>
+            </div>
+        </div>
+        <div class="info-col right">
+            <div class="label">Batch de Análise</div>
+            <div class="value" th:text="${batch.batchName}">Análise Safra 25/26</div>
+            <div class="label" style="margin-top: 2px; font-weight: 400; font-style: italic;" th:text="${batch.note}">Relatório final consolidado</div>
+            <div style="margin-top: 6px;">
+                <div class="label">Período de Referência</div>
+                <div class="value-sm"
+                     th:text="${#temporals.format(batch.startDate,'dd/MM/yyyy')} + ' a ' +
+                             ${#temporals.format(batch.endDate,'dd/MM/yyyy')}">
+                     01/01/2025 a 31/12/2025
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="a4-page">
+    <!-- 3. Seção Dividida (Topo) -->
+    <div class="split-section">
         
-        <!-- Header Técnico -->
-        <div class="border-2 border-black p-4 mb-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold uppercase">Relatório de Inventário GHG</h1>
-                <p class="text-xs">Protocolo: GHG Escopo 3 | Versão: 2.1 | Ref: <span id="batchRef">...</span></p>
-            </div>
-            <div class="text-right">
-                <div class="font-bold text-lg">RV CARBON</div>
-                <div class="text-xs">Relatório Técnico Automático</div>
-            </div>
-        </div>
-
-        <!-- Dados do Batch (Grid) -->
-        <div class="grid grid-cols-4 gap-0 border border-black mb-6 text-xs">
-            <div class="p-2 border-r border-black font-bold bg-gray-100">Batch Name</div>
-            <div class="p-2 border-r border-black" id="t_name">...</div>
-            <div class="p-2 border-r border-black font-bold bg-gray-100">Data Início</div>
-            <div class="p-2" id="t_start">...</div>
-
-            <div class="p-2 border-r border-black border-t border-black font-bold bg-gray-100">Criado Por</div>
-            <div class="p-2 border-r border-black border-t border-black" id="t_user">...</div>
-            <div class="p-2 border-r border-black border-t border-black font-bold bg-gray-100">Data Fim</div>
-            <div class="p-2 border-t border-black" id="t_end">...</div>
-        </div>
-
-        <!-- Seção 1: Totais Consolidados -->
-        <div class="grid grid-cols-2 gap-8">
-            <div>
-                <div class="section-title">01. Consolidação de Gases (Ton. Métricas)</div>
-                <table class="tech-table">
-                    <thead>
-                        <tr><th>Gás</th><th class="text-right">Quantidade</th></tr>
-                    </thead>
-                    <tbody id="gasTable">
-                        <!-- JS -->
-                    </tbody>
-                    <tfoot>
-                        <tr class="font-bold bg-black text-white">
-                            <td class="border-black">TOTAL CO2e</td>
-                            <td class="border-black text-right" id="t_total">...</td>
-                        </tr>
-                    </tfoot>
-                </table>
-
-                <div class="section-title">02. Dados Biogênicos</div>
-                <table class="tech-table">
-                    <tr><td>Emissão Biogênica</td><td class="text-right font-bold" id="t_bio_e">...</td></tr>
-                    <tr><td>Remoção Biogênica</td><td class="text-right font-bold text-green-700" id="t_bio_r">...</td></tr>
-                </table>
-            </div>
-
-            <div>
-                <div class="section-title">03. Gráfico Comparativo (Gases)</div>
-                <!-- Gráfico de barras simples para comparar HFC vs PFC vs CO2 -->
-                <div class="h-48 border border-gray-300 p-2">
-                    <canvas id="gasChart"></canvas>
+        <!-- Coluna Esquerda: KPIs + Bio Chart (Mais estreita) -->
+        <div class="col-stack">
+            <!-- KPIs (Lado a Lado - MAIORES) -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="label">CO₂ Biogênico (Emissão)</div>
+                    <div class="kpi-val text-gray-dark">
+                        <span th:text="${#numbers.formatDecimal(batch.biogenicCo2Emissions, 1, 'POINT', 2, 'COMMA')}">24,00</span>
+                        <span class="kpi-unit">t</span>
+                    </div>
                 </div>
-                
-                <div class="section-title">04. Share Categorias</div>
-                <div class="h-48 border border-gray-300 p-2">
-                    <canvas id="shareChart"></canvas>
+                <div class="kpi-card">
+                    <div class="label">CO₂ Biogênico (Remoção)</div>
+                    <div class="kpi-val text-green-main">
+                        <span th:text="${#numbers.formatDecimal(batch.biogenicCo2Removals, 1, 'POINT', 2, 'COMMA')}">500,00</span>
+                        <span class="kpi-unit">t</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfico Balanço Biogênico (Preenchendo o resto da coluna) -->
+            <div class="chart-box" style="flex-grow: 1;">
+                <div class="chart-title">Balanço Biogênico</div>
+                <!-- height: 100% para ocupar o flex-grow -->
+                <div class="chart-content">
+                    <canvas id="bioChart"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Seção 2: Detalhamento Categorias -->
-        <div class="section-title">05. Detalhamento Escopo 3 (15 Categorias)</div>
-        <div class="h-64 border border-black p-2 mb-4">
-            <canvas id="mainBarChart"></canvas>
+        <!-- Coluna Direita: Gráfico Participação (Grande Destaque) -->
+        <div class="col-stack">
+            <div class="chart-box" style="flex-grow: 1;">
+                <div class="chart-title green" style="border-color: #059669;">Participação Relativa (Top 5 + Outros)</div>
+                <div class="chart-content">
+                    <canvas id="donutChart"></canvas>
+                </div>
+            </div>
         </div>
-        
-        <table class="tech-table">
+    </div>
+
+    <!-- 4. Seção Intermediária: Tabela de Gases Horizontal -->
+    <div class="h-gas-container">
+        <table class="h-gas-table">
             <thead>
                 <tr>
-                    <th style="width: 5%">#</th>
-                    <th>Categoria</th>
-                    <th class="text-right">Emissão (tCO2e)</th>
-                    <th class="text-right">% Total</th>
+                    <th class="total-col">Emissões Totais</th>
+                    <th>CO₂</th>
+                    <th>CH₄</th>
+                    <th>N₂O</th>
+                    <th>HFC</th>
+                    <th>PFC</th>
+                    <th>SF₆</th>
+                    <th>NF₃</th>
                 </tr>
             </thead>
-            <tbody id="catTable">
-                <!-- JS -->
+            <tbody>
+                <tr>
+                    <td class="total-col" th:text="${#numbers.formatDecimal(batch.co2eTotal, 1, 'POINT', 2, 'COMMA')}">4.261.464,00</td>
+                    <td th:text="${#numbers.formatDecimal(batch.co2, 1, 'POINT', 2, 'COMMA')}">24,00</td>
+                    <td th:text="${#numbers.formatDecimal(batch.ch4, 1, 'POINT', 2, 'COMMA')}">24,00</td>
+                    <td th:text="${#numbers.formatDecimal(batch.n2ho, 1, 'POINT', 2, 'COMMA')}">24,00</td>
+                    <td th:text="${#numbers.formatDecimal(batch.hfc, 1, 'POINT', 2, 'COMMA')}">1.009.128,00</td>
+                    <td th:text="${#numbers.formatDecimal(batch.pfc, 1, 'POINT', 2, 'COMMA')}">2.294.880,00</td>
+                    <td th:text="${#numbers.formatDecimal(batch.sf6, 1, 'POINT', 2, 'COMMA')}">24,00</td>
+                    <td th:text="${#numbers.formatDecimal(batch.nf3, 1, 'POINT', 2, 'COMMA')}">24,80</td>
+                </tr>
             </tbody>
         </table>
-
-        <!-- Footer -->
-        <div class="mt-8 text-[10px] text-center font-mono border-t border-black pt-2">
-            Página 1 de 1 - RV Carbon System - <span id="printDate"></span>
-        </div>
-
     </div>
 
-    <script>
-        // Dados
-        const rawData = {
-            batchName: "Calculando 2025", startDate: "2025-06-06", endDate: "2025-06-86",
-            creator: "amadeus123", id: 52,
-            cozeTotal: 4261464.0, bioE: 24.0, bioR: 500.0,
-            gases: { CO2: 24, CH4: 24, N2O: 24, HFC: 1009128, PFC: 2294880, SF6: 24, NF3: 24.8 }
-        };
+    <!-- 5. Seção Inferior: Detalhamento Full Width -->
+    <div class="chart-box bottom-chart-section">
+        <div class="chart-title green" style="border-color: #059669;">Detalhamento por Categoria (tCO₂e)</div>
+        <div class="chart-content">
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
 
-        const cats = [
-            { name: "1. Bens/Serviços Comprados", val: 1200000 },
-            { name: "2. Bens de Capital", val: 500000 },
-            { name: "3. Ativ. Combustível/Energia", val: 300000 },
-            { name: "4. Transporte Upstream", val: 800000 },
-            { name: "5. Resíduos Operação", val: 50000 },
-            { name: "6. Viagens Negócios", val: 20000 },
-            { name: "7. Deslocamento Funcionário", val: 15000 },
-            { name: "8. Bens Arrendados (Up)", val: 100000 },
-            { name: "9. Transporte Downstream", val: 600000 },
-            { name: "10. Proc. Produtos Vendidos", val: 400000 },
-            { name: "11. Uso de Produtos", val: 200000 },
-            { name: "12. Fim de Vida", val: 50000 },
-            { name: "13. Bens Arrendados (Down)", val: 10000 },
-            { name: "14. Franquias", val: 5000 },
-            { name: "15. Investimentos", val: 11464 }
-        ];
+    <!-- 6. Rodapé -->
+    <div style="margin-top: 10px;">
+        <div class="footer-inst">
+            <strong style="color: #4b5563; text-transform: uppercase;">Sobre o Programa Brasileiro GHG Protocol</strong><br>
+            O Programa Brasileiro GHG Protocol foi criado em 2008 e é responsável pela adaptação do método GHG Protocol ao contexto brasileiro.
+            <strong>Objetivo:</strong> Estimular a cultura de inventário de GEE no Brasil.
+        </div>
+        <div class="footer-meta">
+            <div>Gerado por: <span th:text="${batch.userCreator != null ? batch.userCreator.username : 'Sistema'}">rvcarbon.admin</span></div>
+            <div>RV Carbon &copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2026</span> | Página 1 de 1</div>
+        </div>
+    </div>
 
-        // Format
-        const fmt = n => n.toLocaleString('pt-BR', {minimumFractionDigits: 1});
+</div>
 
-        // Fill Text
-        document.getElementById('batchRef').innerText = `BATCH-${rawData.id}`;
-        document.getElementById('t_name').innerText = rawData.batchName;
-        document.getElementById('t_start').innerText = rawData.startDate;
-        document.getElementById('t_end').innerText = rawData.endDate;
-        document.getElementById('t_user').innerText = rawData.creator;
-        document.getElementById('t_total').innerText = fmt(rawData.cozeTotal);
-        document.getElementById('t_bio_e').innerText = fmt(rawData.bioE);
-        document.getElementById('t_bio_r').innerText = fmt(rawData.bioR);
-        document.getElementById('printDate').innerText = new Date().toLocaleDateString();
+<!-- SCRIPTS HÍBRIDOS (MOCK + THYMELEAF) -->
+<script th:inline="javascript">
+    
+    // 1. TRADUÇÃO DE ENUMS
+    const categoryMap = {
+        "GOODS_SERVICES": "Bens e Serviços Comprados",
+        "CAPITAL_GOODS": "Bens de Capital",
+        "ENERGY_AND_FUEL": "Atividades rel. Combustível e Energia",
+        "TRANSPORT_DISTRIBUTION_UPSTREAM": "Transporte e Distribuição (Upstream)",
+        "WASTE": "Resíduos Gerados nas Operações",
+        "BUSINESS_TRAVEL": "Viagens a Negócios",
+        "HOME_TO_WORK_EMISSION": "Deslocamento de Funcionários",
+        "LEASED_ASSETS_LESSOR": "Ativos Arrendados (Upstream)",
+        "PROCESSING_OF_PRODUCTS": "Processamento de Produtos Vendidos",
+        "FRANCHISES": "Franquias",
+        "INVESTMENTS": "Investimentos",
+        "UNCLASSIFIABLE": "Não Classificável / Outros",
+        "TRANSPORT_DISTRIBUTION_DOWN_STREAM": "Transporte e Distribuição (Downstream)",
+        "USE_OF_SOLD_PRODUCTS": "Uso de Bens e Serviços Vendidos",
+        "END_OF_LIFE_TREATMENT": "Tratamento de Fim de Vida",
+        "LEASED_ASSETS_AS_LESSEE": "Ativos Arrendados (Downstream)"
+    };
 
-        // Fill Tables
-        const gasTbody = document.getElementById('gasTable');
-        Object.entries(rawData.gases).forEach(([k, v]) => {
-            gasTbody.innerHTML += `<tr><td>${k}</td><td class="text-right">${fmt(v)}</td></tr>`;
-        });
+    // 2. DADOS MOCK (Padrão para Preview)
+    let bioEmission = 24.0;
+    let bioRemoval  = 500.0;
+    let rawData = [
+        { key: 'GOODS_SERVICES', value: 1200000 },
+        { key: 'CAPITAL_GOODS', value: 500000 },
+        { key: 'ENERGY_AND_FUEL', value: 300000 },
+        { key: 'TRANSPORT_DISTRIBUTION_UPSTREAM', value: 800000 },
+        { key: 'WASTE', value: 50000 },
+        { key: 'BUSINESS_TRAVEL', value: 20000 },
+        { key: 'HOME_TO_WORK_EMISSION', value: 15000 },
+        { key: 'LEASED_ASSETS_LESSOR', value: 100000 },
+        { key: 'TRANSPORT_DISTRIBUTION_DOWN_STREAM', value: 600000 },
+        { key: 'PROCESSING_OF_PRODUCTS', value: 400000 },
+        { key: 'USE_OF_SOLD_PRODUCTS', value: 200000 },
+        { key: 'INVESTMENTS', value: 11464 }
+    ];
 
-        const catTbody = document.getElementById('catTable');
-        cats.forEach((c, i) => {
-            const pct = ((c.val / rawData.cozeTotal) * 100).toFixed(2);
-            catTbody.innerHTML += `
-                <tr>
-                    <td>${i+1}</td>
-                    <td>${c.name}</td>
-                    <td class="text-right">${fmt(c.val)}</td>
-                    <td class="text-right">${pct}%</td>
-                </tr>`;
-        });
+    // 3. INJEÇÃO THYMELEAF (Sobrescreve Mock se houver dados reais)
+    /*[+
+    bioEmission = [[${batch.biogenicCo2Emissions}]];
+    bioRemoval  = [[${batch.biogenicCo2Removals}]];
 
-        // Charts
-        Chart.defaults.font.family = 'Courier New';
-        Chart.defaults.color = '#000';
+    let dbData = [
+        [# th:each="item : ${emissions}"]
+        { 
+            key: '[[${item.emissionType}]]', 
+            value: parseFloat([[${item.co2eT}]]) 
+        },
+        [/]
+    ];
+    
+    if (dbData && dbData.length > 0) {
+        rawData = dbData;
+    }
+    +]*/
 
-        // Gas Comparison (Logarithmic because HFC/PFC are huge compared to CO2)
-        new Chart(document.getElementById('gasChart'), {
-            type: 'bar',
-            data: {
-                labels: Object.keys(rawData.gases),
-                datasets: [{
-                    label: 'Ton',
-                    data: Object.values(rawData.gases),
-                    backgroundColor: '#555'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { y: { type: 'logarithmic' } }, // Escala Logarítmica para ver os dados pequenos
-                plugins: { legend: { display: false } }
+    // 4. MAPEAR NOMES BONITOS
+    const categoriesScope3 = rawData.map(item => {
+        let prettyName = categoryMap[item.key] || item.key;
+        return { name: prettyName, value: item.value };
+    });
+
+    // 5. CONFIGURAÇÃO DOS GRÁFICOS
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = '#374151';
+
+    // --- GRÁFICO DONUT (TOP 5) ---
+    const sortedCats = [...categoriesScope3].sort((a, b) => b.value - a.value);
+    const top5 = sortedCats.slice(0, 5);
+    const othersValue = sortedCats.slice(5).reduce((acc, curr) => acc + curr.value, 0);
+
+    const donutLabels = top5.map(c => c.name);
+    const donutValues = top5.map(c => c.value);
+    if(othersValue > 0) { donutLabels.push("Outros"); donutValues.push(othersValue); }
+    else if (donutLabels.length === 0) { donutLabels.push("Sem dados"); donutValues.push(1); }
+
+    new Chart(document.getElementById('donutChart'), {
+        type: 'doughnut',
+        data: {
+            labels: donutLabels,
+            datasets: [{
+                data: donutValues,
+                backgroundColor: ['#064e3b', '#059669', '#10b981', '#34d399', '#6ee7b7', '#e5e7eb'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: 10 },
+            plugins: {
+                legend: {
+                    position: 'bottom', // Legenda embaixo conforme pedido
+                    align: 'start', // Alinhado à esquerda
+                    labels: { 
+                        boxWidth: 10, 
+                        padding: 15, 
+                        font: { size: 9 } 
+                    }
+                }
             }
-        });
+        }
+    });
 
-        // Share Pie
-        const top5 = [...cats].sort((a,b)=>b.val-a.val).slice(0,5);
-        new Chart(document.getElementById('shareChart'), {
-            type: 'pie',
-            data: {
-                labels: top5.map(c=>c.name.split(' ')[1]), // Short label
-                datasets: [{
-                    data: top5.map(c=>c.val),
-                    backgroundColor: ['#000', '#333', '#666', '#999', '#ccc']
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
-        });
-
-        // Main Categories Bar
-        new Chart(document.getElementById('mainBarChart'), {
-            type: 'bar',
-            data: {
-                labels: cats.map(c=>c.name.split(' ')[0] + ' ' + c.name.split(' ')[1]), // Shorten
-                datasets: [{
-                    label: 'Emissão tCO2e',
-                    data: cats.map(c=>c.val),
-                    backgroundColor: 'black'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { x: { ticks: { maxRotation: 90, minRotation: 90, font: {size: 9} } } },
-                plugins: { legend: { display: false } }
+    // --- GRÁFICO BARRAS (BIOGÊNICO) ---
+    new Chart(document.getElementById('bioChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Emissão', 'Remoção'],
+            datasets: [{
+                data: [bioEmission, bioRemoval],
+                backgroundColor: ['#f59e0b', '#059669'],
+                barPercentage: 0.7
+            }]
+        },
+        options: {
+            indexAxis: 'x',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { display: false }, ticks: { font: { size: 9 } } },
+                y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#f3f4f6' }, ticks: { font: { size: 8 } } }
             }
-        });
+        }
+    });
 
-    </script>
+    // --- GRÁFICO BARRAS (DETALHAMENTO - FULL WIDTH) ---
+    const barData = categoriesScope3.length > 0 ? categoriesScope3 : [{name: 'Sem dados', value: 0}];
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: barData.map(c => c.name),
+            datasets: [{
+                label: 'tCO2e',
+                data: barData.map(c => c.value),
+                backgroundColor: '#059669',
+                borderRadius: 4,
+                hoverBackgroundColor: '#047857'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: { left: 50, right: 20, bottom: 20 } },
+            plugins: { legend: { display: false } },
+            scales: {
+                x: {
+                    ticks: {
+                        font: { size: 9, family: 'Inter', weight: '600' },
+                        color: '#374151',
+                        maxRotation: 45,
+                        minRotation: 0,
+                        autoSkip: false
+                    },
+                    grid: { display: false }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { borderDash: [2, 4], color: '#f3f4f6' },
+                    ticks: { font: { size: 9 } }
+                }
+            }
+        }
+    });
+</script>
 </body>
 </html>
