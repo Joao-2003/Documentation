@@ -247,26 +247,28 @@
     <div class="info-box">
         <!-- Coluna Esquerda: Dados da Propriedade -->
         <div class="info-col">
-            <div>
+            <div style="margin-bottom: 8px;">
                 <div class="label">Proprietário / Cliente</div>
-                <div class="value" th:text="${batch.farm.owner != null ? batch.farm.owner.name : 'Não informado'}" style="margin-bottom: 6px;">Roberto Vasconcelos</div>
+                <div class="value" th:text="${batch.farm.owner != null ? batch.farm.owner.name : 'Não informado'}">Roberto Vasconcelos</div>
             </div>
             
-            <div class="row">
-                <!-- Propriedade e Localização -->
+            <!-- Propriedade em Linha Separada -->
+            <div>
+                <div class="label">Propriedade</div>
+                <div class="value-sm" th:text="${batch.farm.farmName}">Fazenda Esperança - Gleba B</div>
+            </div>
+
+            <div class="row" style="margin-top: 6px;">
+                <!-- Localização (Esquerda) -->
                 <div style="flex: 2;">
-                    <div class="label">Propriedade</div>
-                    <div class="value-sm" th:text="${batch.farm.farmName}">Fazenda Esperança - Gleba B</div>
-                    
-                    <!-- CIDADE E ESTADO ADICIONADOS AQUI VISUALMENTE -->
-                    <div class="label" style="margin-top: 4px;">Localização</div>
+                    <div class="label">Localização</div>
                     <div class="value-sm text-gray-dark">
                         <span th:text="${batch.farm.city ?: 'Não informado'}">Rio Verde</span> - 
                         <span th:text="${batch.farm.state ?: 'UF'}">GO</span>
                     </div>
                 </div>
 
-                <!-- Área -->
+                <!-- Área Total (Direita, mesma linha da Localização) -->
                 <div style="flex: 1;">
                     <div class="label">Área Total</div>
                     <div class="value-sm" th:text="${#numbers.formatDecimal(batch.farm.totalAreaHectares, 1, 'POINT', 2, 'COMMA')} + ' ha'">1.250,00 ha</div>
