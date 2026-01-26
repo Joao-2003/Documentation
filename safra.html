@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- METADADOS TÉCNICOS -->
-    <meta name="season" th:content="${fieldReportData.season ?: ''}">
+    <!-- METADADOS TÉCNICOS (Via DTO fieldReportData) -->
+    <!-- 'season' não existe no DTO fornecido, mantendo fixo ou vazio se necessário -->
+    <meta name="season" content="2025/2026">
     <meta name="farm" th:content="${fieldReportData.farmName ?: ''}">
     <meta name="field" th:content="${fieldReportData.fieldName ?: ''}">
     
@@ -101,7 +102,7 @@
             flex-direction: column; 
             justify-content: center; 
             min-height: 80px;
-            border: 1px solid #e5e7eb; /* Default fallback */
+            border: 1px solid #e5e7eb;
         }
         
         /* CARD VERDE (Padrão) */
@@ -115,14 +116,13 @@
         /* CARD VERMELHO (Warning) */
         .kpi-card.warning { 
             border: 1px solid #dc2626; 
-            background-color: white; /* Fundo removido conforme pedido */
+            background-color: white; 
         }
         .kpi-card.warning .label {
             color: #dc2626;
         }
 
         .kpi-card .label { font-size: 10px; margin-bottom: 4px; text-transform: uppercase; font-weight: 700; }
-        /* Força a cor preta para os valores conforme solicitado */
         .kpi-val { font-size: 24px; font-weight: 800; margin-top: 2px; line-height: 1; color: #111; }
 
         /* CHART BOXES */
@@ -193,7 +193,7 @@
             margin-right: 6px;
         }
 
-        /* RODAPÉ */
+        /* RODAPÉ ATUALIZADO */
         .footer-inst {
             margin-top: auto;
             border-top: 1px solid #e5e7eb;
@@ -234,7 +234,7 @@
     <!-- 1. Header -->
     <header class="header">
         <div class="header-title">
-            <h1>Relatório de Safra <span th:text="${fieldReportData.season ?: '2025/2026'}">2025/2026</span></h1>
+            <h1>Relatório de Safra 2025/2026</h1>
             <p>Gestão de Ativos Biológicos</p>
         </div>
         <div class="header-logo">
@@ -250,7 +250,7 @@
             <!-- 1 -->
             <div style="margin-bottom: 6px;">
                 <div class="label">Proprietário / Cliente</div>
-                <div class="value" th:text="${fieldReportData.ownerName}">Roberto Vasconcelos</div>
+                <div class="value" th:text="${fieldReportData.responsible}">Roberto Vasconcelos</div>
             </div>
             <!-- 2 -->
             <div style="margin-bottom: 6px;">
@@ -269,9 +269,10 @@
             <!-- 1 -->
             <div style="margin-bottom: 8px;">
                 <div class="label">Safra</div>
-                <div class="value-highlight" th:text="${fieldReportData.season ?: '2025/2026'}">2025/2026</div>
+                <!-- Safra não está no DTO, mantendo fixo por enquanto -->
+                <div class="value-highlight">2025/2026</div>
             </div>
-            <!-- 2 (Localização movida para cá) -->
+            <!-- 2 -->
             <div style="margin-bottom: 8px;">
                 <div class="label">Localização</div>
                 <div class="value-sm text-gray-dark">
@@ -282,29 +283,29 @@
             <!-- 3 -->
             <div>
                 <div class="label">Área Total</div>
-                <div class="value-sm" th:text="${#numbers.formatDecimal(fieldReportData.totalArea, 1, 'POINT', 2, 'COMMA')} + ' ha'">1.250,00 ha</div>
+                <div class="value-sm" th:text="${#numbers.formatDecimal(fieldReportData.totalAreaHec, 1, 'POINT', 2, 'COMMA')} + ' ha'">1.250,00 ha</div>
             </div>
         </div>
     </div>
 
-    <!-- 3. KPIs (Visual ajustado) -->
+    <!-- 3. KPIs (Cards com DTO) -->
     <div class="kpi-grid-3">
-        <!-- Box 1: Verde (Success) -->
+        <!-- Box 1 -->
         <div class="kpi-card success">
             <div class="label">Lotes Processados</div>
-            <div class="kpi-val" th:text="${fieldReportData.batchCount}">142</div>
+            <div class="kpi-val" th:text="${fieldReportData.arvaBatchCount}">142</div>
         </div>
 
-        <!-- Box 2: Verde (Success) -->
+        <!-- Box 2 -->
         <div class="kpi-card success">
             <div class="label">Total de Registros</div>
-            <div class="kpi-val" th:text="${#numbers.formatDecimal(fieldReportData.totalRecords, 0, 'POINT', 0, 'COMMA')}">8.450</div>
+            <div class="kpi-val" th:text="${#numbers.formatDecimal(fieldReportData.totalArvaBatchInCurrentYear, 0, 'POINT', 0, 'COMMA')}">8.450</div>
         </div>
 
-        <!-- Box 3: Vermelho (Warning) - Sem fundo, apenas borda e texto vermelho -->
+        <!-- Box 3 -->
         <div class="kpi-card warning">
             <div class="label">Registros Incompletos</div>
-            <div class="kpi-val" th:text="${fieldReportData.incompleteRecords}">12</div>
+            <div class="kpi-val" th:text="${fieldReportData.totalIncompleteArvaBatchs}">12</div>
         </div>
     </div>
 
@@ -323,46 +324,45 @@
                 <thead>
                     <tr>
                         <th>Cultura</th>
-                        <th style="text-align: right;">Área Plantada (ha)</th>
-                        <th style="text-align: right;">%</th>
+                        <th style="text-align: right;">Quantidade (Registros)</th>
+                        <!-- A porcentagem será calculada visualmente no gráfico, aqui mostramos o valor absoluto do DTO -->
+                        <th style="text-align: right;">% (Estimada)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Exemplo mockado -->
                     <tr>
                         <td><span class="dot" style="background-color: #15803d;"></span> Soja</td>
-                        <td style="text-align: right;">500,00</td>
-                        <td style="text-align: right;">40%</td>
+                        <td style="text-align: right;" th:text="${fieldReportData.totalSojaCulture}">0</td>
+                        <td style="text-align: right;" class="calc-pct-soja">-</td>
                     </tr>
                     <tr>
                         <td><span class="dot" style="background-color: #eab308;"></span> Milho</td>
-                        <td style="text-align: right;">437,50</td>
-                        <td style="text-align: right;">35%</td>
+                        <td style="text-align: right;" th:text="${fieldReportData.totalMilhoCulture}">0</td>
+                        <td style="text-align: right;" class="calc-pct-milho">-</td>
                     </tr>
                     <tr>
                         <td><span class="dot" style="background-color: #84cc16;"></span> Cana-de-Açúcar</td>
-                        <td style="text-align: right;">312,50</td>
-                        <td style="text-align: right;">25%</td>
+                        <td style="text-align: right;" th:text="${fieldReportData.totalCanaCulture}">0</td>
+                        <td style="text-align: right;" class="calc-pct-cana">-</td>
                     </tr>
                     <tr class="total-row">
-                        <td>Total</td>
-                        <td style="text-align: right;" th:text="${#numbers.formatDecimal(fieldReportData.totalArea, 1, 'POINT', 2, 'COMMA')}">1.250,00</td>
-                        <td style="text-align: right;">100%</td>
+                        <td>Total (Área)</td>
+                        <td style="text-align: right;" colspan="2" th:text="${#numbers.formatDecimal(fieldReportData.totalAreaHec, 1, 'POINT', 2, 'COMMA')} + ' ha'">1.250,00 ha</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- 5. Rodapé (Texto Original do GHG) -->
+    <!-- 5. Rodapé (Atualizado) -->
     <div style="margin-top: 10px;">
         <div class="footer-inst">
-            <strong style="color: #4b5563; text-transform: uppercase;">Sobre o Programa Brasileiro GHG Protocol</strong><br>
-            O Programa Brasileiro GHG Protocol foi criado em 2008 e é responsável pela adaptação do método GHG Protocol ao contexto brasileiro.
-            <strong>Objetivo:</strong> Estimular a cultura de inventário de GEE no Brasil.
+            <strong style="color: #4b5563; text-transform: uppercase;">RV Carbon - Monitoramento de Safra e Ativos Biológicos</strong><br>
+            Este relatório consolida os dados operacionais e agronômicos da safra vigente, processados pela plataforma RV Carbon. 
+            <strong>Objetivo:</strong> Fornecer visibilidade sobre a eficiência produtiva, monitoramento de áreas e conformidade dos registros de campo.
         </div>
         <div class="footer-meta">
-            <div>Gerado por: <span th:text="${fieldReportData.userCreator != null ? fieldReportData.userCreator.username : 'Sistema'}">rvcarbon.admin</span></div>
+            <div>Gerado por: RV Carbon System</div>
             <div>RV Carbon &copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2026</span> | Página 1 de 1</div>
         </div>
     </div>
@@ -374,9 +374,32 @@
     Chart.defaults.font.family = "'Inter', sans-serif";
     Chart.defaults.color = '#374151';
 
+    // Capturando os valores do Thymeleaf para o JS
+    // Usamos um valor default de 0 caso venha nulo para evitar erro no gráfico
+    /*[+
+    const sojaVal = [[${fieldReportData.totalSojaCulture}]] || 0;
+    const milhoVal = [[${fieldReportData.totalMilhoCulture}]] || 0;
+    const canaVal = [[${fieldReportData.totalCanaCulture}]] || 0;
+    +]*/
+    
+    // Fallback para preview estático se o Thymeleaf não processar
+    if (typeof sojaVal === 'undefined') {
+        var sojaVal = 40;
+        var milhoVal = 35;
+        var canaVal = 25;
+    }
+
+    // Calcula porcentagens simples para exibir na tabela via JS (opcional, apenas visual)
+    const totalCount = sojaVal + milhoVal + canaVal;
+    if(totalCount > 0) {
+        if(document.querySelector('.calc-pct-soja')) document.querySelector('.calc-pct-soja').innerText = Math.round((sojaVal/totalCount)*100) + '%';
+        if(document.querySelector('.calc-pct-milho')) document.querySelector('.calc-pct-milho').innerText = Math.round((milhoVal/totalCount)*100) + '%';
+        if(document.querySelector('.calc-pct-cana')) document.querySelector('.calc-pct-cana').innerText = Math.round((canaVal/totalCount)*100) + '%';
+    }
+
     const cultureData = {
         labels: ['Soja', 'Milho', 'Cana-de-Açúcar'],
-        values: [40, 35, 25]
+        values: [sojaVal, milhoVal, canaVal]
     };
 
     const ctx = document.getElementById('cultureChart').getContext('2d');
@@ -418,7 +441,16 @@
                         weight: 'bold',
                         size: 14
                     },
-                    formatter: (value) => value + "%",
+                    formatter: (value, ctx) => {
+                        let sum = 0;
+                        let dataArr = ctx.chart.data.datasets[0].data;
+                        dataArr.map(data => {
+                            sum += data;
+                        });
+                        if (sum === 0) return "0%";
+                        let percentage = (value*100 / sum).toFixed(0)+"%";
+                        return percentage;
+                    },
                     anchor: 'center', 
                     align: 'center',
                     offset: 0
@@ -426,7 +458,7 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return context.label + ': ' + context.parsed + '%';
+                            return context.label + ': ' + context.parsed;
                         }
                     }
                 }
