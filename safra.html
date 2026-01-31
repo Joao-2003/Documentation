@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- METADADOS TÉCNICOS (Via DTO fieldReportData) -->
-    <!-- 'season' não existe no DTO fornecido, mantendo fixo ou vazio se necessário -->
-    <meta name="season" content="2025/2026">
+    <!-- METADADOS TÉCNICOS -->
+    <!-- Agora refletindo o período histórico -->
+    <meta name="period" th:content="${periodYears ?: 10} + ' Anos'">
     <meta name="farm" th:content="${fieldReportData.farmName ?: ''}">
     <meta name="field" th:content="${fieldReportData.fieldName ?: ''}">
     
-    <title>RV Carbon - Relatório de Safra</title>
+    <title>RV Carbon - Relatório de Histórico</title>
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -234,8 +234,9 @@
     <!-- 1. Header -->
     <header class="header">
         <div class="header-title">
-            <h1>Relatório de Safra 2025/2026</h1>
-            <p>Gestão de Ativos Biológicos</p>
+            <!-- Título atualizado para Histórico com período dinâmico (default 10 anos) -->
+            <h1>Relatório de Histórico <span th:text="${periodYears ?: 10} + ' Anos'">10 Anos</span></h1>
+            <p>Gestão de Ativos Biológicos - Rotação de Culturas</p>
         </div>
         <div class="header-logo">
             <div class="brand">RV Carbon</div>
@@ -264,13 +265,12 @@
             </div>
         </div>
 
-        <!-- Coluna Direita: Safra, Localização, Área Total -->
+        <!-- Coluna Direita: Janela Temporal, Localização, Área Total -->
         <div class="info-col right">
-            <!-- 1 -->
+            <!-- 1 - Substituindo Safra por Janela Temporal/Período -->
             <div style="margin-bottom: 8px;">
-                <div class="label">Safra</div>
-                <!-- Safra não está no DTO, mantendo fixo por enquanto -->
-                <div class="value-highlight">2025/2026</div>
+                <div class="label">Janela Temporal</div>
+                <div class="value-highlight" th:text="${periodYears ?: 10} + ' Anos'">10 Anos</div>
             </div>
             <!-- 2 -->
             <div style="margin-bottom: 8px;">
@@ -288,17 +288,17 @@
         </div>
     </div>
 
-    <!-- 3. KPIs (Cards com DTO) -->
+    <!-- 3. KPIs (Acumulado Histórico) -->
     <div class="kpi-grid-3">
         <!-- Box 1 -->
         <div class="kpi-card success">
-            <div class="label">Lotes Processados</div>
+            <div class="label">Lotes Processados (Histórico)</div>
             <div class="kpi-val" th:text="${fieldReportData.arvaBatchCount}">142</div>
         </div>
 
         <!-- Box 2 -->
         <div class="kpi-card success">
-            <div class="label">Total de Registros</div>
+            <div class="label">Total de Registros (Acumulado)</div>
             <div class="kpi-val" th:text="${#numbers.formatDecimal(fieldReportData.totalArvaBatchInCurrentYear, 0, 'POINT', 0, 'COMMA')}">8.450</div>
         </div>
 
@@ -311,7 +311,8 @@
 
     <!-- 4. Seção Gráfico e Tabela -->
     <div class="chart-box">
-        <div class="chart-title green">Distribuição de Cultura</div>
+        <!-- Título ajustado para Histórico de Culturas -->
+        <div class="chart-title green">Histórico de Culturas (Distribuição)</div>
         
         <!-- Gráfico -->
         <div class="chart-content">
@@ -324,9 +325,8 @@
                 <thead>
                     <tr>
                         <th>Cultura</th>
-                        <th style="text-align: right;">Quantidade (Registros)</th>
-                        <!-- A porcentagem será calculada visualmente no gráfico, aqui mostramos o valor absoluto do DTO -->
-                        <th style="text-align: right;">% (Estimada)</th>
+                        <th style="text-align: right;">Registros Acumulados</th>
+                        <th style="text-align: right;">Representatividade Histórica (%)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -346,7 +346,7 @@
                         <td style="text-align: right;" class="calc-pct-cana">-</td>
                     </tr>
                     <tr class="total-row">
-                        <td>Total (Área)</td>
+                        <td>Total (Área Atual)</td>
                         <td style="text-align: right;" colspan="2" th:text="${#numbers.formatDecimal(fieldReportData.totalAreaHec, 1, 'POINT', 2, 'COMMA')} + ' ha'">1.250,00 ha</td>
                     </tr>
                 </tbody>
@@ -354,12 +354,12 @@
         </div>
     </div>
 
-    <!-- 5. Rodapé (Atualizado) -->
+    <!-- 5. Rodapé -->
     <div style="margin-top: 10px;">
         <div class="footer-inst">
-            <strong style="color: #4b5563; text-transform: uppercase;">RV Carbon - Monitoramento de Safra e Ativos Biológicos</strong><br>
-            Este relatório consolida os dados operacionais e agronômicos da safra vigente, processados pela plataforma RV Carbon. 
-            <strong>Objetivo:</strong> Fornecer visibilidade sobre a eficiência produtiva, monitoramento de áreas e conformidade dos registros de campo.
+            <strong style="color: #4b5563; text-transform: uppercase;">RV Carbon - Monitoramento Histórico de Safra e Ativos</strong><br>
+            Este relatório consolida os dados operacionais e agronômicos em um período histórico definido (Padrão 10 anos), processados pela plataforma RV Carbon. 
+            <strong>Objetivo:</strong> Fornecer visibilidade sobre a rotação de culturas, eficiência produtiva histórica e conformidade dos registros de campo.
         </div>
         <div class="footer-meta">
             <div>Gerado por: RV Carbon System</div>
@@ -384,12 +384,12 @@
     
     // Fallback para preview estático se o Thymeleaf não processar
     if (typeof sojaVal === 'undefined') {
-        var sojaVal = 40;
-        var milhoVal = 35;
-        var canaVal = 25;
+        var sojaVal = 50; // Exemplo histórico: 5 safras
+        var milhoVal = 50; // Exemplo histórico: 5 safras
+        var canaVal = 0;
     }
 
-    // Calcula porcentagens simples para exibir na tabela via JS (opcional, apenas visual)
+    // Calcula porcentagens simples para exibir na tabela via JS
     const totalCount = sojaVal + milhoVal + canaVal;
     if(totalCount > 0) {
         if(document.querySelector('.calc-pct-soja')) document.querySelector('.calc-pct-soja').innerText = Math.round((sojaVal/totalCount)*100) + '%';
@@ -458,7 +458,7 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return context.label + ': ' + context.parsed;
+                            return context.label + ': ' + context.parsed + ' registros';
                         }
                     }
                 }
