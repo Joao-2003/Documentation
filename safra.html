@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- METADADOS TÉCNICOS -->
-    <!-- Agora refletindo o período histórico -->
+    <!-- LÓGICA: Variável periodYears com fallback para 10 se for nula -->
     <meta name="period" th:content="${periodYears ?: 10} + ' Anos'">
     <meta name="farm" th:content="${fieldReportData.farmName ?: ''}">
     <meta name="field" th:content="${fieldReportData.fieldName ?: ''}">
@@ -42,7 +42,8 @@
         .page {
             width: 210mm;
             min-height: 297mm;
-            padding: 12mm 15mm;
+            /* Margem otimizada para caber até 20 anos se necessário */
+            padding: 10mm 15mm; 
             margin: 20px auto;
             background: white;
             position: relative;
@@ -57,14 +58,14 @@
             justify-content: space-between;
             align-items: flex-end;
             border-bottom: 4px solid #059669;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
             height: auto;
         }
-        .header-title h1 { font-size: 24px; font-weight: 800; line-height: 1; text-transform: uppercase; color: #111; }
-        .header-title p { color: #047857; font-weight: 600; font-size: 14px; margin-top: 2px; }
+        .header-title h1 { font-size: 22px; font-weight: 800; line-height: 1; text-transform: uppercase; color: #111; }
+        .header-title p { color: #047857; font-weight: 600; font-size: 13px; margin-top: 2px; }
         .header-logo { text-align: right; }
-        .header-logo .brand { font-size: 20px; font-weight: 800; color: #064e3b; }
+        .header-logo .brand { font-size: 18px; font-weight: 800; color: #064e3b; }
         .header-logo .date { font-size: 9px; color: #6b7280; margin-top: 2px; }
 
         /* INFO BOX */
@@ -72,86 +73,72 @@
             background-color: #f9fafb;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 15px;
+            padding: 10px;
+            margin-bottom: 12px;
             display: flex;
         }
         .info-col { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .info-col.right { border-left: 1px solid #d1d5db; padding-left: 20px; text-align: right; }
         
         .label { font-size: 8px; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin-bottom: 2px; letter-spacing: 0.5px; }
-        .value { font-size: 14px; font-weight: 700; color: #1f2937; line-height: 1.2; }
-        .value-sm { font-size: 12px; font-weight: 600; color: #374151; }
-        .value-highlight { color: #059669; font-weight: 700; font-size: 16px; }
+        .value { font-size: 13px; font-weight: 700; color: #1f2937; line-height: 1.2; }
+        .value-sm { font-size: 11px; font-weight: 600; color: #374151; }
+        .value-highlight { color: #059669; font-weight: 700; font-size: 15px; }
 
         /* KPI GRID - 3 COLUNAS */
         .kpi-grid-3 { 
             display: grid; 
             grid-template-columns: 1fr 1fr 1fr; 
-            gap: 12px; 
-            margin-bottom: 15px; 
+            gap: 10px; 
+            margin-bottom: 12px; 
             flex-shrink: 0;
         } 
         
-        /* KPI CARD - BASE */
+        /* KPI CARD */
         .kpi-card { 
             border-radius: 8px; 
-            padding: 12px; 
+            padding: 10px; 
             background: white; 
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
-            min-height: 80px;
+            min-height: 70px;
             border: 1px solid #e5e7eb;
         }
-        
-        /* CARD VERDE (Padrão) */
-        .kpi-card.success {
-            border: 1px solid #059669;
-        }
-        .kpi-card.success .label {
-            color: #059669;
-        }
+        .kpi-card.success { border: 1px solid #059669; }
+        .kpi-card.success .label { color: #059669; }
+        .kpi-card.warning { border: 1px solid #dc2626; background-color: white; }
+        .kpi-card.warning .label { color: #dc2626; }
 
-        /* CARD VERMELHO (Warning) */
-        .kpi-card.warning { 
-            border: 1px solid #dc2626; 
-            background-color: white; 
-        }
-        .kpi-card.warning .label {
-            color: #dc2626;
-        }
-
-        .kpi-card .label { font-size: 10px; margin-bottom: 4px; text-transform: uppercase; font-weight: 700; }
-        .kpi-val { font-size: 24px; font-weight: 800; margin-top: 2px; line-height: 1; color: #111; }
+        .kpi-card .label { font-size: 9px; margin-bottom: 3px; text-transform: uppercase; font-weight: 700; }
+        .kpi-val { font-size: 20px; font-weight: 800; margin-top: 1px; line-height: 1; color: #111; }
 
         /* CHART BOXES */
         .chart-box {
             border: 1px solid #f3f4f6;
             border-radius: 8px;
-            padding: 10px;
+            padding: 8px;
             background: white;
             position: relative;
             display: flex;
             flex-direction: column;
-            margin-bottom: 15px;
-            flex-grow: 1;
+            margin-bottom: 10px; 
         }
         .chart-title {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             color: #374151;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             padding-left: 8px;
             border-left: 4px solid #f59e0b;
             flex-shrink: 0;
         }
         .chart-title.green { border-color: #059669; }
+        
         .chart-content { 
-            flex-grow: 1; 
             position: relative; 
             width: 100%; 
-            min-height: 300px; 
+            height: 180px;
             display: flex;
             justify-content: center;
         }
@@ -160,21 +147,21 @@
         .simple-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
-            margin-top: 15px;
+            font-size: 10px;
+            margin-top: 5px;
         }
         .simple-table th {
             background-color: #ecfdf5;
             color: #064e3b;
-            padding: 6px 10px;
+            padding: 5px 8px;
             text-align: left;
             font-weight: 700;
             border-bottom: 1px solid #d1fae5;
             text-transform: uppercase;
-            font-size: 9px;
+            font-size: 8px;
         }
         .simple-table td {
-            padding: 6px 10px;
+            padding: 5px 8px;
             border-bottom: 1px solid #f3f4f6;
             color: #374151;
             font-weight: 500;
@@ -186,30 +173,33 @@
             border-bottom: none;
         }
         .dot {
-            height: 8px;
-            width: 8px;
+            height: 6px;
+            width: 6px;
             border-radius: 50%;
             display: inline-block;
-            margin-right: 6px;
+            margin-right: 4px;
         }
+        
+        .status-ok { color: #059669; font-weight: 700; font-size: 7px; text-transform: uppercase; }
+        .status-warn { color: #dc2626; font-weight: 700; font-size: 7px; text-transform: uppercase; }
 
-        /* RODAPÉ ATUALIZADO */
+        /* RODAPÉ */
         .footer-inst {
             margin-top: auto;
             border-top: 1px solid #e5e7eb;
-            padding-top: 8px;
+            padding-top: 6px;
             font-size: 7px;
             color: #6b7280;
-            line-height: 1.3;
+            line-height: 1.2;
             text-align: justify;
         }
         .footer-meta {
-            margin-top: 5px;
+            margin-top: 4px;
             border-top: 1px solid #f3f4f6;
-            padding-top: 5px;
+            padding-top: 4px;
             display: flex;
             justify-content: space-between;
-            font-size: 8px;
+            font-size: 7px;
             font-weight: 600;
             text-transform: uppercase;
             color: #9ca3af;
@@ -234,7 +224,7 @@
     <!-- 1. Header -->
     <header class="header">
         <div class="header-title">
-            <!-- Título atualizado para Histórico com período dinâmico (default 10 anos) -->
+            <!-- LÓGICA: Exibe o período dinâmico, se nulo exibe 10 -->
             <h1>Relatório de Histórico <span th:text="${periodYears ?: 10} + ' Anos'">10 Anos</span></h1>
             <p>Gestão de Ativos Biológicos - Rotação de Culturas</p>
         </div>
@@ -244,35 +234,29 @@
         </div>
     </header>
 
-    <!-- 2. Info Box (3 Itens de cada lado) -->
+    <!-- 2. Info Box -->
     <div class="info-box">
-        <!-- Coluna Esquerda: Proprietário, Propriedade, Talhão -->
         <div class="info-col">
-            <!-- 1 -->
             <div style="margin-bottom: 6px;">
                 <div class="label">Proprietário / Cliente</div>
                 <div class="value" th:text="${fieldReportData.responsible}">Roberto Vasconcelos</div>
             </div>
-            <!-- 2 -->
             <div style="margin-bottom: 6px;">
                 <div class="label">Propriedade</div>
                 <div class="value-sm" th:text="${fieldReportData.farmName}">Fazenda Esperança - Matriz</div>
             </div>
-            <!-- 3 -->
             <div>
                 <div class="label">Talhão(ões) Referência</div>
                 <div class="value-sm" style="font-weight: 700; color: #064e3b;" th:text="${fieldReportData.fieldName}">Gleba B-04 / Setor Norte</div>
             </div>
         </div>
 
-        <!-- Coluna Direita: Janela Temporal, Localização, Área Total -->
         <div class="info-col right">
-            <!-- 1 - Substituindo Safra por Janela Temporal/Período -->
             <div style="margin-bottom: 8px;">
                 <div class="label">Janela Temporal</div>
+                <!-- LÓGICA: Exibe o período dinâmico também aqui -->
                 <div class="value-highlight" th:text="${periodYears ?: 10} + ' Anos'">10 Anos</div>
             </div>
-            <!-- 2 -->
             <div style="margin-bottom: 8px;">
                 <div class="label">Localização</div>
                 <div class="value-sm text-gray-dark">
@@ -280,7 +264,6 @@
                     <span th:text="${fieldReportData.state ?: 'GO'}">GO</span>
                 </div>
             </div>
-            <!-- 3 -->
             <div>
                 <div class="label">Área Total</div>
                 <div class="value-sm" th:text="${#numbers.formatDecimal(fieldReportData.totalAreaHec, 1, 'POINT', 2, 'COMMA')} + ' ha'">1.250,00 ha</div>
@@ -288,77 +271,101 @@
         </div>
     </div>
 
-    <!-- 3. KPIs (Acumulado Histórico) -->
+    <!-- 3. KPIs -->
     <div class="kpi-grid-3">
-        <!-- Box 1 -->
         <div class="kpi-card success">
             <div class="label">Lotes Processados (Histórico)</div>
             <div class="kpi-val" th:text="${fieldReportData.arvaBatchCount}">142</div>
         </div>
-
-        <!-- Box 2 -->
         <div class="kpi-card success">
             <div class="label">Total de Registros (Acumulado)</div>
             <div class="kpi-val" th:text="${#numbers.formatDecimal(fieldReportData.totalArvaBatchInCurrentYear, 0, 'POINT', 0, 'COMMA')}">8.450</div>
         </div>
-
-        <!-- Box 3 -->
         <div class="kpi-card warning">
             <div class="label">Registros Incompletos</div>
             <div class="kpi-val" th:text="${fieldReportData.totalIncompleteArvaBatchs}">12</div>
         </div>
     </div>
 
-    <!-- 4. Seção Gráfico e Tabela -->
-    <div class="chart-box">
-        <!-- Título ajustado para Histórico de Culturas -->
-        <div class="chart-title green">Histórico de Culturas (Distribuição)</div>
+    <!-- 4. Seção Gráfico e Tabela Agregada (Histórico Acumulado) -->
+    <div class="chart-box" style="margin-bottom: 8px; flex-grow: 0;">
+        <div class="chart-title green">Distribuição Histórica (Acumulado)</div>
         
-        <!-- Gráfico -->
-        <div class="chart-content">
-            <canvas id="cultureChart"></canvas>
-        </div>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <!-- Gráfico (Esquerda) -->
+            <div class="chart-content" style="flex: 1; height: 180px;">
+                <canvas id="cultureChart"></canvas>
+            </div>
 
-        <!-- Tabela de Detalhamento -->
-        <div style="padding: 0 10px 10px 10px;">
-            <table class="simple-table">
+            <!-- Tabela Resumo (Direita) - Apenas as 3 principais -->
+            <div style="flex: 1; padding-right: 10px;">
+                <table class="simple-table" style="margin-top: 0;">
+                    <thead>
+                        <tr>
+                            <th>Cultura</th>
+                            <th style="text-align: right;">Qtd.</th>
+                            <th style="text-align: right;">%</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="dot" style="background-color: #15803d;"></span> Soja</td>
+                            <td style="text-align: right;" th:text="${fieldReportData.totalSojaCulture}">4</td>
+                            <td style="text-align: right;" class="calc-pct-soja">40%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="dot" style="background-color: #eab308;"></span> Milho</td>
+                            <td style="text-align: right;" th:text="${fieldReportData.totalMilhoCulture}">4</td>
+                            <td style="text-align: right;" class="calc-pct-milho">40%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="dot" style="background-color: #84cc16;"></span> Cana</td>
+                            <td style="text-align: right;" th:text="${fieldReportData.totalCanaCulture}">2</td>
+                            <td style="text-align: right;" class="calc-pct-cana">20%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Tabela de Resumo Anual -->
+    <div class="chart-box" style="flex-grow: 1;">
+        <div class="chart-title green">Histórico Detalhado (Safra a Safra)</div>
+        <div style="padding: 5px 10px 10px 10px;">
+            <table class="simple-table" style="margin-top: 0;">
                 <thead>
                     <tr>
-                        <th>Cultura</th>
-                        <th style="text-align: right;">Registros Acumulados</th>
-                        <th style="text-align: right;">Representatividade Histórica (%)</th>
+                        <th style="width: 25%;">Safra</th>
+                        <th style="width: 30%;">Cultura Identificada</th>
+                        <th style="width: 25%; text-align: right;">Registros</th>
+                        <th style="width: 20%; text-align: center;">Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><span class="dot" style="background-color: #15803d;"></span> Soja</td>
-                        <td style="text-align: right;" th:text="${fieldReportData.totalSojaCulture}">0</td>
-                        <td style="text-align: right;" class="calc-pct-soja">-</td>
-                    </tr>
-                    <tr>
-                        <td><span class="dot" style="background-color: #eab308;"></span> Milho</td>
-                        <td style="text-align: right;" th:text="${fieldReportData.totalMilhoCulture}">0</td>
-                        <td style="text-align: right;" class="calc-pct-milho">-</td>
-                    </tr>
-                    <tr>
-                        <td><span class="dot" style="background-color: #84cc16;"></span> Cana-de-Açúcar</td>
-                        <td style="text-align: right;" th:text="${fieldReportData.totalCanaCulture}">0</td>
-                        <td style="text-align: right;" class="calc-pct-cana">-</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td>Total (Área Atual)</td>
-                        <td style="text-align: right;" colspan="2" th:text="${#numbers.formatDecimal(fieldReportData.totalAreaHec, 1, 'POINT', 2, 'COMMA')} + ' ha'">1.250,00 ha</td>
-                    </tr>
+                    <!-- Exemplo com 10 Linhas (Padrão solicitado) -->
+                    <!-- O backend irá popular isso dinamicamente, podendo chegar a 20 -->
+                    <tr><td style="font-weight: 600;">2025/2026</td><td><span class="dot" style="background-color: #15803d;"></span> Soja</td><td style="text-align: right;">15</td><td style="text-align: center;"><span class="status-ok">CONCLUÍDO</span></td></tr>
+                    <tr><td style="font-weight: 600;">2024/2025</td><td><span class="dot" style="background-color: #eab308;"></span> Milho</td><td style="text-align: right;">12</td><td style="text-align: center;"><span class="status-ok">CONCLUÍDO</span></td></tr>
+                    <tr><td style="font-weight: 600;">2023/2024</td><td><span class="dot" style="background-color: #15803d;"></span> Soja</td><td style="text-align: right;">14</td><td style="text-align: center;"><span class="status-ok">CONCLUÍDO</span></td></tr>
+                    <tr><td style="font-weight: 600;">2022/2023</td><td><span class="dot" style="background-color: #15803d;"></span> Soja</td><td style="text-align: right;">14</td><td style="text-align: center;"><span class="status-ok">CONCLUÍDO</span></td></tr>
+                    <tr><td style="font-weight: 600;">2021/2022</td><td><span class="dot" style="background-color: #84cc16;"></span> Cana-de-Açúcar</td><td style="text-align: right;">8</td><td style="text-align: center;"><span class="status-warn">PENDENTE</span></td></tr>
+                    <tr><td style="font-weight: 600;">2020/2021</td><td><span class="dot" style="background-color: #84cc16;"></span> Cana-de-Açúcar</td><td style="text-align: right;">10</td><td style="text-align: center;"><span class="status-ok">CONCLUÍDO</span></td></tr>
+                    <tr><td style="font-weight: 600;">2019/2020</td><td><span class="dot" style="background-color: #eab308;"></span> Milho</td><td style="text-align: right;">11</td><td style="text-align: center;"><span class="status-ok">CONCLUÍDO</span></td></tr>
+                    <tr><td style="font-weight: 600;">2018/2019</td><td><span class="dot" style="background-color: #15803d;"></span> Soja</td><td style="text-align: right;">9</td><td style="text-align: center;"><span class="status-ok">CONCLUÍDO</span></td></tr>
+                    <tr><td style="font-weight: 600;">2017/2018</td><td><span class="dot" style="background-color: #15803d;"></span> Soja</td><td style="text-align: right;">13</td><td style="text-align: center;"><span class="status-ok">CONCLUÍDO</span></td></tr>
+                    <tr><td style="font-weight: 600;">2016/2017</td><td><span class="dot" style="background-color: #eab308;"></span> Milho</td><td style="text-align: right;">12</td><td style="text-align: center;"><span class="status-ok">CONCLUÍDO</span></td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- 5. Rodapé -->
-    <div style="margin-top: 10px;">
+    <!-- 6. Rodapé -->
+    <div style="margin-top: auto;">
         <div class="footer-inst">
+            <!-- LÓGICA: Texto dinâmico com o período padrão de 10 anos -->
             <strong style="color: #4b5563; text-transform: uppercase;">RV Carbon - Monitoramento Histórico de Safra e Ativos</strong><br>
-            Este relatório consolida os dados operacionais e agronômicos em um período histórico definido (Padrão 10 anos), processados pela plataforma RV Carbon. 
+            Este relatório consolida os dados operacionais e agronômicos em um período histórico definido (Padrão <span th:text="${periodYears ?: 10}">10</span> anos), processados pela plataforma RV Carbon. 
             <strong>Objetivo:</strong> Fornecer visibilidade sobre a rotação de culturas, eficiência produtiva histórica e conformidade dos registros de campo.
         </div>
         <div class="footer-meta">
@@ -374,23 +381,21 @@
     Chart.defaults.font.family = "'Inter', sans-serif";
     Chart.defaults.color = '#374151';
 
-    // Capturando os valores do Thymeleaf para o JS
-    // Usamos um valor default de 0 caso venha nulo para evitar erro no gráfico
     /*[+
     const sojaVal = [[${fieldReportData.totalSojaCulture}]] || 0;
     const milhoVal = [[${fieldReportData.totalMilhoCulture}]] || 0;
     const canaVal = [[${fieldReportData.totalCanaCulture}]] || 0;
     +]*/
     
-    // Fallback para preview estático se o Thymeleaf não processar
     if (typeof sojaVal === 'undefined') {
-        var sojaVal = 50; // Exemplo histórico: 5 safras
-        var milhoVal = 50; // Exemplo histórico: 5 safras
-        var canaVal = 0;
+        var sojaVal = 4; 
+        var milhoVal = 4; 
+        var canaVal = 2;
     }
 
-    // Calcula porcentagens simples para exibir na tabela via JS
     const totalCount = sojaVal + milhoVal + canaVal;
+    
+    // Calcula porcentagens simples para exibir na tabela via JS
     if(totalCount > 0) {
         if(document.querySelector('.calc-pct-soja')) document.querySelector('.calc-pct-soja').innerText = Math.round((sojaVal/totalCount)*100) + '%';
         if(document.querySelector('.calc-pct-milho')) document.querySelector('.calc-pct-milho').innerText = Math.round((milhoVal/totalCount)*100) + '%';
@@ -398,13 +403,13 @@
     }
 
     const cultureData = {
-        labels: ['Soja', 'Milho', 'Cana-de-Açúcar'],
+        labels: ['Soja', 'Milho', 'Cana'],
         values: [sojaVal, milhoVal, canaVal]
     };
 
     const ctx = document.getElementById('cultureChart').getContext('2d');
     new Chart(ctx, {
-        type: 'pie',
+        type: 'doughnut', 
         data: {
             labels: cultureData.labels,
             datasets: [{
@@ -416,44 +421,40 @@
                 ],
                 borderColor: '#ffffff',
                 borderWidth: 2,
-                hoverOffset: 6
+                hoverOffset: 4
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             layout: {
-                padding: 20
+                padding: 10
             },
             plugins: {
                 legend: {
                     position: 'right',
                     labels: {
                         usePointStyle: true,
-                        boxWidth: 8,
-                        padding: 15,
-                        font: { size: 11, weight: '500' }
+                        boxWidth: 6,
+                        padding: 10,
+                        font: { size: 9, weight: '500' }
                     }
                 },
                 datalabels: {
                     color: '#fff',
                     font: {
                         weight: 'bold',
-                        size: 14
+                        size: 9
                     },
                     formatter: (value, ctx) => {
                         let sum = 0;
                         let dataArr = ctx.chart.data.datasets[0].data;
-                        dataArr.map(data => {
-                            sum += data;
-                        });
+                        dataArr.map(data => { sum += data; });
                         if (sum === 0) return "0%";
-                        let percentage = (value*100 / sum).toFixed(0)+"%";
-                        return percentage;
+                        return (value*100 / sum).toFixed(0)+"%";
                     },
                     anchor: 'center', 
-                    align: 'center',
-                    offset: 0
+                    align: 'center'
                 },
                 tooltip: {
                     callbacks: {
