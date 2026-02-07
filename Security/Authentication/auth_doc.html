@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swagger UI - RvCarbonApi</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* --- CSS SWAGGER GENUINE STYLE --- */
+        body { margin: 0; padding: 0; background: #fafafa; font-family: sans-serif; color: #3b4151; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; }
+
+        /* Topbar */
+        .topbar { background-color: #1b1b1b; padding: 10px 20px; display: flex; align-items: center; height: 60px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .logo { font-weight: bold; color: white; font-size: 24px; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .logo span { color: #89bf04; } 
+        .search-bar { margin-left: auto; display: flex; gap: 10px; }
+        .fake-input { background: #fff; border: 2px solid #89bf04; padding: 5px 10px; border-radius: 4px; width: 300px; font-size: 13px; color: #3b4151; }
+        .btn-explore { background: #89bf04; color: white; border: none; padding: 6px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+        /* Layout */
+        .container { max-width: 1460px; margin: 0 auto; padding: 20px; }
+
+        /* Header Info */
+        .info-header { margin: 20px 0 40px; border-bottom: 1px solid #ccc; padding-bottom: 20px; }
+        .info-title { font-size: 36px; font-weight: bold; margin: 0; display: flex; align-items: center; gap: 10px; }
+        .badge { font-size: 10px; background: #7d8492; color: white; padding: 4px 10px; border-radius: 15px; vertical-align: middle; }
+        .info-desc { margin-top: 15px; font-size: 14px; color: #3b4151; max-width: 800px; line-height: 1.6; }
+        .base-url { font-family: monospace; font-size: 12px; background: #333; color: white; padding: 4px 8px; border-radius: 4px; margin-top: 10px; display: inline-block; }
+        
+        .btn-pdf {
+            background: white; border: 2px solid #4990e2; color: #4990e2; 
+            padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;
+            float: right; transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .btn-pdf:hover { background: #4990e2; color: white; }
+
+        /* Sections (Tags) */
+        .op-block-tag { 
+            font-size: 24px; margin: 30px 0 10px; border-bottom: 1px solid rgba(59,65,81,.2); 
+            padding-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            font-family: sans-serif; font-weight: 700; color: #3b4151;
+        }
+        .op-block-tag:hover { color: #4990e2; border-color: #4990e2; }
+        
+        /* Operation Blocks (Accordions) */
+        .op-block {
+            border: 1px solid #000; border-radius: 4px; margin: 0 0 15px; box-shadow: 0 0 3px rgba(0,0,0,.19);
+            background: white; overflow: hidden; transition: height 0.3s ease;
+        }
+
+        /* Method Colors */
+        .op-block.post { border-color: #49cc90; background: rgba(73,204,144,.1); }
+        .op-block.post .op-block-summary-method { background: #49cc90; }
+        .op-block.post .op-block-body { border-top: 1px solid #49cc90; }
+
+        .op-block.get { border-color: #61affe; background: rgba(97,175,254,.1); }
+        .op-block.get .op-block-summary-method { background: #61affe; }
+        .op-block.get .op-block-body { border-top: 1px solid #61affe; }
+
+        .op-block.put { border-color: #fca130; background: rgba(252,161,48,.1); }
+        .op-block.put .op-block-summary-method { background: #fca130; }
+        .op-block.put .op-block-body { border-top: 1px solid #fca130; }
+
+        .op-block.patch { border-color: #50e3c2; background: rgba(80,227,194,.1); }
+        .op-block.patch .op-block-summary-method { background: #50e3c2; }
+        .op-block.patch .op-block-body { border-top: 1px solid #50e3c2; }
+
+        .op-block.delete { border-color: #f93e3e; background: rgba(249,62,62,.1); }
+        .op-block.delete .op-block-summary-method { background: #f93e3e; }
+        .op-block.delete .op-block-body { border-top: 1px solid #f93e3e; }
+
+        /* Summary Header */
+        .op-block-summary { padding: 5px; cursor: pointer; display: flex; align-items: center; }
+        .op-block-summary-method {
+            font-size: 14px; font-weight: 700; min-width: 80px; padding: 6px 15px; text-align: center; border-radius: 3px; color: white; text-shadow: 0 1px 0 rgba(0,0,0,.1); margin-right: 10px;
+        }
+        .op-block-summary-path { font-size: 16px; font-weight: 600; color: #3b4151; flex: 1; display: flex; align-items: center; font-family: monospace; }
+        .op-block-summary-desc { font-size: 13px; color: #3b4151; margin-left: 10px; flex: 1; }
+        .arrow { width: 20px; height: 20px; fill: #3b4151; transition: transform 0.2s; margin-right: 10px; }
+
+        /* Body Details */
+        .op-block-body { padding: 20px; background: #fff; display: none; }
+        
+        .section-header { font-size: 14px; font-weight: bold; margin: 20px 0 10px; color: #3b4151; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Data Display */
+        .model-box { 
+            background: #333; color: #fff; padding: 15px; border-radius: 4px; 
+            font-family: "Source Code Pro", monospace; font-size: 12px; overflow-x: auto; margin-bottom: 20px;
+        }
+        .highlight { color: #dcb67a; } /* JSON Keys */
+        .string { color: #a5c261; }
+        .number { color: #ffc66d; }
+        .boolean { color: #cc7832; }
+        .comment { color: #808080; font-style: italic; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+        th { text-align: left; padding: 12px; border-bottom: 1px solid rgba(59,65,81,.2); color: #3b4151; font-weight: bold; }
+        td { padding: 12px; border-bottom: 1px solid rgba(59,65,81,.2); vertical-align: top; color: #3b4151; }
+        
+        /* Badges for Business Logic */
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: bold; color: white; margin-right: 5px; }
+        .status-200 { background: #49cc90; }
+        .status-201 { background: #49cc90; }
+        .status-204 { background: #49cc90; }
+        .status-302 { background: #61affe; }
+        .status-400 { background: #f93e3e; }
+        .status-401 { background: #fca130; }
+        .status-403 { background: #fca130; }
+        .status-422 { background: #fca130; }
+
+        .service-rule { 
+            background: #fff8e1; border-left: 4px solid #ffc107; padding: 10px; margin: 5px 0; font-size: 13px; color: #5f4b06;
+        }
+
+        /* Schemas Section */
+        .models-section { margin-top: 60px; border-top: 1px solid #3b4151; padding-top: 20px; }
+        .model-container { background: rgba(0,0,0,0.05); padding: 10px; margin-bottom: 10px; border-radius: 4px; transition: all 0.2s; }
+        .model-container:hover { background: rgba(0,0,0,0.08); }
+        .model-title { font-size: 16px; font-weight: bold; color: #3b4151; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; }
+        .model-content { display: none; padding: 10px; font-family: monospace; font-size: 13px; background: white; border-radius: 4px; }
+        .prop-req { color: #f93e3e; font-weight: bold; font-size: 10px; }
+
+        .rotate { transform: rotate(180deg); }
+    </style>
+</head>
+<body>
+
+    <div class="topbar">
+        <a href="#" class="logo">swagger<span>ui</span></a>
+        <div class="search-bar">
+            <input type="text" class="fake-input" value="https://rvcarbon.com.br/api/v1/openapi.json" disabled>
+            <button class="btn-explore">Explore</button>
+        </div>
+    </div>
+
+    <div class="container" id="printable-area">
+        
+        <div class="info-header">
+            <button onclick="generatePDF()" class="btn-pdf">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export PDF
+            </button>
+            <h1 class="info-title">
+                RvCarbonApi
+                <span class="badge">1.0.0</span>
+                <span class="badge" style="background:#49cc90;">OAS 3.0</span>
+            </h1>
+            <div class="base-url">[ Base URL: http://localhost:8080 ]</div>
+            <p class="info-desc">
+                Documentação oficial da API RvCarbon. <br>
+                Este documento detalha os endpoints de <strong>Segurança e Autenticação</strong>, incluindo contratos de dados (DTOs) e regras de negócio da camada de Service.
+            </p>
+            <a href="#" style="color:#4990e2; text-decoration:none;">Termos de Serviço</a> | 
+            <a href="#" style="color:#4990e2; text-decoration:none;">Contato Suporte</a>
+        </div>
+
+        <!-- AUTH CONTROLLER SECTION -->
+        <div class="op-block-tag" onclick="toggleSection('auth-container')">
+            <span>Auth Controller</span>
+            <small>Autenticação e Gestão de Contas</small>
+        </div>
+
+        <div id="auth-container">
+
+            <!-- POST LOGIN -->
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/auth/login/</span>
+                    <span class="op-block-summary-desc">Login e emissão de JWT</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        <strong>Service Logic (AuthService):</strong> 
+                        <ul>
+                            <li>Autentica via <code>AuthenticationManager</code>.</li>
+                            <li>Gera par de tokens (Access + Refresh).</li>
+                            <li><strong>Regra de Bloqueio:</strong> Se o usuário não estiver ativado (email não confirmado), lança <code>DisabledException</code>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="section-header">Request Body</div>
+                    <div class="model-box">
+{
+  <span class="highlight">"loginIdentifier"</span>: <span class="string">"user@rvcarbon.com"</span>, <span class="comment">// Email ou Username</span>
+  <span class="highlight">"password"</span>: <span class="string">"Senh@Forte123"</span> <span class="comment">// Min 6 caracteres</span>
+}
+                    </div>
+
+                    <div class="section-header">Responses</div>
+                    <table>
+                        <thead><tr><th>Code</th><th>Description</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="status-badge status-200">200</span></td>
+                                <td>
+                                    <strong>Sucesso</strong>. Retorna Token Pair.<br>
+                                    Schema: <code>JwtTokenPair</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-401">401</span></td>
+                                <td>Credenciais inválidas (BadCredentials).</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-403">403</span></td>
+                                <td>Conta inativa/não verificada. Verifique seu email.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- POST REGISTER -->
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/auth/register/</span>
+                    <span class="op-block-summary-desc">Cadastro de novo usuário</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        <strong>Service Logic:</strong> 
+                        Ao registrar, o status do usuário é definido como inativo. Um token de ativação (tipo <code>ACTIVATION</code>) é gerado e enviado por e-mail.
+                    </div>
+                    
+                    <div class="section-header">Request Body (AuthRegisterRequest)</div>
+                    <div class="model-box">
+{
+  <span class="highlight">"name"</span>: <span class="string">"João Silva"</span>,
+  <span class="highlight">"email"</span>: <span class="string">"joao@email.com"</span>,
+  <span class="highlight">"phone"</span>: <span class="string">"(11) 99999-9999"</span>, <span class="comment">// Pattern: (xx) xxxxx-xxxx</span>
+  <span class="highlight">"username"</span>: <span class="string">"joaosilva"</span>, <span class="comment">// Min 3, Max 30</span>
+  <span class="highlight">"password"</span>: <span class="string">"secret123"</span>, <span class="comment">// Min 6 chars</span>
+  <span class="highlight">"birthday"</span>: <span class="string">"1990-01-01"</span>, <span class="comment">// Deve ser passado</span>
+  <span class="highlight">"state"</span>: <span class="string">"SP"</span>,
+  <span class="highlight">"city"</span>: <span class="string">"São Paulo"</span>,
+  <span class="highlight">"cpfCnpj"</span>: <span class="string">"123.456.789-00"</span>, <span class="comment">// Validação rigorosa de formato</span>
+  <span class="highlight">"occupation"</span>: <span class="string">"Agrônomo"</span>,
+  <span class="highlight">"academicTitle"</span>: <span class="string">"Doutor"</span>,
+  <span class="highlight">"imageProfileUrl"</span>: <span class="string">"http://..."</span>
+}
+                    </div>
+
+                    <div class="section-header">Responses</div>
+                    <table>
+                         <tbody>
+                            <tr>
+                                <td><span class="status-badge status-200">200</span></td>
+                                <td>Usuário registrado com sucesso. Retorna <code>AuthRegisterResponse</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-400">400</span></td>
+                                <td>Erro de validação (Campos inválidos ou padrão incorreto).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+             <!-- POST REFRESH -->
+             <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/auth/refresh/</span>
+                    <span class="op-block-summary-desc">Renova o Access Token</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        <strong>Security Logic:</strong> 
+                        <ul>
+                            <li>Verifica se o token é do tipo REFRESH.</li>
+                            <li>Valida se o token está na Blacklist ou Expirado.</li>
+                            <li>Se válido: invalida o token atual (Blacklist) e gera um novo par.</li>
+                        </ul>
+                    </div>
+                    <div class="section-header">Request Body</div>
+                    <div class="model-box">
+{
+  <span class="highlight">"refreshToken"</span>: <span class="string">"eyJhbGciOiJIUzI1NiJ..."</span>
+}
+                    </div>
+                    <div class="section-header">Responses</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Novo par de tokens gerado.</td></tr>
+                        <tr><td><span class="status-badge status-401">401</span></td><td>Refresh token inválido, expirado ou blacklisted.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET ME -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/auth/me/</span>
+                    <span class="op-block-summary-desc">Dados do Usuário Logado</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="section-header">Parameters</div>
+                    <table>
+                        <tr><th>Name</th><th>In</th><th>Required</th><th>Description</th></tr>
+                        <tr><td>Authorization</td><td>header</td><td>Yes</td><td>Bearer Token</td></tr>
+                    </table>
+                    <div class="section-header">Responses</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna <code>UserInfosResponse</code> com dados agregados (total farms, etc).</td></tr>
+                    </table>
+                </div>
+            </div>
+
+             <!-- PATCH ME -->
+             <div class="op-block patch">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">PATCH</span>
+                    <span class="op-block-summary-path">/api/auth/me/</span>
+                    <span class="op-block-summary-desc">Atualizar Perfil</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="section-header">Request Body (AuthUpdateRequest)</div>
+                    <div class="model-box">
+{
+  <span class="comment">// Campos são opcionais. Envie apenas o que deseja alterar.</span>
+  <span class="highlight">"name"</span>: <span class="string">"Novo Nome"</span>,
+  <span class="highlight">"phone"</span>: <span class="string">"(11) 99999-8888"</span>
+}
+                    </div>
+                    <div class="section-header">Responses</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Perfil atualizado. Retorna dados atualizados.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- DELETE ME -->
+            <div class="op-block delete">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">DELETE</span>
+                    <span class="op-block-summary-path">/api/auth/me/</span>
+                    <span class="op-block-summary-desc">Solicitar Exclusão de Conta</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        <strong>Critical Business Logic:</strong> 
+                        <ul>
+                            <li>O sistema verifica se o usuário possui Fazendas (Farm Owner).</li>
+                            <li><strong>Se possuir fazendas:</strong> Lança <code>DeleteUserException</code> (Erro de Negócio). A exclusão é impedida.</li>
+                            <li><strong>Se não possuir:</strong> Envia e-mail de confirmação (Token type: ACCOUNT_DELETION).</li>
+                        </ul>
+                    </div>
+                    <div class="section-header">Responses</div>
+                    <table>
+                        <tr><td><span class="status-badge status-204">204</span></td><td>Solicitação aceita. Email enviado.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td>Erro: Usuário possui fazendas vinculadas.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- RESET PASSWORD FLOW -->
+            <div class="section-header" style="margin-top: 40px; border-bottom: 1px solid #ddd;">Fluxos de Email (Reset Senha / Confirmação)</div>
+
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/auth/forgot-password/</span>
+                    <span class="op-block-summary-desc">Solicitar Reset de Senha</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="section-header">Request Body</div>
+                    <div class="model-box">{ <span class="highlight">"email"</span>: <span class="string">"user@email.com"</span> }</div>
+                    <div class="section-header">Responses</div>
+                    <tr><td><span class="status-badge status-200">200</span></td><td>Email enviado (se usuário existir).</td></tr>
+                </div>
+            </div>
+
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/auth/reset-password/</span>
+                    <span class="op-block-summary-desc">Definir Nova Senha</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        <strong>Business Logic:</strong>
+                        Verifica se a nova senha é exatamente igual à antiga. Se for, lança <code>ResetPasswordException</code>.
+                    </div>
+                    <div class="section-header">Request Body</div>
+                    <div class="model-box">
+{
+  <span class="highlight">"token"</span>: <span class="string">"token_recebido_no_email"</span>,
+  <span class="highlight">"newPassword"</span>: <span class="string">"NovaSenh@123"</span>
+}
+                    </div>
+                    <div class="section-header">Responses</div>
+                    <tr><td><span class="status-badge status-200">200</span></td><td>Senha alterada com sucesso.</td></tr>
+                    <tr><td><span class="status-badge status-400">400</span></td><td>Erro: Nova senha igual à anterior ou Token inválido.</td></tr>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SCHEMAS -->
+        <div class="models-section">
+            <div class="op-block-tag">Schemas</div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">
+                    JwtTokenPair <span class="arrow">▼</span>
+                </div>
+                <div class="model-content">
+                    <span class="highlight">token</span>: string<br>
+                    <span class="highlight">refreshToken</span>: string<br>
+                    <span class="highlight">tokenType</span>: string (default: "bearer")
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">
+                    AuthRegisterRequest <span class="arrow">▼</span>
+                </div>
+                <div class="model-content">
+                    <span class="highlight">name</span>: string <span class="prop-req">*Required (min 3)</span><br>
+                    <span class="highlight">email</span>: string($email) <span class="prop-req">*Required</span><br>
+                    <span class="highlight">phone</span>: string <span class="prop-req">*Pattern: (XX) XXXXX-XXXX</span><br>
+                    <span class="highlight">username</span>: string <span class="prop-req">*Required (3-30 chars)</span><br>
+                    <span class="highlight">password</span>: string <span class="prop-req">*Required (min 6 chars)</span><br>
+                    <span class="highlight">birthday</span>: string($date) <span class="prop-req">*Required (Past)</span><br>
+                    <span class="highlight">state</span>: string <span class="prop-req">*Required</span><br>
+                    <span class="highlight">city</span>: string <span class="prop-req">*Required</span><br>
+                    <span class="highlight">cpfCnpj</span>: string <span class="prop-req">*Pattern: CPF or CNPJ format</span><br>
+                    <span class="highlight">occupation</span>: string <span class="prop-req">*Min 2 chars</span><br>
+                    <span class="highlight">academicTitle</span>: string <span class="prop-req">*Min 2 chars</span><br>
+                    <span class="highlight">imageProfileUrl</span>: string <span class="prop-req">*Min 5 chars</span>
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">
+                    UserInfosResponse <span class="arrow">▼</span>
+                </div>
+                <div class="model-content">
+                    <span class="highlight">userId</span>: integer($int64)<br>
+                    <span class="highlight">name</span>: string<br>
+                    <span class="highlight">email</span>: string<br>
+                    <span class="highlight">totalFarmOwnerByUser</span>: long<br>
+                    <span class="highlight">totalFarmsByUser</span>: long<br>
+                    <span class="highlight">createdAt</span>: string($date-time)<br>
+                    ... (demais campos de perfil)
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'none') el.style.display = 'block';
+            else el.style.display = 'none';
+        }
+
+        function toggleBody(element) {
+            const body = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            
+            if (body.style.display === "block") {
+                body.style.display = "none";
+                arrow.classList.remove('rotate');
+            } else {
+                body.style.display = "block";
+                arrow.classList.add('rotate');
+            }
+        }
+
+        function toggleModel(element) {
+            const content = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            if(content.style.display === "block") {
+                content.style.display = "none";
+                arrow.style.transform = "rotate(0deg)";
+            } else {
+                content.style.display = "block";
+                arrow.style.transform = "rotate(180deg)";
+            }
+        }
+
+        function generatePDF() {
+            const element = document.getElementById('printable-area');
+            const opt = {
+                margin:       [0.5, 0.5, 0.5, 0.5],
+                filename:     'RvCarbon_Auth_Docs_v1.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            // Expand all sections for printing
+            const bodies = document.querySelectorAll('.op-block-body');
+            const models = document.querySelectorAll('.model-content');
+            
+            bodies.forEach(b => b.style.display = 'block');
+            models.forEach(m => m.style.display = 'block');
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Collapse back
+                bodies.forEach(b => b.style.display = 'none');
+                models.forEach(m => m.style.display = 'none');
+            });
+        }
+    </script>
+</body>
+</html>
