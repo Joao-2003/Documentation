@@ -151,7 +151,7 @@
             <div class="base-url">[ Base URL: http://localhost:8080 ]</div>
             <p class="info-desc">
                 Documentação oficial da API RvCarbon. <br>
-                Este documento detalha os endpoints de <strong>Segurança e Autenticação</strong>, incluindo contratos de dados (DTOs) e regras de negócio da camada de Service.
+                Este documento descreve os recursos de <strong>Autenticação</strong>, cobrindo o ciclo de vida do usuário (cadastro, login, exclusão) e suas respectivas regras de negócio.
             </p>
             <a href="#" style="color:#4990e2; text-decoration:none;">Termos de Serviço</a> | 
             <a href="#" style="color:#4990e2; text-decoration:none;">Contato Suporte</a>
@@ -170,24 +170,24 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/login/</span>
-                    <span class="op-block-summary-desc">Login e emissão de JWT</span>
+                    <span class="op-block-summary-desc">Login e emissão de tokens</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
-                        <strong>Service Logic (AuthService):</strong> 
+                        <strong>Regra de Negócio:</strong> 
                         <ul>
-                            <li>Autentica via <code>AuthenticationManager</code>.</li>
-                            <li>Gera par de tokens (Access + Refresh).</li>
-                            <li><strong>Regra de Bloqueio:</strong> Se o usuário não estiver ativado (email não confirmado), lança <code>DisabledException</code>.</li>
+                            <li>O sistema verifica as credenciais (usuário e senha).</li>
+                            <li>Gera um par de chaves de acesso (Token de Acesso e Token de Atualização).</li>
+                            <li><strong>Bloqueio de Segurança:</strong> O login será recusado se o e-mail do usuário ainda não tiver sido confirmado.</li>
                         </ul>
                     </div>
 
                     <div class="section-header">Request Body</div>
                     <div class="model-box">
 {
-  <span class="highlight">"loginIdentifier"</span>: <span class="string">"user@rvcarbon.com"</span>, <span class="comment">// Email ou Username</span>
-  <span class="highlight">"password"</span>: <span class="string">"Senh@Forte123"</span> <span class="comment">// Min 6 caracteres</span>
+  <span class="highlight">"loginIdentifier"</span>: <span class="string">"user@rvcarbon.com"</span>, <span class="comment">// Aceita E-mail ou Nome de Usuário</span>
+  <span class="highlight">"password"</span>: <span class="string">"*******"</span>
 }
                     </div>
 
@@ -198,17 +198,17 @@
                             <tr>
                                 <td><span class="status-badge status-200">200</span></td>
                                 <td>
-                                    <strong>Sucesso</strong>. Retorna Token Pair.<br>
-                                    Schema: <code>JwtTokenPair</code>
+                                    <strong>Sucesso</strong>. Retorna as chaves de acesso.<br>
+                                    Retorno: <code>JwtTokenPair</code>
                                 </td>
                             </tr>
                             <tr>
                                 <td><span class="status-badge status-401">401</span></td>
-                                <td>Credenciais inválidas (BadCredentials).</td>
+                                <td>Credenciais (login ou senha) incorretas.</td>
                             </tr>
                             <tr>
                                 <td><span class="status-badge status-403">403</span></td>
-                                <td>Conta inativa/não verificada. Verifique seu email.</td>
+                                <td>Conta inativa. É necessário confirmar o e-mail antes de realizar o login.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -225,8 +225,8 @@
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
-                        <strong>Service Logic:</strong> 
-                        Ao registrar, o status do usuário é definido como inativo. Um token de ativação (tipo <code>ACTIVATION</code>) é gerado e enviado por e-mail.
+                        <strong>Comportamento:</strong> 
+                        Realiza o pré-cadastro do usuário. O status inicial é definido como "Pendente". Um e-mail contendo um link de ativação é enviado automaticamente para o endereço informado.
                     </div>
                     
                     <div class="section-header">Request Body (AuthRegisterRequest)</div>
@@ -234,13 +234,13 @@
 {
   <span class="highlight">"name"</span>: <span class="string">"João Silva"</span>,
   <span class="highlight">"email"</span>: <span class="string">"joao@email.com"</span>,
-  <span class="highlight">"phone"</span>: <span class="string">"(11) 99999-9999"</span>, <span class="comment">// Pattern: (xx) xxxxx-xxxx</span>
-  <span class="highlight">"username"</span>: <span class="string">"joaosilva"</span>, <span class="comment">// Min 3, Max 30</span>
-  <span class="highlight">"password"</span>: <span class="string">"secret123"</span>, <span class="comment">// Min 6 chars</span>
-  <span class="highlight">"birthday"</span>: <span class="string">"1990-01-01"</span>, <span class="comment">// Deve ser passado</span>
+  <span class="highlight">"phone"</span>: <span class="string">"(11) 99999-9999"</span>, <span class="comment">// Formato obrigatório: (xx) xxxxx-xxxx</span>
+  <span class="highlight">"username"</span>: <span class="string">"joaosilva"</span>,
+  <span class="highlight">"password"</span>: <span class="string">"secret123"</span>, <span class="comment">// Mínimo 6 caracteres</span>
+  <span class="highlight">"birthday"</span>: <span class="string">"1990-01-01"</span>,
   <span class="highlight">"state"</span>: <span class="string">"SP"</span>,
   <span class="highlight">"city"</span>: <span class="string">"São Paulo"</span>,
-  <span class="highlight">"cpfCnpj"</span>: <span class="string">"123.456.789-00"</span>, <span class="comment">// Validação rigorosa de formato</span>
+  <span class="highlight">"cpfCnpj"</span>: <span class="string">"123.456.789-00"</span>, <span class="comment">// Deve ser um CPF ou CNPJ válido</span>
   <span class="highlight">"occupation"</span>: <span class="string">"Agrônomo"</span>,
   <span class="highlight">"academicTitle"</span>: <span class="string">"Doutor"</span>,
   <span class="highlight">"imageProfileUrl"</span>: <span class="string">"http://..."</span>
@@ -252,11 +252,11 @@
                          <tbody>
                             <tr>
                                 <td><span class="status-badge status-200">200</span></td>
-                                <td>Usuário registrado com sucesso. Retorna <code>AuthRegisterResponse</code>.</td>
+                                <td>Pré-cadastro realizado. E-mail de confirmação enviado.</td>
                             </tr>
                             <tr>
                                 <td><span class="status-badge status-400">400</span></td>
-                                <td>Erro de validação (Campos inválidos ou padrão incorreto).</td>
+                                <td>Erro de validação nos dados enviados (ex: CPF inválido, e-mail mal formatado).</td>
                             </tr>
                         </tbody>
                     </table>
@@ -268,16 +268,16 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/refresh/</span>
-                    <span class="op-block-summary-desc">Renova o Access Token</span>
+                    <span class="op-block-summary-desc">Renovar sessão (Token)</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
-                        <strong>Security Logic:</strong> 
+                        <strong>Segurança:</strong> 
+                        Utilizado para manter o usuário logado sem pedir a senha novamente.
                         <ul>
-                            <li>Verifica se o token é do tipo REFRESH.</li>
-                            <li>Valida se o token está na Blacklist ou Expirado.</li>
-                            <li>Se válido: invalida o token atual (Blacklist) e gera um novo par.</li>
+                            <li>Invalida o token de atualização anterior (rotação de chaves).</li>
+                            <li>Se o token antigo já tiver sido invalidado ou expirado, a renovação falha e o usuário deve fazer login novamente.</li>
                         </ul>
                     </div>
                     <div class="section-header">Request Body</div>
@@ -288,8 +288,8 @@
                     </div>
                     <div class="section-header">Responses</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Novo par de tokens gerado.</td></tr>
-                        <tr><td><span class="status-badge status-401">401</span></td><td>Refresh token inválido, expirado ou blacklisted.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Sessão renovada. Retorna novo par de tokens.</td></tr>
+                        <tr><td><span class="status-badge status-401">401</span></td><td>Sessão expirada ou inválida. Necessário realizar login novamente.</td></tr>
                     </table>
                 </div>
             </div>
@@ -299,18 +299,18 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">GET</span>
                     <span class="op-block-summary-path">/api/auth/me/</span>
-                    <span class="op-block-summary-desc">Dados do Usuário Logado</span>
+                    <span class="op-block-summary-desc">Dados do perfil atual</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="section-header">Parameters</div>
+                    <div class="section-header">Parâmetros</div>
                     <table>
-                        <tr><th>Name</th><th>In</th><th>Required</th><th>Description</th></tr>
-                        <tr><td>Authorization</td><td>header</td><td>Yes</td><td>Bearer Token</td></tr>
+                        <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>Authorization</td><td>header</td><td>Sim</td><td>Bearer Token (JWT)</td></tr>
                     </table>
                     <div class="section-header">Responses</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna <code>UserInfosResponse</code> com dados agregados (total farms, etc).</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna os dados do perfil e estatísticas agregadas (ex: total de fazendas).</td></tr>
                     </table>
                 </div>
             </div>
@@ -327,14 +327,14 @@
                     <div class="section-header">Request Body (AuthUpdateRequest)</div>
                     <div class="model-box">
 {
-  <span class="comment">// Campos são opcionais. Envie apenas o que deseja alterar.</span>
+  <span class="comment">// Envie apenas os campos que deseja alterar.</span>
   <span class="highlight">"name"</span>: <span class="string">"Novo Nome"</span>,
   <span class="highlight">"phone"</span>: <span class="string">"(11) 99999-8888"</span>
 }
                     </div>
                     <div class="section-header">Responses</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Perfil atualizado. Retorna dados atualizados.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Perfil atualizado com sucesso.</td></tr>
                     </table>
                 </div>
             </div>
@@ -349,36 +349,36 @@
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
-                        <strong>Critical Business Logic:</strong> 
+                        <strong>Regra de Integridade de Dados:</strong> 
                         <ul>
-                            <li>O sistema verifica se o usuário possui Fazendas (Farm Owner).</li>
-                            <li><strong>Se possuir fazendas:</strong> Lança <code>DeleteUserException</code> (Erro de Negócio). A exclusão é impedida.</li>
-                            <li><strong>Se não possuir:</strong> Envia e-mail de confirmação (Token type: ACCOUNT_DELETION).</li>
+                            <li>O sistema verifica se o usuário é proprietário de Fazendas cadastradas.</li>
+                            <li><strong>Se possuir vínculos:</strong> A exclusão é impedida para evitar que fazendas fiquem "órfãs" no sistema.</li>
+                            <li><strong>Se não possuir vínculos:</strong> Um e-mail de confirmação final é enviado para garantir a intenção do usuário.</li>
                         </ul>
                     </div>
                     <div class="section-header">Responses</div>
                     <table>
-                        <tr><td><span class="status-badge status-204">204</span></td><td>Solicitação aceita. Email enviado.</td></tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td>Erro: Usuário possui fazendas vinculadas.</td></tr>
+                        <tr><td><span class="status-badge status-204">204</span></td><td>Solicitação aceita. Verifique seu e-mail para confirmar a exclusão.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td>Operação negada: O usuário possui fazendas vinculadas e não pode ser excluído.</td></tr>
                     </table>
                 </div>
             </div>
 
             <!-- RESET PASSWORD FLOW -->
-            <div class="section-header" style="margin-top: 40px; border-bottom: 1px solid #ddd;">Fluxos de Email (Reset Senha / Confirmação)</div>
+            <div class="section-header" style="margin-top: 40px; border-bottom: 1px solid #ddd;">Fluxos de Recuperação (Senha / Confirmação)</div>
 
             <div class="op-block post">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/forgot-password/</span>
-                    <span class="op-block-summary-desc">Solicitar Reset de Senha</span>
+                    <span class="op-block-summary-desc">Recuperar Senha</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="section-header">Request Body</div>
                     <div class="model-box">{ <span class="highlight">"email"</span>: <span class="string">"user@email.com"</span> }</div>
                     <div class="section-header">Responses</div>
-                    <tr><td><span class="status-badge status-200">200</span></td><td>Email enviado (se usuário existir).</td></tr>
+                    <tr><td><span class="status-badge status-200">200</span></td><td>Se o e-mail existir, um link de recuperação será enviado.</td></tr>
                 </div>
             </div>
 
@@ -391,8 +391,8 @@
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
-                        <strong>Business Logic:</strong>
-                        Verifica se a nova senha é exatamente igual à antiga. Se for, lança <code>ResetPasswordException</code>.
+                        <strong>Validação:</strong>
+                        A nova senha não pode ser idêntica à senha atual por motivos de segurança.
                     </div>
                     <div class="section-header">Request Body</div>
                     <div class="model-box">
@@ -403,7 +403,7 @@
                     </div>
                     <div class="section-header">Responses</div>
                     <tr><td><span class="status-badge status-200">200</span></td><td>Senha alterada com sucesso.</td></tr>
-                    <tr><td><span class="status-badge status-400">400</span></td><td>Erro: Nova senha igual à anterior ou Token inválido.</td></tr>
+                    <tr><td><span class="status-badge status-400">400</span></td><td>Erro: A nova senha é igual à atual ou o link expirou.</td></tr>
                 </div>
             </div>
 
@@ -411,51 +411,51 @@
 
         <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas</div>
+            <div class="op-block-tag">Schemas (Modelos de Dados)</div>
 
             <div class="model-container">
                 <div class="model-title" onclick="toggleModel(this)">
-                    JwtTokenPair <span class="arrow">▼</span>
+                    JwtTokenPair (Chaves de Acesso) <span class="arrow">▼</span>
                 </div>
                 <div class="model-content">
-                    <span class="highlight">token</span>: string<br>
-                    <span class="highlight">refreshToken</span>: string<br>
+                    <span class="highlight">token</span>: string <span class="comment">// Token usado para autenticar requisições</span><br>
+                    <span class="highlight">refreshToken</span>: string <span class="comment">// Token usado para renovar a sessão</span><br>
                     <span class="highlight">tokenType</span>: string (default: "bearer")
                 </div>
             </div>
 
             <div class="model-container">
                 <div class="model-title" onclick="toggleModel(this)">
-                    AuthRegisterRequest <span class="arrow">▼</span>
+                    AuthRegisterRequest (Formulário de Cadastro) <span class="arrow">▼</span>
                 </div>
                 <div class="model-content">
-                    <span class="highlight">name</span>: string <span class="prop-req">*Required (min 3)</span><br>
-                    <span class="highlight">email</span>: string($email) <span class="prop-req">*Required</span><br>
-                    <span class="highlight">phone</span>: string <span class="prop-req">*Pattern: (XX) XXXXX-XXXX</span><br>
-                    <span class="highlight">username</span>: string <span class="prop-req">*Required (3-30 chars)</span><br>
-                    <span class="highlight">password</span>: string <span class="prop-req">*Required (min 6 chars)</span><br>
-                    <span class="highlight">birthday</span>: string($date) <span class="prop-req">*Required (Past)</span><br>
-                    <span class="highlight">state</span>: string <span class="prop-req">*Required</span><br>
-                    <span class="highlight">city</span>: string <span class="prop-req">*Required</span><br>
-                    <span class="highlight">cpfCnpj</span>: string <span class="prop-req">*Pattern: CPF or CNPJ format</span><br>
+                    <span class="highlight">name</span>: string <span class="prop-req">*Obrigatório (min 3)</span><br>
+                    <span class="highlight">email</span>: string <span class="prop-req">*Obrigatório (válido)</span><br>
+                    <span class="highlight">phone</span>: string <span class="prop-req">*Padrão: (XX) XXXXX-XXXX</span><br>
+                    <span class="highlight">username</span>: string <span class="prop-req">*Obrigatório (3-30 chars)</span><br>
+                    <span class="highlight">password</span>: string <span class="prop-req">*Obrigatório (min 6 chars)</span><br>
+                    <span class="highlight">birthday</span>: string <span class="prop-req">*Obrigatório (Data Passada)</span><br>
+                    <span class="highlight">state</span>: string <span class="prop-req">*Obrigatório</span><br>
+                    <span class="highlight">city</span>: string <span class="prop-req">*Obrigatório</span><br>
+                    <span class="highlight">cpfCnpj</span>: string <span class="prop-req">*CPF ou CNPJ válido</span><br>
                     <span class="highlight">occupation</span>: string <span class="prop-req">*Min 2 chars</span><br>
                     <span class="highlight">academicTitle</span>: string <span class="prop-req">*Min 2 chars</span><br>
-                    <span class="highlight">imageProfileUrl</span>: string <span class="prop-req">*Min 5 chars</span>
+                    <span class="highlight">imageProfileUrl</span>: string <span class="prop-req">*Link da imagem</span>
                 </div>
             </div>
 
             <div class="model-container">
                 <div class="model-title" onclick="toggleModel(this)">
-                    UserInfosResponse <span class="arrow">▼</span>
+                    UserInfosResponse (Perfil Completo) <span class="arrow">▼</span>
                 </div>
                 <div class="model-content">
-                    <span class="highlight">userId</span>: integer($int64)<br>
+                    <span class="highlight">userId</span>: integer<br>
                     <span class="highlight">name</span>: string<br>
                     <span class="highlight">email</span>: string<br>
-                    <span class="highlight">totalFarmOwnerByUser</span>: long<br>
-                    <span class="highlight">totalFarmsByUser</span>: long<br>
+                    <span class="highlight">totalFarmOwnerByUser</span>: long <span class="comment">// Qtd de fazendas próprias</span><br>
+                    <span class="highlight">totalFarmsByUser</span>: long <span class="comment">// Qtd de fazendas vinculadas</span><br>
                     <span class="highlight">createdAt</span>: string($date-time)<br>
-                    ... (demais campos de perfil)
+                    ... (demais campos de cadastro)
                 </div>
             </div>
 
@@ -498,7 +498,7 @@
             const element = document.getElementById('printable-area');
             const opt = {
                 margin:       [0.5, 0.5, 0.5, 0.5],
-                filename:     'RvCarbon_Auth_Docs_v1.pdf',
+                filename:     'RvCarbon_Auth_Docs_v2.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
