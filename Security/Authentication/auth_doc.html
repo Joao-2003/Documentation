@@ -11,7 +11,7 @@
         * { box-sizing: border-box; }
 
         /* Topbar */
-        .topbar { background-color: #1b1b1b; padding: 10px 20px; display: flex; align-items: center; height: 60px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .topbar { background-color: #1b1b1b; padding: 10px 20px; display: flex; align-items: center; height: 60px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
         .logo { font-weight: bold; color: white; font-size: 24px; text-decoration: none; display: flex; align-items: center; gap: 5px; }
         .logo span { color: #89bf04; } 
         .search-bar { margin-left: auto; display: flex; gap: 10px; }
@@ -84,12 +84,28 @@
         
         .section-header { font-size: 14px; font-weight: bold; margin: 20px 0 10px; color: #3b4151; text-transform: uppercase; letter-spacing: 0.5px; }
         
+        /* Interactive "Try it out" */
+        .try-out-wrapper { background: #f8f9fa; border: 1px solid #e9ecef; padding: 10px; margin-top: 20px; border-radius: 4px; }
+        .try-btn { background: #fff; border: 1px solid #3b4151; color: #3b4151; padding: 5px 15px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 12px; margin-bottom: 10px; }
+        .try-btn:hover { background: #3b4151; color: white; }
+        
+        .execute-panel { display: none; margin-top: 10px; }
+        .execute-btn { background: #4990e2; color: white; border: none; padding: 8px 40px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; display: block; margin-top: 10px; }
+        .execute-btn:hover { background: #357abd; }
+        
+        .req-editor { width: 100%; min-height: 150px; background: #333; color: #fff; font-family: monospace; padding: 10px; border-radius: 4px; border: 1px solid #555; }
+        .response-box { margin-top: 15px; background: #292b2c; color: #85d77c; padding: 10px; font-family: monospace; border-radius: 4px; white-space: pre-wrap; font-size: 12px; display: none; }
+        .response-status { font-weight: bold; margin-bottom: 5px; display: block; color: #fff; }
+
         /* Data Display */
         .model-box { 
             background: #333; color: #fff; padding: 15px; border-radius: 4px; 
             font-family: "Source Code Pro", monospace; font-size: 12px; overflow-x: auto; margin-bottom: 20px;
         }
-        .highlight { color: #dcb67a; } /* JSON Keys */
+        .model-box pre { margin: 0; }
+        
+        /* Syntax Highlight */
+        .highlight { color: #dcb67a; } /* Keys */
         .string { color: #a5c261; }
         .number { color: #ffc66d; }
         .boolean { color: #cc7832; }
@@ -100,16 +116,14 @@
         th { text-align: left; padding: 12px; border-bottom: 1px solid rgba(59,65,81,.2); color: #3b4151; font-weight: bold; }
         td { padding: 12px; border-bottom: 1px solid rgba(59,65,81,.2); vertical-align: top; color: #3b4151; }
         
-        /* Badges for Business Logic */
+        /* Badges */
         .status-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: bold; color: white; margin-right: 5px; }
         .status-200 { background: #49cc90; }
         .status-201 { background: #49cc90; }
         .status-204 { background: #49cc90; }
-        .status-302 { background: #61affe; }
         .status-400 { background: #f93e3e; }
         .status-401 { background: #fca130; }
         .status-403 { background: #fca130; }
-        .status-422 { background: #fca130; }
 
         .service-rule { 
             background: #fff8e1; border-left: 4px solid #ffc107; padding: 10px; margin: 5px 0; font-size: 13px; color: #5f4b06;
@@ -124,6 +138,14 @@
         .prop-req { color: #f93e3e; font-weight: bold; font-size: 10px; }
 
         .rotate { transform: rotate(180deg); }
+
+        /* Flow Diagram */
+        .flow-diagram { 
+            background: #eef7ff; border: 1px dashed #4990e2; padding: 15px; margin: 20px 0; border-radius: 8px;
+            font-size: 13px; color: #333;
+        }
+        .flow-step { margin-bottom: 10px; display: flex; align-items: start; gap: 10px; }
+        .step-num { background: #4990e2; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -139,10 +161,7 @@
     <div class="container" id="printable-area">
         
         <div class="info-header">
-            <button onclick="generatePDF()" class="btn-pdf">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Export PDF
-            </button>
+            <button onclick="generatePDF()" class="btn-pdf">Export PDF</button>
             <h1 class="info-title">
                 RvCarbonApi
                 <span class="badge">1.0.0</span>
@@ -150,11 +169,8 @@
             </h1>
             <div class="base-url">[ Base URL: http://localhost:8080 ]</div>
             <p class="info-desc">
-                Documentação oficial da API RvCarbon. <br>
-                Este documento descreve os recursos de <strong>Autenticação</strong>, cobrindo o ciclo de vida do usuário (cadastro, login, exclusão) e suas respectivas regras de negócio.
+                Documentação oficial da API RvCarbon.
             </p>
-            <a href="#" style="color:#4990e2; text-decoration:none;">Termos de Serviço</a> | 
-            <a href="#" style="color:#4990e2; text-decoration:none;">Contato Suporte</a>
         </div>
 
         <!-- AUTH CONTROLLER SECTION -->
@@ -170,46 +186,42 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/login/</span>
-                    <span class="op-block-summary-desc">Login e emissão de tokens</span>
+                    <span class="op-block-summary-desc">Login</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
                         <strong>Regra de Negócio:</strong> 
-                        <ul>
-                            <li>O sistema verifica as credenciais (usuário e senha).</li>
-                            <li>Gera um par de chaves de acesso (Token de Acesso e Token de Atualização).</li>
-                            <li><strong>Bloqueio de Segurança:</strong> O login será recusado se o e-mail do usuário ainda não tiver sido confirmado.</li>
-                        </ul>
+                        Verifica credenciais e retorna JWT. Bloqueia se e-mail não confirmado.
                     </div>
 
                     <div class="section-header">Request Body</div>
                     <div class="model-box">
-{
-  <span class="highlight">"loginIdentifier"</span>: <span class="string">"user@rvcarbon.com"</span>, <span class="comment">// Aceita E-mail ou Nome de Usuário</span>
+<pre>{
+  <span class="highlight">"loginIdentifier"</span>: <span class="string">"user@rvcarbon.com"</span>,
   <span class="highlight">"password"</span>: <span class="string">"*******"</span>
-}
+}</pre>
+                    </div>
+
+                    <!-- TESTER -->
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <textarea class="req-editor" id="req-login">{
+  "loginIdentifier": "string",
+  "password": "string"
+}</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/auth/login/', 'req-login', 'res-login')">Executar</button>
+                            <div class="response-box" id="res-login"></div>
+                        </div>
                     </div>
 
                     <div class="section-header">Responses</div>
                     <table>
                         <thead><tr><th>Code</th><th>Description</th></tr></thead>
                         <tbody>
-                            <tr>
-                                <td><span class="status-badge status-200">200</span></td>
-                                <td>
-                                    <strong>Sucesso</strong>. Retorna as chaves de acesso.<br>
-                                    Retorno: <code>JwtTokenPair</code>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="status-badge status-401">401</span></td>
-                                <td>Credenciais (login ou senha) incorretas.</td>
-                            </tr>
-                            <tr>
-                                <td><span class="status-badge status-403">403</span></td>
-                                <td>Conta inativa. É necessário confirmar o e-mail antes de realizar o login.</td>
-                            </tr>
+                            <tr><td><span class="status-badge status-200">200</span></td><td>Sucesso. Retorna <code>JwtTokenPair</code>.</td></tr>
+                            <tr><td><span class="status-badge status-401">401</span></td><td>Credenciais incorretas.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -224,47 +236,59 @@
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="service-rule">
-                        <strong>Comportamento:</strong> 
-                        Realiza o pré-cadastro do usuário. O status inicial é definido como "Pendente". Um e-mail contendo um link de ativação é enviado automaticamente para o endereço informado.
-                    </div>
-                    
                     <div class="section-header">Request Body (AuthRegisterRequest)</div>
                     <div class="model-box">
-{
+<pre>{
   <span class="highlight">"name"</span>: <span class="string">"João Silva"</span>,
   <span class="highlight">"email"</span>: <span class="string">"joao@email.com"</span>,
-  <span class="highlight">"phone"</span>: <span class="string">"(11) 99999-9999"</span>, <span class="comment">// Formato obrigatório: (xx) xxxxx-xxxx</span>
+  <span class="highlight">"phone"</span>: <span class="string">"(11) 99999-9999"</span>,
   <span class="highlight">"username"</span>: <span class="string">"joaosilva"</span>,
-  <span class="highlight">"password"</span>: <span class="string">"secret123"</span>, <span class="comment">// Mínimo 6 caracteres</span>
+  <span class="highlight">"password"</span>: <span class="string">"secret123"</span>,
   <span class="highlight">"birthday"</span>: <span class="string">"1990-01-01"</span>,
   <span class="highlight">"state"</span>: <span class="string">"SP"</span>,
   <span class="highlight">"city"</span>: <span class="string">"São Paulo"</span>,
-  <span class="highlight">"cpfCnpj"</span>: <span class="string">"123.456.789-00"</span>, <span class="comment">// Deve ser um CPF ou CNPJ válido</span>
+  <span class="highlight">"cpfCnpj"</span>: <span class="string">"123.456.789-00"</span>,
   <span class="highlight">"occupation"</span>: <span class="string">"Agrônomo"</span>,
   <span class="highlight">"academicTitle"</span>: <span class="string">"Doutor"</span>,
   <span class="highlight">"imageProfileUrl"</span>: <span class="string">"http://..."</span>
-}
+}</pre>
+                    </div>
+
+                     <!-- TESTER -->
+                     <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <textarea class="req-editor" id="req-register">{
+  "name": "string",
+  "email": "string",
+  "phone": "(11) 99999-9999",
+  "username": "string",
+  "password": "string",
+  "birthday": "2000-01-01",
+  "state": "string",
+  "city": "string",
+  "cpfCnpj": "000.000.000-00",
+  "occupation": "string",
+  "academicTitle": "string",
+  "imageProfileUrl": "string"
+}</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/auth/register/', 'req-register', 'res-register')">Executar</button>
+                            <div class="response-box" id="res-register"></div>
+                        </div>
                     </div>
 
                     <div class="section-header">Responses</div>
                     <table>
                          <tbody>
-                            <tr>
-                                <td><span class="status-badge status-200">200</span></td>
-                                <td>Pré-cadastro realizado. E-mail de confirmação enviado.</td>
-                            </tr>
-                            <tr>
-                                <td><span class="status-badge status-400">400</span></td>
-                                <td>Erro de validação nos dados enviados (ex: CPF inválido, e-mail mal formatado).</td>
-                            </tr>
+                            <tr><td><span class="status-badge status-200">200</span></td><td>Pré-cadastro realizado. E-mail enviado.</td></tr>
+                            <tr><td><span class="status-badge status-400">400</span></td><td>Erro de validação.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-             <!-- POST REFRESH -->
-             <div class="op-block post">
+            <!-- POST REFRESH (RE-ADICIONADO) -->
+            <div class="op-block post">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/refresh/</span>
@@ -282,10 +306,21 @@
                     </div>
                     <div class="section-header">Request Body</div>
                     <div class="model-box">
-{
+<pre>{
   <span class="highlight">"refreshToken"</span>: <span class="string">"eyJhbGciOiJIUzI1NiJ..."</span>
-}
+}</pre>
                     </div>
+
+                    <!-- TESTER -->
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <textarea class="req-editor" id="req-refresh">{ "refreshToken": "string" }</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/auth/refresh/', 'req-refresh', 'res-refresh')">Executar</button>
+                            <div class="response-box" id="res-refresh"></div>
+                        </div>
+                    </div>
+
                     <div class="section-header">Responses</div>
                     <table>
                         <tr><td><span class="status-badge status-200">200</span></td><td>Sessão renovada. Retorna novo par de tokens.</td></tr>
@@ -294,7 +329,7 @@
                 </div>
             </div>
 
-            <!-- GET ME -->
+            <!-- GET ME (Protected) -->
             <div class="op-block get">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">GET</span>
@@ -303,20 +338,33 @@
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="section-header">Parâmetros</div>
+                    
+                    <div class="section-header">Parameters</div>
                     <table>
                         <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
                         <tr><td>Authorization</td><td>header</td><td>Sim</td><td>Bearer Token (JWT)</td></tr>
                     </table>
+
+                    <!-- TESTER WITH TOKEN -->
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Bearer Token:</label>
+                            <input type="text" id="token-me" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Cole o token aqui...">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/auth/me/', null, 'res-me', 'token-me')">Executar</button>
+                            <div class="response-box" id="res-me"></div>
+                        </div>
+                    </div>
+
                     <div class="section-header">Responses</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna os dados do perfil e estatísticas agregadas (ex: total de fazendas).</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna os dados do perfil.</td></tr>
                     </table>
                 </div>
             </div>
 
-             <!-- PATCH ME -->
-             <div class="op-block patch">
+            <!-- PATCH ME (RE-ADICIONADO) -->
+            <div class="op-block patch">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">PATCH</span>
                     <span class="op-block-summary-path">/api/auth/me/</span>
@@ -324,14 +372,36 @@
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
+                    <div class="section-header">Parâmetros</div>
+                    <table>
+                        <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>Authorization</td><td>header</td><td>Sim</td><td>Bearer Token (JWT)</td></tr>
+                    </table>
+
                     <div class="section-header">Request Body (AuthUpdateRequest)</div>
                     <div class="model-box">
-{
+<pre>{
   <span class="comment">// Envie apenas os campos que deseja alterar.</span>
   <span class="highlight">"name"</span>: <span class="string">"Novo Nome"</span>,
   <span class="highlight">"phone"</span>: <span class="string">"(11) 99999-8888"</span>
-}
+}</pre>
                     </div>
+
+                    <!-- TESTER -->
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Bearer Token:</label>
+                            <input type="text" id="token-patch-me" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Cole o token aqui...">
+                            <textarea class="req-editor" id="req-patch-me">{
+  "name": "Novo Nome",
+  "phone": "(11) 99999-8888"
+}</textarea>
+                            <button class="execute-btn" onclick="executeRequest('PATCH', '/api/auth/me/', 'req-patch-me', 'res-patch-me', 'token-patch-me')">Executar</button>
+                            <div class="response-box" id="res-patch-me"></div>
+                        </div>
+                    </div>
+
                     <div class="section-header">Responses</div>
                     <table>
                         <tr><td><span class="status-badge status-200">200</span></td><td>Perfil atualizado com sucesso.</td></tr>
@@ -339,7 +409,7 @@
                 </div>
             </div>
 
-            <!-- DELETE ME -->
+            <!-- DELETE ME (RE-ADICIONADO) -->
             <div class="op-block delete">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">DELETE</span>
@@ -356,6 +426,23 @@
                             <li><strong>Se não possuir vínculos:</strong> Um e-mail de confirmação final é enviado para garantir a intenção do usuário.</li>
                         </ul>
                     </div>
+                    <div class="section-header">Parâmetros</div>
+                    <table>
+                        <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>Authorization</td><td>header</td><td>Sim</td><td>Bearer Token (JWT)</td></tr>
+                    </table>
+
+                     <!-- TESTER -->
+                     <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Bearer Token:</label>
+                            <input type="text" id="token-del-me" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Cole o token aqui...">
+                            <button class="execute-btn" onclick="executeRequest('DELETE', '/api/auth/me/', null, 'res-del-me', 'token-del-me')">Executar</button>
+                            <div class="response-box" id="res-del-me"></div>
+                        </div>
+                    </div>
+
                     <div class="section-header">Responses</div>
                     <table>
                         <tr><td><span class="status-badge status-204">204</span></td><td>Solicitação aceita. Verifique seu e-mail para confirmar a exclusão.</td></tr>
@@ -364,49 +451,94 @@
                 </div>
             </div>
 
-            <!-- RESET PASSWORD FLOW -->
+            <!-- FLUXO DE SENHA -->
             <div class="section-header" style="margin-top: 40px; border-bottom: 1px solid #ddd;">Fluxos de Recuperação (Senha / Confirmação)</div>
 
+            <div class="flow-diagram">
+                <strong>Fluxo Completo de Reset de Senha:</strong>
+                <div class="flow-step" style="margin-top:10px;">
+                    <span class="step-num">1</span>
+                    <div>Usuário envia E-mail para <code>/forgot-password</code>.</div>
+                </div>
+                <div class="flow-step">
+                    <span class="step-num">2</span>
+                    <div>Backend envia e-mail contendo link: <code>https://app.rvcarbon.com/reset-password?token=XYZ...</code></div>
+                </div>
+                <div class="flow-step">
+                    <span class="step-num">3</span>
+                    <div>Usuário clica no link. Frontend abre, captura o <code>token</code> da URL.</div>
+                </div>
+                <div class="flow-step">
+                    <span class="step-num">4</span>
+                    <div>Usuário digita a nova senha na tela.</div>
+                </div>
+                <div class="flow-step">
+                    <span class="step-num">5</span>
+                    <div>Frontend envia <code>token</code> capturado + <code>novaSenha</code> para o endpoint <code>/reset-password</code>.</div>
+                </div>
+            </div>
+
+            <!-- FORGOT PASSWORD -->
             <div class="op-block post">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/forgot-password/</span>
-                    <span class="op-block-summary-desc">Recuperar Senha</span>
+                    <span class="op-block-summary-desc">Solicitar Link</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="section-header">Request Body</div>
-                    <div class="model-box">{ <span class="highlight">"email"</span>: <span class="string">"user@email.com"</span> }</div>
+                    <div class="model-box"><pre>{ "email": "user@email.com" }</pre></div>
+                    
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <textarea class="req-editor" id="req-forgot">{ "email": "string" }</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/auth/forgot-password/', 'req-forgot', 'res-forgot')">Executar</button>
+                            <div class="response-box" id="res-forgot"></div>
+                        </div>
+                    </div>
+
                     <div class="section-header">Responses</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Se o e-mail existir, um link de recuperação será enviado.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Email enviado.</td></tr>
                     </table>
                 </div>
             </div>
 
+            <!-- RESET PASSWORD -->
             <div class="op-block post">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/reset-password/</span>
-                    <span class="op-block-summary-desc">Definir Nova Senha</span>
+                    <span class="op-block-summary-desc">Confirmar Nova Senha</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="service-rule">
-                        <strong>Validação:</strong>
-                        A nova senha não pode ser idêntica à senha atual por motivos de segurança.
-                    </div>
                     <div class="section-header">Request Body</div>
                     <div class="model-box">
-{
-  <span class="highlight">"token"</span>: <span class="string">"token_recebido_no_email"</span>,
+<pre>{
+  <span class="highlight">"token"</span>: <span class="string">"token_da_url"</span>,
   <span class="highlight">"newPassword"</span>: <span class="string">"NovaSenh@123"</span>
-}
+}</pre>
                     </div>
+                    
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <textarea class="req-editor" id="req-reset">{
+  "token": "string",
+  "newPassword": "string"
+}</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/auth/reset-password/', 'req-reset', 'res-reset')">Executar</button>
+                            <div class="response-box" id="res-reset"></div>
+                        </div>
+                    </div>
+
                     <div class="section-header">Responses</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Senha alterada com sucesso.</td></tr>
-                        <tr><td><span class="status-badge status-400">400</span></td><td>Erro: A nova senha é igual à atual ou o link expirou.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Senha alterada.</td></tr>
+                        <tr><td><span class="status-badge status-400">400</span></td><td>Token inválido ou senha repetida.</td></tr>
                     </table>
                 </div>
             </div>
@@ -456,10 +588,36 @@
                     <span class="highlight">userId</span>: integer<br>
                     <span class="highlight">name</span>: string<br>
                     <span class="highlight">email</span>: string<br>
+                    <span class="highlight">phone</span>: string<br>
+                    <span class="highlight">username</span>: string<br>
+                    <span class="highlight">birthday</span>: string($date)<br>
+                    <span class="highlight">state</span>: string<br>
+                    <span class="highlight">city</span>: string<br>
+                    <span class="highlight">cpfCnpj</span>: string<br>
+                    <span class="highlight">occupation</span>: string<br>
+                    <span class="highlight">academicTitle</span>: string<br>
+                    <span class="highlight">imageProfileUrl</span>: string<br>
                     <span class="highlight">totalFarmOwnerByUser</span>: long <span class="comment">// Qtd de fazendas próprias</span><br>
                     <span class="highlight">totalFarmsByUser</span>: long <span class="comment">// Qtd de fazendas vinculadas</span><br>
-                    <span class="highlight">createdAt</span>: string($date-time)<br>
-                    ... (demais campos de cadastro)
+                    <span class="highlight">createdAt</span>: string($date-time)
+                </div>
+            </div>
+            
+             <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">
+                    AuthUpdateRequest (Atualização de Perfil) <span class="arrow">▼</span>
+                </div>
+                <div class="model-content">
+                    <span class="comment">// Todos os campos são opcionais</span><br>
+                    <span class="highlight">name</span>: string <span class="comment">// min 3</span><br>
+                    <span class="highlight">phone</span>: string <span class="comment">// Padrão (XX) XXXXX-XXXX</span><br>
+                    <span class="highlight">state</span>: string<br>
+                    <span class="highlight">city</span>: string<br>
+                    <span class="highlight">birthday</span>: string($date)<br>
+                    <span class="highlight">cpfCnpj</span>: string <span class="comment">// CPF/CNPJ válido</span><br>
+                    <span class="highlight">occupation</span>: string <span class="comment">// min 2</span><br>
+                    <span class="highlight">academicTitle</span>: string <span class="comment">// min 2</span><br>
+                    <span class="highlight">imageProfileUrl</span>: string <span class="comment">// min 5</span>
                 </div>
             </div>
 
@@ -498,11 +656,84 @@
             }
         }
 
+        function toggleExecute(btn) {
+            const panel = btn.nextElementSibling;
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                btn.textContent = 'Testar Endpoint';
+            } else {
+                panel.style.display = 'block';
+                btn.textContent = 'Cancelar Teste';
+            }
+        }
+
+        async function executeRequest(method, path, bodyId, resId, tokenId) {
+            const baseUrl = 'http://localhost:8080';
+            const url = baseUrl + path;
+            const resBox = document.getElementById(resId);
+            
+            resBox.style.display = 'block';
+            resBox.innerHTML = '<span style="color:white">Enviando requisição...</span>';
+
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // Add Token if exists
+            if (tokenId) {
+                const tokenVal = document.getElementById(tokenId).value;
+                if (tokenVal) headers['Authorization'] = 'Bearer ' + tokenVal;
+            }
+
+            const options = {
+                method: method,
+                headers: headers
+            };
+
+            if (bodyId) {
+                try {
+                    const rawBody = document.getElementById(bodyId).value;
+                    // Validate JSON
+                    JSON.parse(rawBody); 
+                    options.body = rawBody;
+                } catch (e) {
+                    resBox.innerHTML = '<span style="color:#f93e3e">Erro: JSON Inválido no corpo da requisição.</span>';
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch(url, options);
+                const statusColor = response.ok ? '#49cc90' : '#f93e3e';
+                
+                let responseData;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    responseData = await response.json();
+                    responseData = JSON.stringify(responseData, null, 2);
+                } else {
+                    responseData = await response.text();
+                }
+
+                resBox.innerHTML = 
+                    `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span>` +
+                    responseData;
+
+            } catch (error) {
+                resBox.innerHTML = 
+                    '<span class="response-status" style="color:#f93e3e">Erro de Conexão</span>' +
+                    'Falha ao conectar com o backend. Verifique se:\n' +
+                    '1. O servidor está rodando em localhost:8080\n' +
+                    '2. O CORS está habilitado no backend para permitir esta origem.';
+                console.error(error);
+            }
+        }
+
         function generatePDF() {
             const element = document.getElementById('printable-area');
             const opt = {
                 margin:       [0.5, 0.5, 0.5, 0.5],
-                filename:     'RvCarbon_Auth_Docs_v2.pdf',
+                filename:     'RvCarbon_Auth_Docs_v3.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
