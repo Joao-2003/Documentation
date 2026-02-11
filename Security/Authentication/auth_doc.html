@@ -153,7 +153,7 @@
     <div class="topbar">
         <a href="#" class="logo">swagger<span>ui</span></a>
         <div class="search-bar">
-            <input type="text" class="fake-input" value="https://rvcarbon.com.br/api/v1/openapi.json" disabled>
+            <input type="text" class="fake-input" value="https://api.rvcarbon.com.br/v1/openapi.json" disabled>
             <button class="btn-explore">Explore</button>
         </div>
     </div>
@@ -167,7 +167,7 @@
                 <span class="badge">1.0.0</span>
                 <span class="badge" style="background:#49cc90;">OAS 3.0</span>
             </h1>
-            <div class="base-url">[ Base URL: http://localhost:8080 ]</div>
+            <div class="base-url">[ Base URL: https://api.rvcarbon.com.br/ ]</div>
             <p class="info-desc">
                 Documentação oficial da API RvCarbon.
             </p>
@@ -254,8 +254,8 @@
 }</pre>
                     </div>
 
-                     <!-- TESTER -->
-                     <div class="try-out-wrapper">
+                      <!-- TESTER -->
+                      <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
                             <textarea class="req-editor" id="req-register">{
@@ -432,8 +432,8 @@
                         <tr><td>Authorization</td><td>header</td><td>Sim</td><td>Bearer Token (JWT)</td></tr>
                     </table>
 
-                     <!-- TESTER -->
-                     <div class="try-out-wrapper">
+                      <!-- TESTER -->
+                      <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
                             <label style="font-size:12px; font-weight:bold;">Bearer Token:</label>
@@ -462,7 +462,7 @@
                 </div>
                 <div class="flow-step">
                     <span class="step-num">2</span>
-                    <div>Backend envia e-mail contendo link: <code>https://app.rvcarbon.com/reset-password?token=XYZ...</code></div>
+                    <div>Backend envia e-mail contendo link: <code>https://app.rvcarbon.com.br/reset-password?token=XYZ...</code></div>
                 </div>
                 <div class="flow-step">
                     <span class="step-num">3</span>
@@ -668,7 +668,9 @@
         }
 
         async function executeRequest(method, path, bodyId, resId, tokenId) {
-            const baseUrl = 'http://localhost:8080';
+            // URL BASE ATUALIZADA
+            const baseUrl = 'https://api.rvcarbon.com.br';
+            
             const url = baseUrl + path;
             const resBox = document.getElementById(resId);
             
@@ -723,7 +725,7 @@
                 resBox.innerHTML = 
                     '<span class="response-status" style="color:#f93e3e">Erro de Conexão</span>' +
                     'Falha ao conectar com o backend. Verifique se:\n' +
-                    '1. O servidor está rodando em localhost:8080\n' +
+                    `1. O servidor está acessível em ${baseUrl}\n` +
                     '2. O CORS está habilitado no backend para permitir esta origem.';
                 console.error(error);
             }
@@ -733,7 +735,7 @@
             const element = document.getElementById('printable-area');
             const opt = {
                 margin:       [0.5, 0.5, 0.5, 0.5],
-                filename:     'RvCarbon_Auth_Docs_v3.pdf',
+                filename:     'RvCarbon_Auth_Docs_v4.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
