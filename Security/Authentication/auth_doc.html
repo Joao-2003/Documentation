@@ -378,7 +378,8 @@
                                         &nbsp; "password": "A senha (password) deve ter no mínimo 6 caracteres.",<br>
                                         &nbsp; "name": "O nome (name) deve ter pelo menos 3 caracteres.",<br>
                                         &nbsp; "cpfCnpj": "O CPF ou CNPJ (cpfCnpj) está em formato inválido.",<br>
-                                        &nbsp; "email": "O email (email) deve ser válido."<br>
+                                        &nbsp; "email": "O email (email) deve ser válido.",<br>
+                                        &nbsp; "birthday": "A data de nascimento (birthday) deve estar no passado."<br>
                                         }
                                         <br><br>
                                         // Erro de Parsing (Data/Tipo inválido):<br>
@@ -868,7 +869,7 @@
             const element = document.getElementById('printable-area');
             const opt = {
                 margin: [0.5, 0.5, 0.5, 0.5],
-                filename: 'RvCarbon_Auth_Docs_v11.pdf',
+                filename: 'RvCarbon_Auth_Docs_v12.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
