@@ -423,7 +423,12 @@
                     <table>
                         <tr>
                             <td><span class="status-badge status-200">200</span></td>
-                            <td><strong>Sucesso:</strong> Retorna um novo par de chaves de acesso.</td>
+                            <td>
+                                <strong>Sucesso:</strong> Retorna um novo par de chaves de acesso.
+                                <div class="model-box" style="margin-top:5px; font-size:10px;">
+                                    { "token": "...", "refreshToken": "...", "tokenType": "bearer" }
+                                </div>
+                            </td>
                         </tr>
                         <tr>
                             <td><span class="status-badge status-400">400</span></td>
@@ -457,7 +462,7 @@
                 </div>
                 <div class="op-block-body">
                     <div class="validation-list">
-                        <strong>⚠️ Regras:</strong> Envie o <code>refreshToken</code> para invalidá-lo no banco.
+                        <strong>⚠️ Regras:</strong> Envie o <code>refreshToken</code> para invalidá-lo no banco e impedir novos acessos.
                     </div>
                     <div class="model-box"><pre>{ "refreshToken": "string" }</pre></div>
 
@@ -523,12 +528,17 @@
                 </div>
                 <div class="op-block-body">
                     <div class="validation-list">
-                        <strong>⚠️ Regras (Se enviar o campo, deve ser válido):</strong>
+                        <strong>⚠️ Regras Completas (Se enviar o campo, deve ser válido):</strong>
                         <ul>
-                            <li><strong>phone:</strong> <code>(XX) XXXXX-XXXX</code>.</li>
-                            <li><strong>cpfCnpj:</strong> Válido.</li>
-                            <li><strong>birthday:</strong> Data passada <code>yyyy-MM-dd</code>.</li>
-                            <li><strong>imageProfileUrl:</strong> Min 5 letras.</li>
+                            <li><strong>name:</strong> Mínimo 3 letras.</li>
+                            <li><strong>phone:</strong> Formato exato: <code>(XX) XXXXX-XXXX</code>.</li>
+                            <li><strong>state:</strong> Texto livre (não nulo).</li>
+                            <li><strong>city:</strong> Texto livre (não nulo).</li>
+                            <li><strong>birthday:</strong> Formato <code>yyyy-MM-dd</code> e deve ser no passado.</li>
+                            <li><strong>cpfCnpj:</strong> Formato válido (ex: <code>000.000.000-00</code> ou <code>00.000.000/0000-00</code>).</li>
+                            <li><strong>occupation:</strong> Mínimo 2 letras.</li>
+                            <li><strong>academicTitle:</strong> Mínimo 2 letras.</li>
+                            <li><strong>imageProfileUrl:</strong> Mínimo 5 letras.</li>
                         </ul>
                     </div>
 
@@ -597,6 +607,33 @@
                             </td>
                         </tr>
                     </table>
+                </div>
+            </div>
+
+            <!-- FLUXO DE SENHA -->
+            <div class="section-header" style="margin-top: 40px; border-bottom: 1px solid #ddd;">Fluxos de Recuperação (Senha / Confirmação)</div>
+
+            <div class="flow-diagram">
+                <strong>Fluxo Completo de Reset de Senha:</strong>
+                <div class="flow-step" style="margin-top:10px;">
+                    <span class="step-num">1</span>
+                    <div>Usuário envia E-mail para <code>/forgot-password</code>.</div>
+                </div>
+                <div class="flow-step">
+                    <span class="step-num">2</span>
+                    <div>Backend envia e-mail contendo link: <code>https://app.rvcarbon.com.br/reset-password?token=XYZ...</code></div>
+                </div>
+                <div class="flow-step">
+                    <span class="step-num">3</span>
+                    <div>Usuário clica no link. Frontend abre, captura o <code>token</code> da URL.</div>
+                </div>
+                <div class="flow-step">
+                    <span class="step-num">4</span>
+                    <div>Usuário digita a nova senha na tela.</div>
+                </div>
+                <div class="flow-step">
+                    <span class="step-num">5</span>
+                    <div>Frontend envia <code>token</code> capturado + <code>novaSenha</code> para o endpoint <code>/reset-password</code>.</div>
                 </div>
             </div>
 
@@ -831,7 +868,7 @@
             const element = document.getElementById('printable-area');
             const opt = {
                 margin: [0.5, 0.5, 0.5, 0.5],
-                filename: 'RvCarbon_Auth_Docs_v10.pdf',
+                filename: 'RvCarbon_Auth_Docs_v11.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
