@@ -128,6 +128,15 @@
         .service-rule { 
             background: #fff8e1; border-left: 4px solid #ffc107; padding: 10px; margin: 5px 0; font-size: 13px; color: #5f4b06;
         }
+        
+        .error-example {
+            background: #ffe6e6; border-left: 4px solid #f93e3e; padding: 10px; margin: 10px 0; font-size: 12px; font-family: monospace; color: #a94442;
+        }
+        .validation-list {
+            background: #e3f2fd; border-radius: 4px; padding: 15px; margin: 10px 0; font-size: 13px;
+        }
+        .validation-list ul { margin: 5px 0 0 20px; padding: 0; }
+        .validation-list li { margin-bottom: 4px; color: #0d47a1; }
 
         /* Schemas Section */
         .models-section { margin-top: 60px; border-top: 1px solid #3b4151; padding-top: 20px; }
@@ -186,16 +195,24 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/login/</span>
-                    <span class="op-block-summary-desc">Login</span>
+                    <span class="op-block-summary-desc">Entrar no Sistema</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
-                        <strong>Regra de Negócio:</strong> 
-                        Verifica credenciais e retorna JWT. Bloqueia se e-mail não confirmado.
+                        <strong>O que isso faz?</strong> 
+                        Verifica se o e-mail/username e a senha estão corretos. Se estiverem, entrega uma "Chave de Acesso" (Token).
+                    </div>
+                    
+                    <div class="validation-list">
+                        <strong>⚠️ Regras de Validação:</strong>
+                        <ul>
+                            <li><strong>loginIdentifier:</strong> Obrigatório (E-mail ou Username).</li>
+                            <li><strong>password:</strong> Obrigatório, Mínimo 6 caracteres.</li>
+                        </ul>
                     </div>
 
-                    <div class="section-header">Request Body</div>
+                    <div class="section-header">Dados para Envio (JSON)</div>
                     <div class="model-box">
 <pre>{
   <span class="highlight">"loginIdentifier"</span>: <span class="string">"user@rvcarbon.com"</span>,
@@ -216,12 +233,53 @@
                         </div>
                     </div>
 
-                    <div class="section-header">Responses</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <thead><tr><th>Code</th><th>Description</th></tr></thead>
+                        <thead><tr><th>Código</th><th>Explicação e Retorno</th></tr></thead>
                         <tbody>
-                            <tr><td><span class="status-badge status-200">200</span></td><td>Sucesso. Retorna <code>JwtTokenPair</code>.</td></tr>
-                            <tr><td><span class="status-badge status-401">401</span></td><td>Credenciais incorretas.</td></tr>
+                            <tr>
+                                <td><span class="status-badge status-200">200</span></td>
+                                <td>
+                                    <strong>Sucesso (Login Aprovado):</strong> Retorna suas chaves de acesso.
+                                    <div class="model-box" style="margin-top:5px; font-size:10px;">
+                                        { "token": "...", "refreshToken": "...", "tokenType": "bearer" }
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-400">400</span></td>
+                                <td>
+                                    <strong>Erro na Requisição:</strong> Falta preencher campos ou JSON inválido.
+                                    <div class="error-example">
+                                        // JSON mal formatado ou corpo vazio:<br>
+                                        { "detail": "JSON inválido." }
+                                        <br><br>
+                                        // Campos vazios:<br>
+                                        {<br>
+                                        &nbsp; "password": "não deve estar em branco",<br>
+                                        &nbsp; "loginIdentifier": "O e-mail ou username é obrigatório."<br>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-401">401</span></td>
+                                <td>
+                                    <strong>Não Autorizado:</strong> Credenciais incorretas.
+                                    <div class="error-example">
+                                        { "details": "Usuário inexistente ou senha inválida" }
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-403">403</span></td>
+                                <td>
+                                    <strong>Acesso Negado:</strong> Usuário inativo. Necessário confirmar e-mail.
+                                    <div class="error-example">
+                                        { "details": "User was not activated. Please check your email..." }
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -232,11 +290,28 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/register/</span>
-                    <span class="op-block-summary-desc">Cadastro de novo usuário</span>
+                    <span class="op-block-summary-desc">Criar Nova Conta</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="section-header">Request Body (AuthRegisterRequest)</div>
+                    
+                    <div class="validation-list">
+                        <strong>⚠️ Regras Rigorosas de Validação (Erro 400 se falhar):</strong>
+                        <ul>
+                            <li><strong>name:</strong> Min 3 letras.</li>
+                            <li><strong>email:</strong> Formato válido e Min 5 letras.</li>
+                            <li><strong>phone:</strong> Formato exato: <code>(XX) XXXXX-XXXX</code>.</li>
+                            <li><strong>username:</strong> 3 a 30 caracteres.</li>
+                            <li><strong>password:</strong> Mínimo 6 caracteres.</li>
+                            <li><strong>birthday:</strong> Formato <code>yyyy-MM-dd</code> e deve ser no passado.</li>
+                            <li><strong>cpfCnpj:</strong> Formato válido (ex: <code>000.000.000-00</code> ou <code>00.000.000/0000-00</code>).</li>
+                            <li><strong>state, city:</strong> Obrigatórios.</li>
+                            <li><strong>occupation, academicTitle:</strong> Min 2 letras.</li>
+                            <li><strong>imageProfileUrl:</strong> Min 5 letras.</li>
+                        </ul>
+                    </div>
+
+                    <div class="section-header">Formulário de Cadastro</div>
                     <div class="model-box">
 <pre>{
   <span class="highlight">"name"</span>: <span class="string">"João Silva"</span>,
@@ -277,39 +352,62 @@
                         </div>
                     </div>
 
-                    <div class="section-header">Responses</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
                          <tbody>
-                            <tr><td><span class="status-badge status-200">200</span></td><td>Pré-cadastro realizado. E-mail enviado.</td></tr>
-                            <tr><td><span class="status-badge status-400">400</span></td><td>Erro de validação.</td></tr>
+                            <tr>
+                                <td><span class="status-badge status-200">200</span></td>
+                                <td>
+                                    <strong>Sucesso (Cadastro Realizado):</strong> Retorna o usuário criado.
+                                    <div class="model-box" style="margin-top:5px; font-size:10px;">
+                                        {<br>
+                                        &nbsp; "userId": 1, "name": "joao", "email": "jvglima03@gmail.com",<br>
+                                        &nbsp; "phone": null, "cpfCnpj": "999.999.999-99", "state": "go",<br>
+                                        &nbsp; "city": "rio quente", "birthday": "2003-03-20", ...<br>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="status-badge status-400">400</span></td>
+                                <td>
+                                    <strong>Erros de Validação (Campos Inválidos):</strong>
+                                    <div class="error-example">
+                                        // Mapa Plano de Erros (Campo: Mensagem):<br>
+                                        {<br>
+                                        &nbsp; "password": "A senha (password) deve ter no mínimo 6 caracteres.",<br>
+                                        &nbsp; "name": "O nome (name) deve ter pelo menos 3 caracteres.",<br>
+                                        &nbsp; "cpfCnpj": "O CPF ou CNPJ (cpfCnpj) está em formato inválido.",<br>
+                                        &nbsp; "email": "O email (email) deve ser válido."<br>
+                                        }
+                                        <br><br>
+                                        // Erro de Parsing (Data/Tipo inválido):<br>
+                                        { "detail": "Campo 'birthday' tem valor inválido. Use o formato yyyy-MM-dd." }
+                                        <br><br>
+                                        // Duplicidade (E-mail/Username já existe):<br>
+                                        { "email": "email já está em uso.", "username": "username já está em uso." }
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- POST REFRESH (RE-ADICIONADO) -->
+            <!-- POST REFRESH -->
             <div class="op-block post">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/refresh/</span>
-                    <span class="op-block-summary-desc">Renovar sessão (Token)</span>
+                    <span class="op-block-summary-desc">Renovar Sessão</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="service-rule">
-                        <strong>Segurança:</strong> 
-                        Utilizado para manter o usuário logado sem pedir a senha novamente.
-                        <ul>
-                            <li>Invalida o token de atualização anterior (rotação de chaves).</li>
-                            <li>Se o token antigo já tiver sido invalidado ou expirado, a renovação falha e o usuário deve fazer login novamente.</li>
-                        </ul>
+                    <div class="validation-list">
+                        <strong>⚠️ Regras:</strong>
+                        <ul><li><strong>refreshToken:</strong> Obrigatório. É a chave secundária recebida no login.</li></ul>
                     </div>
-                    <div class="section-header">Request Body</div>
-                    <div class="model-box">
-<pre>{
-  <span class="highlight">"refreshToken"</span>: <span class="string">"eyJhbGciOiJIUzI1NiJ..."</span>
-}</pre>
-                    </div>
+                    <div class="model-box"><pre>{ "refreshToken": "string" }</pre></div>
 
                     <!-- TESTER -->
                     <div class="try-out-wrapper">
@@ -321,10 +419,63 @@
                         </div>
                     </div>
 
-                    <div class="section-header">Responses</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Sessão renovada. Retorna novo par de tokens.</td></tr>
-                        <tr><td><span class="status-badge status-401">401</span></td><td>Sessão expirada ou inválida. Necessário realizar login novamente.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td><strong>Sucesso:</strong> Retorna um novo par de chaves de acesso.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro na Requisição:</strong> Enviou Token errado (ex: AccessToken em vez de Refresh).
+                                <div class="error-example">
+                                    { "detail": "O token informado é um AccessToken, mas esperava-se um RefreshToken." }
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-401">401</span></td>
+                            <td>
+                                <strong>Não Autorizado:</strong> Chave inválida, expirada ou já usada (Blacklisted).
+                                <div class="error-example">
+                                    { "detail": "Refresh token invalid or expired. Please make login again." }
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- POST LOGOUT (NOVO) -->
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/auth/logout/</span>
+                    <span class="op-block-summary-desc">Sair (Invalidar Token)</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list">
+                        <strong>⚠️ Regras:</strong> Envie o <code>refreshToken</code> para invalidá-lo no banco.
+                    </div>
+                    <div class="model-box"><pre>{ "refreshToken": "string" }</pre></div>
+
+                    <!-- TESTER -->
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <textarea class="req-editor" id="req-logout">{ "refreshToken": "string" }</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/auth/logout/', 'req-logout', 'res-logout')">Executar</button>
+                            <div class="response-box" id="res-logout"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Respostas</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Sucesso (Sem conteúdo de retorno).</td></tr>
+                        <tr><td><span class="status-badge status-400">400</span></td><td>Erro: Enviou token errado (AccessToken).</td></tr>
+                        <tr><td><span class="status-badge status-401">401</span></td><td>Erro: Token já invalidado anteriormente.</td></tr>
                     </table>
                 </div>
             </div>
@@ -334,54 +485,56 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">GET</span>
                     <span class="op-block-summary-path">/api/auth/me/</span>
-                    <span class="op-block-summary-desc">Dados do perfil atual</span>
+                    <span class="op-block-summary-desc">Ver Meu Perfil</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    
-                    <div class="section-header">Parameters</div>
+                    <div class="section-header">Permissões</div>
                     <table>
                         <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td>Authorization</td><td>header</td><td>Sim</td><td>Bearer Token (JWT)</td></tr>
+                        <tr><td>Authorization</td><td>header</td><td>Sim</td><td>Chave de Acesso (Bearer Token)</td></tr>
                     </table>
 
-                    <!-- TESTER WITH TOKEN -->
+                    <!-- TESTER -->
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">Bearer Token:</label>
+                            <label style="font-size:12px; font-weight:bold;">Chave de Acesso (Token):</label>
                             <input type="text" id="token-me" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Cole o token aqui...">
                             <button class="execute-btn" onclick="executeRequest('GET', '/api/auth/me/', null, 'res-me', 'token-me')">Executar</button>
                             <div class="response-box" id="res-me"></div>
                         </div>
                     </div>
 
-                    <div class="section-header">Responses</div>
+                    <div class="section-header">Respostas</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna os dados do perfil.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna todos os detalhes do seu perfil (Perfil Completo).</td></tr>
                     </table>
                 </div>
             </div>
 
-            <!-- PATCH ME (RE-ADICIONADO) -->
+            <!-- PATCH ME -->
             <div class="op-block patch">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">PATCH</span>
                     <span class="op-block-summary-path">/api/auth/me/</span>
-                    <span class="op-block-summary-desc">Atualizar Perfil</span>
+                    <span class="op-block-summary-desc">Atualizar Meus Dados</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="section-header">Parâmetros</div>
-                    <table>
-                        <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td>Authorization</td><td>header</td><td>Sim</td><td>Bearer Token (JWT)</td></tr>
-                    </table>
+                    <div class="validation-list">
+                        <strong>⚠️ Regras (Se enviar o campo, deve ser válido):</strong>
+                        <ul>
+                            <li><strong>phone:</strong> <code>(XX) XXXXX-XXXX</code>.</li>
+                            <li><strong>cpfCnpj:</strong> Válido.</li>
+                            <li><strong>birthday:</strong> Data passada <code>yyyy-MM-dd</code>.</li>
+                            <li><strong>imageProfileUrl:</strong> Min 5 letras.</li>
+                        </ul>
+                    </div>
 
-                    <div class="section-header">Request Body (AuthUpdateRequest)</div>
+                    <div class="section-header">Dados para Atualizar</div>
                     <div class="model-box">
 <pre>{
-  <span class="comment">// Envie apenas os campos que deseja alterar.</span>
   <span class="highlight">"name"</span>: <span class="string">"Novo Nome"</span>,
   <span class="highlight">"phone"</span>: <span class="string">"(11) 99999-8888"</span>
 }</pre>
@@ -391,7 +544,7 @@
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">Bearer Token:</label>
+                            <label style="font-size:12px; font-weight:bold;">Chave de Acesso (Token):</label>
                             <input type="text" id="token-patch-me" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Cole o token aqui...">
                             <textarea class="req-editor" id="req-patch-me">{
   "name": "Novo Nome",
@@ -402,79 +555,48 @@
                         </div>
                     </div>
 
-                    <div class="section-header">Responses</div>
+                    <div class="section-header">Respostas</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Perfil atualizado com sucesso.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna os dados do usuário já atualizados.</td></tr>
+                        <tr><td><span class="status-badge status-400">400</span></td><td><strong>Erro:</strong> Validação falhou (retorna mapa de erros igual ao cadastro).</td></tr>
                     </table>
                 </div>
             </div>
 
-            <!-- DELETE ME (RE-ADICIONADO) -->
+            <!-- DELETE ME -->
             <div class="op-block delete">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">DELETE</span>
                     <span class="op-block-summary-path">/api/auth/me/</span>
-                    <span class="op-block-summary-desc">Solicitar Exclusão de Conta</span>
+                    <span class="op-block-summary-desc">Excluir Minha Conta</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
-                        <strong>Regra de Integridade de Dados:</strong> 
-                        <ul>
-                            <li>O sistema verifica se o usuário é proprietário de Fazendas cadastradas.</li>
-                            <li><strong>Se possuir vínculos:</strong> A exclusão é impedida para evitar que fazendas fiquem "órfãs" no sistema.</li>
-                            <li><strong>Se não possuir vínculos:</strong> Um e-mail de confirmação final é enviado para garantir a intenção do usuário.</li>
-                        </ul>
+                        <strong>Regra:</strong> Se o usuário for dono de Fazendas, lança erro (pois não pode deixar fazendas sem dono).
                     </div>
-                    <div class="section-header">Parâmetros</div>
-                    <table>
-                        <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td>Authorization</td><td>header</td><td>Sim</td><td>Bearer Token (JWT)</td></tr>
-                    </table>
-
-                      <!-- TESTER -->
-                      <div class="try-out-wrapper">
+                    <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">Bearer Token:</label>
+                            <label style="font-size:12px; font-weight:bold;">Chave de Acesso:</label>
                             <input type="text" id="token-del-me" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Cole o token aqui...">
                             <button class="execute-btn" onclick="executeRequest('DELETE', '/api/auth/me/', null, 'res-del-me', 'token-del-me')">Executar</button>
                             <div class="response-box" id="res-del-me"></div>
                         </div>
                     </div>
-
-                    <div class="section-header">Responses</div>
+                    <div class="section-header">Respostas</div>
                     <table>
-                        <tr><td><span class="status-badge status-204">204</span></td><td>Solicitação aceita. Verifique seu e-mail para confirmar a exclusão.</td></tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td>Operação negada: O usuário possui fazendas vinculadas e não pode ser excluído.</td></tr>
+                        <tr><td><span class="status-badge status-204">204</span></td><td><strong>Aceito:</strong> E-mail de confirmação enviado. Verifique sua caixa de entrada.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro:</strong> Impossível excluir.
+                                <div class="error-example">
+                                    { "detail": "Você não pode deletar sua conta tendo clientes associados" }
+                                </div>
+                            </td>
+                        </tr>
                     </table>
-                </div>
-            </div>
-
-            <!-- FLUXO DE SENHA -->
-            <div class="section-header" style="margin-top: 40px; border-bottom: 1px solid #ddd;">Fluxos de Recuperação (Senha / Confirmação)</div>
-
-            <div class="flow-diagram">
-                <strong>Fluxo Completo de Reset de Senha:</strong>
-                <div class="flow-step" style="margin-top:10px;">
-                    <span class="step-num">1</span>
-                    <div>Usuário envia E-mail para <code>/forgot-password</code>.</div>
-                </div>
-                <div class="flow-step">
-                    <span class="step-num">2</span>
-                    <div>Backend envia e-mail contendo link: <code>https://app.rvcarbon.com.br/reset-password?token=XYZ...</code></div>
-                </div>
-                <div class="flow-step">
-                    <span class="step-num">3</span>
-                    <div>Usuário clica no link. Frontend abre, captura o <code>token</code> da URL.</div>
-                </div>
-                <div class="flow-step">
-                    <span class="step-num">4</span>
-                    <div>Usuário digita a nova senha na tela.</div>
-                </div>
-                <div class="flow-step">
-                    <span class="step-num">5</span>
-                    <div>Frontend envia <code>token</code> capturado + <code>novaSenha</code> para o endpoint <code>/reset-password</code>.</div>
                 </div>
             </div>
 
@@ -483,13 +605,14 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/forgot-password/</span>
-                    <span class="op-block-summary-desc">Solicitar Link</span>
+                    <span class="op-block-summary-desc">Esqueci Minha Senha</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="section-header">Request Body</div>
+                    <div class="validation-list">
+                        <ul><li><strong>email:</strong> Obrigatório e formato válido.</li></ul>
+                    </div>
                     <div class="model-box"><pre>{ "email": "user@email.com" }</pre></div>
-                    
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
@@ -498,11 +621,8 @@
                             <div class="response-box" id="res-forgot"></div>
                         </div>
                     </div>
-
-                    <div class="section-header">Responses</div>
-                    <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Email enviado.</td></tr>
-                    </table>
+                    <div class="section-header">Respostas</div>
+                    <table><tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> E-mail de recuperação enviado (se o usuário existir).</td></tr></table>
                 </div>
             </div>
 
@@ -511,34 +631,39 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/reset-password/</span>
-                    <span class="op-block-summary-desc">Confirmar Nova Senha</span>
+                    <span class="op-block-summary-desc">Salvar Nova Senha</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="section-header">Request Body</div>
-                    <div class="model-box">
-<pre>{
-  <span class="highlight">"token"</span>: <span class="string">"token_da_url"</span>,
-  <span class="highlight">"newPassword"</span>: <span class="string">"NovaSenh@123"</span>
-}</pre>
+                    <div class="validation-list">
+                        <ul><li><strong>token:</strong> Obrigatório (Vem no link do e-mail).</li><li><strong>newPassword:</strong> Mínimo 6 caracteres.</li></ul>
                     </div>
-                    
+                    <div class="model-box"><pre>{ "token": "...", "newPassword": "123456" }</pre></div>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <textarea class="req-editor" id="req-reset">{
-  "token": "string",
-  "newPassword": "string"
-}</textarea>
+                            <textarea class="req-editor" id="req-reset">{ "token": "string", "newPassword": "string" }</textarea>
                             <button class="execute-btn" onclick="executeRequest('POST', '/api/auth/reset-password/', 'req-reset', 'res-reset')">Executar</button>
                             <div class="response-box" id="res-reset"></div>
                         </div>
                     </div>
-
-                    <div class="section-header">Responses</div>
+                    <div class="section-header">Respostas</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Senha alterada.</td></tr>
-                        <tr><td><span class="status-badge status-400">400</span></td><td>Token inválido ou senha repetida.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Senha alterada.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro:</strong> Senha igual à atual.
+                                <div class="error-example">{ "detail": "A nova senha não pode ser igual à senha atual." }</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-401">401</span></td>
+                            <td>
+                                <strong>Erro:</strong> Token expirado ou inválido.
+                                <div class="error-example">{ "detail": "Token de confirmação invalido ou expirado!" }</div>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -550,74 +675,66 @@
             <div class="op-block-tag">Schemas (Modelos de Dados)</div>
 
             <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">
-                    JwtTokenPair (Chaves de Acesso) <span class="arrow">▼</span>
-                </div>
+                <div class="model-title" onclick="toggleModel(this)">Par de Chaves de Acesso (Tokens) <span class="arrow">▼</span></div>
                 <div class="model-content">
-                    <span class="highlight">token</span>: string <span class="comment">// Token usado para autenticar requisições</span><br>
-                    <span class="highlight">refreshToken</span>: string <span class="comment">// Token usado para renovar a sessão</span><br>
-                    <span class="highlight">tokenType</span>: string (default: "bearer")
+                    <span class="highlight">token</span>: string<br>
+                    <span class="highlight">refreshToken</span>: string<br>
+                    <span class="highlight">tokenType</span>: string (bearer)
                 </div>
             </div>
 
             <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">
-                    AuthRegisterRequest (Formulário de Cadastro) <span class="arrow">▼</span>
-                </div>
+                <div class="model-title" onclick="toggleModel(this)">Dados de Cadastro (Requisição) <span class="arrow">▼</span></div>
                 <div class="model-content">
-                    <span class="highlight">name</span>: string <span class="prop-req">*Obrigatório (min 3)</span><br>
-                    <span class="highlight">email</span>: string <span class="prop-req">*Obrigatório (válido)</span><br>
-                    <span class="highlight">phone</span>: string <span class="prop-req">*Padrão: (XX) XXXXX-XXXX</span><br>
-                    <span class="highlight">username</span>: string <span class="prop-req">*Obrigatório (3-30 chars)</span><br>
-                    <span class="highlight">password</span>: string <span class="prop-req">*Obrigatório (min 6 chars)</span><br>
-                    <span class="highlight">birthday</span>: string <span class="prop-req">*Obrigatório (Data Passada)</span><br>
-                    <span class="highlight">state</span>: string <span class="prop-req">*Obrigatório</span><br>
-                    <span class="highlight">city</span>: string <span class="prop-req">*Obrigatório</span><br>
-                    <span class="highlight">cpfCnpj</span>: string <span class="prop-req">*CPF ou CNPJ válido</span><br>
-                    <span class="highlight">occupation</span>: string <span class="prop-req">*Min 2 chars</span><br>
-                    <span class="highlight">academicTitle</span>: string <span class="prop-req">*Min 2 chars</span><br>
-                    <span class="highlight">imageProfileUrl</span>: string <span class="prop-req">*Link da imagem</span>
+                    <span class="highlight">name</span>: string (min 3)<br>
+                    <span class="highlight">email</span>: string (email)<br>
+                    <span class="highlight">phone</span>: string ((XX) XXXXX-XXXX)<br>
+                    <span class="highlight">username</span>: string (3-30)<br>
+                    <span class="highlight">password</span>: string (min 6)<br>
+                    <span class="highlight">birthday</span>: string (yyyy-MM-dd, past)<br>
+                    <span class="highlight">state</span>: string<br>
+                    <span class="highlight">city</span>: string<br>
+                    <span class="highlight">cpfCnpj</span>: string (regex)<br>
+                    <span class="highlight">occupation</span>: string (min 2)<br>
+                    <span class="highlight">academicTitle</span>: string (min 2)<br>
+                    <span class="highlight">imageProfileUrl</span>: string (min 5)
                 </div>
             </div>
 
             <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">
-                    UserInfosResponse (Perfil Completo) <span class="arrow">▼</span>
-                </div>
+                <div class="model-title" onclick="toggleModel(this)">Dados do Usuário Cadastrado (Resposta) <span class="arrow">▼</span></div>
                 <div class="model-content">
-                    <span class="highlight">userId</span>: integer<br>
+                    <span class="highlight">userId</span>: long<br>
                     <span class="highlight">name</span>: string<br>
                     <span class="highlight">email</span>: string<br>
                     <span class="highlight">phone</span>: string<br>
-                    <span class="highlight">username</span>: string<br>
-                    <span class="highlight">birthday</span>: string($date)<br>
+                    <span class="highlight">cpfCnpj</span>: string<br>
                     <span class="highlight">state</span>: string<br>
                     <span class="highlight">city</span>: string<br>
-                    <span class="highlight">cpfCnpj</span>: string<br>
+                    <span class="highlight">birthday</span>: string<br>
                     <span class="highlight">occupation</span>: string<br>
                     <span class="highlight">academicTitle</span>: string<br>
-                    <span class="highlight">imageProfileUrl</span>: string<br>
-                    <span class="highlight">totalFarmOwnerByUser</span>: long <span class="comment">// Qtd de fazendas próprias</span><br>
-                    <span class="highlight">totalFarmsByUser</span>: long <span class="comment">// Qtd de fazendas vinculadas</span><br>
-                    <span class="highlight">createdAt</span>: string($date-time)
+                    <span class="highlight">username</span>: string<br>
+                    <span class="highlight">imageProfileUrl</span>: string
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">Perfil Completo do Usuário <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="comment">// Herda campos de Dados do Usuário Cadastrado e adiciona:</span><br>
+                    <span class="highlight">totalFarmOwnerByUser</span>: long<br>
+                    <span class="highlight">totalFarmsByUser</span>: long<br>
+                    <span class="highlight">durationAccountUse</span>: string<br>
+                    <span class="highlight">createdAt</span>: string($date-time)<br>
+                    <span class="highlight">color</span>: string
                 </div>
             </div>
             
              <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">
-                    AuthUpdateRequest (Atualização de Perfil) <span class="arrow">▼</span>
-                </div>
+                <div class="model-title" onclick="toggleModel(this)">Mensagem de Erro Detalhada <span class="arrow">▼</span></div>
                 <div class="model-content">
-                    <span class="comment">// Todos os campos são opcionais</span><br>
-                    <span class="highlight">name</span>: string <span class="comment">// min 3</span><br>
-                    <span class="highlight">phone</span>: string <span class="comment">// Padrão (XX) XXXXX-XXXX</span><br>
-                    <span class="highlight">state</span>: string<br>
-                    <span class="highlight">city</span>: string<br>
-                    <span class="highlight">birthday</span>: string($date)<br>
-                    <span class="highlight">cpfCnpj</span>: string <span class="comment">// CPF/CNPJ válido</span><br>
-                    <span class="highlight">occupation</span>: string <span class="comment">// min 2</span><br>
-                    <span class="highlight">academicTitle</span>: string <span class="comment">// min 2</span><br>
-                    <span class="highlight">imageProfileUrl</span>: string <span class="comment">// min 5</span>
+                    <span class="highlight">details</span>: string (ou "detail")
                 </div>
             </div>
 
@@ -627,14 +744,12 @@
     <script>
         function toggleSection(id) {
             const el = document.getElementById(id);
-            if (el.style.display === 'none') el.style.display = 'block';
-            else el.style.display = 'none';
+            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
         }
 
         function toggleBody(element) {
             const body = element.nextElementSibling;
             const arrow = element.querySelector('.arrow');
-            
             if (body.style.display === "block") {
                 body.style.display = "none";
                 arrow.classList.remove('rotate');
@@ -668,38 +783,28 @@
         }
 
         async function executeRequest(method, path, bodyId, resId, tokenId) {
-            // URL BASE ATUALIZADA
             const baseUrl = 'https://api.rvcarbon.com.br';
-            
             const url = baseUrl + path;
             const resBox = document.getElementById(resId);
             
             resBox.style.display = 'block';
             resBox.innerHTML = '<span style="color:white">Enviando requisição...</span>';
 
-            const headers = {
-                'Content-Type': 'application/json'
-            };
-
-            // Add Token if exists
+            const headers = { 'Content-Type': 'application/json' };
             if (tokenId) {
                 const tokenVal = document.getElementById(tokenId).value;
                 if (tokenVal) headers['Authorization'] = 'Bearer ' + tokenVal;
             }
 
-            const options = {
-                method: method,
-                headers: headers
-            };
+            const options = { method: method, headers: headers };
 
             if (bodyId) {
                 try {
                     const rawBody = document.getElementById(bodyId).value;
-                    // Validate JSON
                     JSON.parse(rawBody); 
                     options.body = rawBody;
                 } catch (e) {
-                    resBox.innerHTML = '<span style="color:#f93e3e">Erro: JSON Inválido no corpo da requisição.</span>';
+                    resBox.innerHTML = '<span style="color:#f93e3e">Erro: JSON Inválido.</span>';
                     return;
                 }
             }
@@ -707,7 +812,6 @@
             try {
                 const response = await fetch(url, options);
                 const statusColor = response.ok ? '#49cc90' : '#f93e3e';
-                
                 let responseData;
                 const contentType = response.headers.get("content-type");
                 if (contentType && contentType.indexOf("application/json") !== -1) {
@@ -716,17 +820,9 @@
                 } else {
                     responseData = await response.text();
                 }
-
-                resBox.innerHTML = 
-                    `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span>` +
-                    responseData;
-
+                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span>` + responseData;
             } catch (error) {
-                resBox.innerHTML = 
-                    '<span class="response-status" style="color:#f93e3e">Erro de Conexão</span>' +
-                    'Falha ao conectar com o backend. Verifique se:\n' +
-                    `1. O servidor está acessível em ${baseUrl}\n` +
-                    '2. O CORS está habilitado no backend para permitir esta origem.';
+                resBox.innerHTML = '<span class="response-status" style="color:#f93e3e">Erro de Conexão (CORS ou Offline)</span>';
                 console.error(error);
             }
         }
@@ -734,22 +830,17 @@
         function generatePDF() {
             const element = document.getElementById('printable-area');
             const opt = {
-                margin:       [0.5, 0.5, 0.5, 0.5],
-                filename:     'RvCarbon_Auth_Docs_v4.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                margin: [0.5, 0.5, 0.5, 0.5],
+                filename: 'RvCarbon_Auth_Docs_v10.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
-
-            // Expand all sections for printing
             const bodies = document.querySelectorAll('.op-block-body');
             const models = document.querySelectorAll('.model-content');
-            
             bodies.forEach(b => b.style.display = 'block');
             models.forEach(m => m.style.display = 'block');
-
             html2pdf().set(opt).from(element).save().then(() => {
-                // Collapse back
                 bodies.forEach(b => b.style.display = 'none');
                 models.forEach(m => m.style.display = 'none');
             });
