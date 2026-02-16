@@ -124,6 +124,7 @@
         .status-400 { background: #f93e3e; }
         .status-401 { background: #fca130; }
         .status-403 { background: #fca130; }
+        .status-302 { background: #9013fe; } /* Redirect */
 
         .service-rule { 
             background: #fff8e1; border-left: 4px solid #ffc107; padding: 10px; margin: 5px 0; font-size: 13px; color: #5f4b06;
@@ -533,8 +534,8 @@
                         <ul>
                             <li><strong>name:</strong> Mínimo 3 letras.</li>
                             <li><strong>phone:</strong> Formato exato: <code>(XX) XXXXX-XXXX</code>.</li>
-                            <li><strong>state:</strong> Texto livre (não nulo).</li>
-                            <li><strong>city:</strong> Texto livre (não nulo).</li>
+                            <li><strong>state:</strong> Texto livre.</li>
+                            <li><strong>city:</strong> Texto livre.</li>
                             <li><strong>birthday:</strong> Formato <code>yyyy-MM-dd</code> e deve ser no passado.</li>
                             <li><strong>cpfCnpj:</strong> Formato válido (ex: <code>000.000.000-00</code> ou <code>00.000.000/0000-00</code>).</li>
                             <li><strong>occupation:</strong> Mínimo 2 letras.</li>
@@ -607,6 +608,96 @@
                                 </div>
                             </td>
                         </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET RESEND EMAIL (NOVO) -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/auth/resend-email/</span>
+                    <span class="op-block-summary-desc">Reenviar E-mail de Ativação</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="section-header">Parâmetros (Query String)</div>
+                    <table>
+                        <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>email</td><td>query</td><td>Sim</td><td>O e-mail para reenviar o token</td></tr>
+                    </table>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">E-mail:</label>
+                            <input type="text" id="query-resend-email" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/auth/resend-email/?email=' + document.getElementById('query-resend-email').value, null, 'res-resend-email')">Executar</button>
+                            <div class="response-box" id="res-resend-email"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas</div>
+                    <table><tr><td><span class="status-badge status-200">200</span></td><td>Sucesso.</td></tr></table>
+                </div>
+            </div>
+
+            <!-- GET CONFIRM EMAIL (NOVO) -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/auth/confirm-email</span>
+                    <span class="op-block-summary-desc">Link de Ativação (E-mail)</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="section-header">Parâmetros (Query String)</div>
+                    <table>
+                        <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>token</td><td>query</td><td>Sim</td><td>Token recebido por e-mail</td></tr>
+                    </table>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="query-confirm-token" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/auth/confirm-email?token=' + document.getElementById('query-confirm-token').value, null, 'res-confirm-email')">Executar</button>
+                            <div class="response-box" id="res-confirm-email"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas</div>
+                    <table>
+                        <tr><td><span class="status-badge status-302">302</span></td><td><strong>Redirecionamento:</strong> Vai para a página de sucesso no front-end.</td></tr>
+                        <tr><td><span class="status-badge status-302">302</span></td><td><strong>Redirecionamento (Erro):</strong> Vai para a página de erro (Token inválido/expirado).</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET CONFIRM DELETE (NOVO) -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/auth/confirm-delete-account</span>
+                    <span class="op-block-summary-desc">Link de Exclusão (E-mail)</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="section-header">Parâmetros (Query String)</div>
+                    <table>
+                        <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>token</td><td>query</td><td>Sim</td><td>Token recebido por e-mail</td></tr>
+                    </table>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="query-delete-token" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/auth/confirm-delete-account?token=' + document.getElementById('query-delete-token').value, null, 'res-delete-confirm')">Executar</button>
+                            <div class="response-box" id="res-delete-confirm"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas</div>
+                    <table>
+                        <tr><td><span class="status-badge status-302">302</span></td><td><strong>Redirecionamento:</strong> Vai para a página de "Conta Excluída".</td></tr>
+                        <tr><td><span class="status-badge status-302">302</span></td><td><strong>Redirecionamento (Erro):</strong> Vai para a página de erro.</td></tr>
                     </table>
                 </div>
             </div>
@@ -849,16 +940,32 @@
 
             try {
                 const response = await fetch(url, options);
-                const statusColor = response.ok ? '#49cc90' : '#f93e3e';
+                
+                // Tratamento especial para REDIRECT (302) que o fetch segue automaticamente e retorna 200 da página final
+                // ou se o backend retornar 302 com Location
+                const statusColor = (response.status >= 200 && response.status < 300) || response.status === 302 ? '#49cc90' : '#f93e3e';
+                
                 let responseData;
                 const contentType = response.headers.get("content-type");
+                
                 if (contentType && contentType.indexOf("application/json") !== -1) {
                     responseData = await response.json();
                     responseData = JSON.stringify(responseData, null, 2);
                 } else {
                     responseData = await response.text();
+                    // Se for HTML (página de sucesso), mostra um aviso amigável
+                    if (responseData.includes("<!DOCTYPE html>")) {
+                        responseData = "(HTML Page Content - Redirecionamento realizado com sucesso)";
+                    }
                 }
-                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span>` + responseData;
+                
+                // Se houve redirecionamento (response.redirected é true)
+                let statusText = response.statusText;
+                if (response.redirected) {
+                    statusText += " (Redirecionado)";
+                }
+
+                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${statusText}</span>` + responseData;
             } catch (error) {
                 resBox.innerHTML = '<span class="response-status" style="color:#f93e3e">Erro de Conexão (CORS ou Offline)</span>';
                 console.error(error);
@@ -869,7 +976,7 @@
             const element = document.getElementById('printable-area');
             const opt = {
                 margin: [0.5, 0.5, 0.5, 0.5],
-                filename: 'RvCarbon_Auth_Docs_v12.pdf',
+                filename: 'RvCarbon_Auth_Docs_v14.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
