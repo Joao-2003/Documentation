@@ -32,3 +32,4 @@ https://joao-2003.github.io/Documentation/Security/Authentication/auth_doc.html
 
 Arva Documentation: 
 
+https://joao-2003.github.io/Documentation/Analysis/analysis_doc.html
