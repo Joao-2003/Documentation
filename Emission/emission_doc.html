@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swagger UI - RvCarbon GHG</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* --- CSS SWAGGER GENUINE STYLE --- */
+        body { margin: 0; padding: 0; background: #fafafa; font-family: sans-serif; color: #3b4151; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; }
+
+        /* Topbar */
+        .topbar { background-color: #1b1b1b; padding: 10px 20px; display: flex; align-items: center; height: 60px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: bold; color: white; font-size: 24px; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .logo span { color: #89bf04; } 
+        .search-bar { margin-left: auto; display: flex; gap: 10px; }
+        .fake-input { background: #fff; border: 2px solid #89bf04; padding: 5px 10px; border-radius: 4px; width: 300px; font-size: 13px; color: #3b4151; }
+        .btn-explore { background: #89bf04; color: white; border: none; padding: 6px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+        /* Layout */
+        .container { max-width: 1460px; margin: 0 auto; padding: 20px; }
+
+        /* Header Info */
+        .info-header { margin: 20px 0 40px; border-bottom: 1px solid #ccc; padding-bottom: 20px; }
+        .info-title { font-size: 36px; font-weight: bold; margin: 0; display: flex; align-items: center; gap: 10px; }
+        .badge { font-size: 10px; background: #7d8492; color: white; padding: 4px 10px; border-radius: 15px; vertical-align: middle; }
+        .info-desc { margin-top: 15px; font-size: 14px; color: #3b4151; max-width: 800px; line-height: 1.6; }
+        .base-url { font-family: monospace; font-size: 12px; background: #333; color: white; padding: 4px 8px; border-radius: 4px; margin-top: 10px; display: inline-block; }
+        
+        .btn-pdf {
+            background: white; border: 2px solid #4990e2; color: #4990e2; 
+            padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;
+            float: right; transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .btn-pdf:hover { background: #4990e2; color: white; }
+
+        /* Sections (Tags) */
+        .op-block-tag { 
+            font-size: 24px; margin: 30px 0 10px; border-bottom: 1px solid rgba(59,65,81,.2); 
+            padding-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            font-family: sans-serif; font-weight: 700; color: #3b4151;
+        }
+        .op-block-tag:hover { color: #4990e2; border-color: #4990e2; }
+        
+        /* Operation Blocks (Accordions) */
+        .op-block {
+            border: 1px solid #000; border-radius: 4px; margin: 0 0 15px; box-shadow: 0 0 3px rgba(0,0,0,.19);
+            background: white; overflow: hidden; transition: height 0.3s ease;
+        }
+
+        /* Method Colors */
+        .op-block.post { border-color: #49cc90; background: rgba(73,204,144,.1); }
+        .op-block.post .op-block-summary-method { background: #49cc90; }
+        .op-block.post .op-block-body { border-top: 1px solid #49cc90; }
+
+        .op-block.get { border-color: #61affe; background: rgba(97,175,254,.1); }
+        .op-block.get .op-block-summary-method { background: #61affe; }
+        .op-block.get .op-block-body { border-top: 1px solid #61affe; }
+
+        .op-block.put { border-color: #fca130; background: rgba(252,161,48,.1); }
+        .op-block.put .op-block-summary-method { background: #fca130; }
+        .op-block.put .op-block-body { border-top: 1px solid #fca130; }
+
+        .op-block.patch { border-color: #50e3c2; background: rgba(80,227,194,.1); }
+        .op-block.patch .op-block-summary-method { background: #50e3c2; }
+        .op-block.patch .op-block-body { border-top: 1px solid #50e3c2; }
+
+        .op-block.delete { border-color: #f93e3e; background: rgba(249,62,62,.1); }
+        .op-block.delete .op-block-summary-method { background: #f93e3e; }
+        .op-block.delete .op-block-body { border-top: 1px solid #f93e3e; }
+
+        /* Summary Header */
+        .op-block-summary { padding: 5px; cursor: pointer; display: flex; align-items: center; }
+        .op-block-summary-method {
+            font-size: 14px; font-weight: 700; min-width: 80px; padding: 6px 15px; text-align: center; border-radius: 3px; color: white; text-shadow: 0 1px 0 rgba(0,0,0,.1); margin-right: 10px;
+        }
+        .op-block-summary-path { font-size: 16px; font-weight: 600; color: #3b4151; flex: 1; display: flex; align-items: center; font-family: monospace; }
+        .op-block-summary-desc { font-size: 13px; color: #3b4151; margin-left: 10px; flex: 1; }
+        .arrow { width: 20px; height: 20px; fill: #3b4151; transition: transform 0.2s; margin-right: 10px; }
+
+        /* Body Details */
+        .op-block-body { padding: 20px; background: #fff; display: none; }
+        
+        .section-header { font-size: 14px; font-weight: bold; margin: 20px 0 10px; color: #3b4151; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Interactive "Try it out" */
+        .try-out-wrapper { background: #f8f9fa; border: 1px solid #e9ecef; padding: 10px; margin-top: 20px; border-radius: 4px; }
+        .try-btn { background: #fff; border: 1px solid #3b4151; color: #3b4151; padding: 5px 15px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 12px; margin-bottom: 10px; }
+        .try-btn:hover { background: #3b4151; color: white; }
+        
+        .execute-panel { display: none; margin-top: 10px; }
+        .execute-btn { background: #4990e2; color: white; border: none; padding: 8px 40px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; display: block; margin-top: 10px; }
+        .execute-btn:hover { background: #357abd; }
+        
+        .req-editor { width: 100%; min-height: 150px; background: #333; color: #fff; font-family: monospace; padding: 10px; border-radius: 4px; border: 1px solid #555; }
+        .response-box { margin-top: 15px; background: #292b2c; color: #85d77c; padding: 10px; font-family: monospace; border-radius: 4px; white-space: pre-wrap; font-size: 12px; display: none; }
+        .response-status { font-weight: bold; margin-bottom: 5px; display: block; color: #fff; }
+
+        /* Data Display */
+        .model-box { 
+            background: #333; color: #fff; padding: 15px; border-radius: 4px; 
+            font-family: "Source Code Pro", monospace; font-size: 12px; overflow-x: auto; margin-bottom: 20px;
+        }
+        .model-box pre { margin: 0; }
+        
+        /* Syntax Highlight */
+        .highlight { color: #dcb67a; } /* Keys */
+        .string { color: #a5c261; } /* Strings */
+        .number { color: #6897bb; } /* Numbers */
+        .boolean { color: #cc7832; } /* Booleans and Nulls */
+        .comment { color: #808080; font-style: italic; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+        th { text-align: left; padding: 12px; border-bottom: 1px solid rgba(59,65,81,.2); color: #3b4151; font-weight: bold; }
+        td { padding: 12px; border-bottom: 1px solid rgba(59,65,81,.2); vertical-align: top; color: #3b4151; }
+        
+        /* Badges */
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: bold; color: white; margin-right: 5px; }
+        .status-200 { background: #49cc90; }
+        .status-201 { background: #49cc90; }
+        .status-204 { background: #49cc90; }
+        .status-400 { background: #f93e3e; }
+        .status-401 { background: #fca130; }
+        .status-403 { background: #fca130; }
+        .status-404 { background: #f93e3e; }
+
+        .service-rule { 
+            background: #fff8e1; border-left: 4px solid #ffc107; padding: 10px; margin: 5px 0; font-size: 13px; color: #5f4b06;
+        }
+        
+        .error-example {
+            background: #333; color: #fff; padding: 15px; margin: 10px 0; font-size: 12px; font-family: "Source Code Pro", monospace; border-left: 4px solid #f93e3e; border-radius: 4px; overflow-x: auto;
+        }
+        .error-example pre { margin: 0; }
+        .error-example .comment { color: #808080; }
+
+        .validation-list {
+            background: #e3f2fd; border-radius: 4px; padding: 15px; margin: 10px 0; font-size: 13px;
+        }
+        .validation-list ul { margin: 5px 0 0 20px; padding: 0; }
+        .validation-list li { margin-bottom: 4px; color: #0d47a1; }
+        
+        /* Schemas Section */
+        .models-section { margin-top: 60px; border-top: 1px solid #3b4151; padding-top: 20px; }
+        .model-container { background: rgba(0,0,0,0.05); padding: 10px; margin-bottom: 10px; border-radius: 4px; transition: all 0.2s; }
+        .model-container:hover { background: rgba(0,0,0,0.08); }
+        .model-title { font-size: 16px; font-weight: bold; color: #3b4151; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; }
+        .model-content { display: none; padding: 10px; font-family: monospace; font-size: 13px; background: white; border-radius: 4px; }
+        .prop-req { color: #f93e3e; font-weight: bold; font-size: 10px; }
+
+        .rotate { transform: rotate(180deg); }
+    </style>
+</head>
+<body>
+
+    <div class="topbar">
+        <a href="#" class="logo">swagger<span>ui</span></a>
+        <div class="search-bar">
+            <input type="text" class="fake-input" value="https://api.rvcarbon.com.br/v1/openapi.json" disabled>
+            <button class="btn-explore">Explore</button>
+        </div>
+    </div>
+
+    <div class="container" id="printable-area">
+        
+        <div class="info-header">
+            <button onclick="generatePDF()" class="btn-pdf">Export PDF</button>
+            <h1 class="info-title">
+                RvCarbon GHG
+                <span class="badge">1.0.0</span>
+                <span class="badge" style="background:#49cc90;">Protocolo de Emissões</span>
+            </h1>
+            <div class="base-url">[ Base URL: https://api.rvcarbon.com.br/ ]</div>
+            <p class="info-desc">
+                Gestão de Lotes de Emissões e Gases de Efeito Estufa (Protocolo GHG).
+                <br>
+                <strong>Nota Importante:</strong> Esta API retorna <strong>Entidades Completas</strong> diretamente nas respostas (incluindo o cálculo de métricas CO2e).
+            </p>
+        </div>
+
+        <!-- BATCH CONTROLLER SECTION (GHG) -->
+        <div class="op-block-tag" onclick="toggleSection('ghg-batch-container')">
+            <span>GHG Batch Controller</span>
+            <small>Gestão de Lotes de Emissão (Atrelados à Fazenda)</small>
+        </div>
+
+        <div id="ghg-batch-container">
+
+            <!-- POST CREATE BATCH -->
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/emissions/batches/</span>
+                    <span class="op-block-summary-desc">Criar Novo Lote de Emissões</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        Cria um novo Lote (Batch) destinado a agrupar registros de emissões de gases. 
+                        Diferente do ARVA, os lotes do GHG são vinculados diretamente a uma <strong>Fazenda</strong> (<code>farmId</code>) e não a um Talhão.
+                    </div>
+                    
+                    <div class="validation-list">
+                        <strong>⚠️ Regras de Validação:</strong>
+                        <ul>
+                            <li><strong>Permissão Necessária:</strong> Seu usuário deve ter a permissão para criar dados na Fazenda referenciada.</li>
+                            <li><strong>farmId:</strong> Obrigatório. É o ID numérico da Fazenda.</li>
+                            <li><strong>startDate:</strong> Obrigatório. Data de início do período analisado.</li>
+                            <li><strong>endDate:</strong> Obrigatório. A data de fim não pode ser anterior à data de início.</li>
+                            <li><strong>batchName:</strong> Obrigatório. Um nome para o lote (Ex: "Inventário de Emissões 2023").</li>
+                        </ul>
+                    </div>
+
+                    <div class="section-header">Dados para Envio (JSON)</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"farmId"</span>: <span class="number">15</span>,
+  <span class="highlight">"batchName"</span>: <span class="string">"Inventário de Emissões 2023"</span>,
+  <span class="highlight">"startDate"</span>: <span class="string">"2023-01-01"</span>,
+  <span class="highlight">"endDate"</span>: <span class="string">"2023-12-31"</span>,
+  <span class="highlight">"manager"</span>: <span class="string">"Engenheiro Marcos"</span>,
+  <span class="highlight">"note"</span>: <span class="string">"Observações opcionais"</span>
+}</pre>
+                    </div>
+
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-create-batch-ghg" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <textarea class="req-editor" id="req-create-batch-ghg">{
+  "farmId": 15,
+  "batchName": "Inventário 2023",
+  "startDate": "2023-01-01",
+  "endDate": "2023-12-31"
+}</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/emissions/batches/', 'req-create-batch-ghg', 'res-create-batch-ghg', 'token-create-batch-ghg')">Executar</button>
+                            <div class="response-box" id="res-create-batch-ghg"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td>
+                                <strong>Sucesso:</strong> Retorna a entidade Lote GHG criada (os totais de gases iniciam zerados).
+                                <div class="model-box" style="margin-top:5px;">
+<pre>{
+  <span class="highlight">"id"</span>: <span class="number">305</span>,
+  <span class="highlight">"batchName"</span>: <span class="string">"Inventário 2023"</span>,
+  <span class="highlight">"co2"</span>: <span class="number">0.0</span>,
+  <span class="highlight">"ch4"</span>: <span class="number">0.0</span>,
+  <span class="highlight">"co2eTotal"</span>: <span class="number">0.0</span>,
+  <span class="highlight">"isComplete"</span>: <span class="boolean">false</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro de Validação:</strong> Inconsistência nos dados enviados.
+                                <div class="error-example">
+<span class="comment">// Exemplo: Inconsistência de Datas</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"A data de fim (endDate) deve ser posterior à data de início (startDate)"</span>
+}</pre>
+<br>
+<span class="comment">// Exemplo: Faltou Farm ID</span>
+<pre>{
+  <span class="highlight">"farmId"</span>: <span class="string">"O campo farmId é obrigatório"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> A Fazenda informada não existe no banco de dados.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-403">403</span></td>
+                            <td><strong>Proibido:</strong> Você não tem permissão para criar lotes nesta fazenda.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PATCH BATCH -->
+            <div class="op-block patch">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">PATCH</span>
+                    <span class="op-block-summary-path">/api/emissions/batches/{batchId}/</span>
+                    <span class="op-block-summary-desc">Atualizar Lote de Emissões</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list">
+                        <strong>⚠️ Regras e Permissões:</strong>
+                        <ul>
+                            <li><strong>Permissão:</strong> Autorização para editar todos os lotes, ou ser o próprio criador do lote.</li>
+                            <li><strong>Praticidade:</strong> Envie apenas os campos que deseja alterar (ex: apenas o <code>note</code>).</li>
+                            <li><strong>Atenção:</strong> Se for alterar as datas, garanta que a data fim seja maior ou igual à data de início.</li>
+                        </ul>
+                    </div>
+                    <div class="section-header">Exemplo de Atualização Parcial</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"note"</span>: <span class="string">"Atualizado para incluir novos relatórios."</span>
+}</pre>
+                    </div>
+                    
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID do Lote:</label>
+                            <input type="text" id="path-patch-batch-ghg" class="fake-input" style="width:50px; margin-bottom:10px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-patch-batch-ghg" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <textarea class="req-editor" id="req-patch-batch-ghg">{ "note": "Atualizado" }</textarea>
+                            <button class="execute-btn" onclick="executeRequest('PATCH', '/api/emissions/batches/' + document.getElementById('path-patch-batch-ghg').value + '/', 'req-patch-batch-ghg', 'res-patch-batch-ghg', 'token-patch-batch-ghg')">Executar</button>
+                            <div class="response-box" id="res-patch-batch-ghg"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna a entidade do lote atualizada.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro de Validação:</strong> Inconsistência de datas.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"A data de fim (endDate) deve ser posterior à data de início (startDate)"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> O lote não existe.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Batch não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso negado.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET BATCHES BY FARM -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/emissions/batches/</span>
+                    <span class="op-block-summary-desc">Listar Lotes de uma Fazenda</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        Retorna uma lista paginada dos lotes de emissão vinculados a uma fazenda.
+                        <br><strong>Permissão:</strong> Necessária autorização de visualização na Fazenda alvo.
+                    </div>
+                    <div class="section-header">Filtros (Query Params)</div>
+                    <table>
+                        <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>farmId</td><td>Sim</td><td>O ID numérico da Fazenda</td></tr>
+                        <tr><td>page</td><td>Não</td><td>Página (Padrão: 0)</td></tr>
+                        <tr><td>size</td><td>Não</td><td>Itens por página (Padrão: 10)</td></tr>
+                    </table>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Query:</label>
+                            <input type="text" id="query-batches-ghg-farm" class="fake-input" style="width:100%;" value="?farmId=15">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-batches-ghg-farm" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/emissions/batches/' + document.getElementById('query-batches-ghg-farm').value, null, 'res-batches-ghg-farm', 'token-batches-ghg-farm')">Executar</button>
+                            <div class="response-box" id="res-batches-ghg-farm"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna uma lista paginada de <code>EmissionBatchGhg</code>.</td></tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> Fazenda não encontrada no banco de dados.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso de visualização negado.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET ONE BATCH -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/emissions/batches/{batchId}/</span>
+                    <span class="op-block-summary-desc">Buscar Lote por ID</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list"><strong>Permissão:</strong> O usuário precisa ter direito de visualização neste Lote específico.</div>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID do Lote:</label>
+                            <input type="text" id="path-get-batch-ghg-id" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-get-batch-ghg" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/emissions/batches/' + document.getElementById('path-get-batch-ghg-id').value + '/', null, 'res-get-batch-ghg', 'token-get-batch-ghg')">Executar</button>
+                            <div class="response-box" id="res-get-batch-ghg"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna a entidade detalhada.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Batch não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Visualização negada.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- DELETE BATCH -->
+            <div class="op-block delete">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">DELETE</span>
+                    <span class="op-block-summary-path">/api/emissions/batches/{batchId}/</span>
+                    <span class="op-block-summary-desc">Excluir Lote (Deleção em Cascata)</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        Ao excluir um Lote de Emissões, <strong>TODOS</strong> os registros de gases atrelados a ele serão permanentemente apagados do banco de dados em cascata.
+                    </div>
+                    <div class="validation-list">
+                        <strong>⚠️ Permissão Crítica:</strong> Necessário nível de acesso para deleção global de lote ou ser o proprietário criador do lote.
+                    </div>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID do Lote:</label>
+                            <input type="text" id="path-del-batch-ghg-id" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-del-batch-ghg" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('DELETE', '/api/emissions/batches/' + document.getElementById('path-del-batch-ghg-id').value + '/', null, 'res-del-batch-ghg', 'token-del-batch-ghg')">Executar</button>
+                            <div class="response-box" id="res-del-batch-ghg"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-204">204</span></td><td><strong>Sucesso:</strong> Removido com segurança (Sem corpo).</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Batch não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Nível de acesso insuficiente para exclusão.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET MINE BATCHES -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/emissions/batches/mine/</span>
+                    <span class="op-block-summary-desc">Meus Lotes de Emissão</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">Busca todos os lotes GHG que foram criados exclusivamente pelo usuário atual logado (Paginado).</div>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-mine-batch-ghg" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/emissions/batches/mine/', null, 'res-mine-batch-ghg', 'token-mine-batch-ghg')">Executar</button>
+                            <div class="response-box" id="res-mine-batch-ghg"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table><tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna uma lista paginada de Lotes (Page&lt;EmissionBatchGhg&gt;).</td></tr></table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- GHG EMISSIONS CONTROLLER SECTION -->
+        <div class="op-block-tag" onclick="toggleSection('emissions-container')">
+            <span>GHG Emissions Controller</span>
+            <small>Gestão dos Registros de Gases</small>
+        </div>
+
+        <div id="emissions-container">
+
+            <!-- POST CREATE EMISSION -->
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/emissions/</span>
+                    <span class="op-block-summary-desc">Registrar Emissão de Gases</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        <strong>Dinâmica de Cálculo:</strong> Ao salvar um registro, o backend recalculará automaticamente as métricas totais e a equivalência em Carbono (<code>CO2eT</code>), e em seguida atualizará a soma total do Lote pai.
+                    </div>
+                    
+                    <div class="validation-list">
+                        <strong>⚠️ Regras de Validação Absolutas (EmissionGHGRequest):</strong>
+                        <ul>
+                            <li><strong>batchId:</strong> Obrigatório e Maior que zero.</li>
+                            <li><strong>emissionType:</strong> Obrigatório (Enum). Indica a categoria da emissão (ex: <code>ENERGY_AND_FUEL</code>).</li>
+                            <li><strong>co2:</strong> Obrigatório. O valor de Dióxido de Carbono nunca pode ser negativo.</li>
+                            <li><strong>Demais Gases (ch4, n2o, sf6, hfc*, pfc*, etc.):</strong> Opcionais, porém se forem enviados, <strong>nunca podem ser negativos ( >= 0 )</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="section-header">Exemplo de Envio (JSON)</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"batchId"</span>: <span class="number">305</span>,
+  <span class="highlight">"emissionType"</span>: <span class="string">"ENERGY_AND_FUEL"</span>,
+  <span class="highlight">"note"</span>: <span class="string">"Consumo de gerador a diesel"</span>,
+  <span class="highlight">"co2"</span>: <span class="number">150.5</span>,
+  <span class="highlight">"ch4"</span>: <span class="number">2.1</span>,
+  <span class="highlight">"n2o"</span>: <span class="number">0.5</span>,
+  <span class="comment">// Os campos que não forem informados ficarão zerados/nulos no banco</span>
+}</pre>
+                    </div>
+
+                    <!-- TESTER -->
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-create-emission" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <textarea class="req-editor" id="req-create-emission">{
+  "batchId": 305,
+  "emissionType": "ENERGY_AND_FUEL",
+  "co2": 150.5
+}</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/emissions/', 'req-create-emission', 'res-create-emission', 'token-create-emission')">Executar</button>
+                            <div class="response-box" id="res-create-emission"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td>
+                                <strong>Sucesso:</strong> Retorna a entidade salva, com os cálculos de CO2e finalizados.
+                                <div class="model-box" style="margin-top:5px;">
+<pre>{
+  <span class="highlight">"id"</span>: <span class="number">99</span>,
+  <span class="highlight">"emissionType"</span>: <span class="string">"ENERGY_AND_FUEL"</span>,
+  <span class="highlight">"co2"</span>: <span class="number">150.5</span>,
+  <span class="highlight">"co2eT"</span>: <span class="number">291.8</span>, <span class="comment">// (Exemplo de resultado do cálculo GWP)</span>
+  <span class="highlight">"totalBiogenicRemoval"</span>: <span class="number">0.0</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro de Validação:</strong> Violação das regras de não-negatividade.
+                                <div class="error-example">
+<span class="comment">// Exemplo de Mapa de Erros (Todas as possibilidades):</span>
+<pre>{
+  <span class="highlight">"batchId"</span>: <span class="string">"O id da batch de emissão (batchId) é obrigatório"</span>, // ou "precisa ser positivo"
+  <span class="highlight">"emissionType"</span>: <span class="string">"O valor do tipo de emissão (emissionType) não pode ser nulo"</span>,
+  <span class="highlight">"co2"</span>: <span class="string">"O valor de CO2 (co2) é obrigatório"</span>, // ou "não pode ser negativo"
+  <span class="highlight">"ch4"</span>: <span class="string">"O valor de CH4 (ch4) não pode ser negativo"</span>,
+  <span class="highlight">"sf6"</span>: <span class="string">"O valor de SF6 (sf6) não pode ser negativo"</span>,
+  <span class="highlight">"nf3"</span>: <span class="string">"O valor de NF3 (nf3) não pode ser negativo"</span>,
+  <span class="highlight">"n2o"</span>: <span class="string">"O valor de N2O (n2o) não pode ser negativo"</span>,
+  <span class="highlight">"emiCo2Bio"</span>: <span class="string">"O valor de emissões de CO2 biogênico (emiCo2Bio) não pode ser negativo"</span>,
+  <span class="highlight">"remoCo2Bio"</span>: <span class="string">"O valor de remoções de CO2 biogênico (remoCo2Bio) não pode ser negativo"</span>,
+  <span class="highlight">"hfc23"</span>: <span class="string">"O valor de HFC-23 (hfc23) não pode ser negativo"</span>,
+  <span class="comment">// ... (E exatamente a mesma mensagem "não pode ser negativo" para todos os 18 HFCs e 9 PFCs)</span>
+  <span class="highlight">"pfc"</span>: <span class="string">"O valor de PFC (pfc) não pode ser negativo"</span>,
+  <span class="highlight">"trifluorometilPentafluoretoEnxofre"</span>: <span class="string">"O valor de Trifluorometil pentafluoreto de enxofre (...) não pode ser negativo"</span>,
+  <span class="highlight">"perfluorociclopropano"</span>: <span class="string">"O valor de Perfluorociclopropano (...) não pode ser negativo"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> O Lote não foi encontrado no banco.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Batch não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso negado para edição.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PATCH UPDATE EMISSION -->
+            <div class="op-block patch">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">PATCH</span>
+                    <span class="op-block-summary-path">/api/emissions/{emissionId}/</span>
+                    <span class="op-block-summary-desc">Atualizar Registro de Emissão</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list">
+                        <strong>⚠️ Regras Importantes:</strong> 
+                        <ul>
+                            <li><strong>Recálculo Automático:</strong> Os cálculos do registro e a soma do Lote correspondente serão recalculados automaticamente após a atualização.</li>
+                            <li><strong>Gases:</strong> Os campos de gases que você passar no JSON substituirão os antigos. Lembre-se, não podem ser menores que zero.</li>
+                        </ul>
+                    </div>
+                    <div class="section-header">Exemplo de Atualização</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"co2"</span>: <span class="number">180.0</span>,
+  <span class="highlight">"note"</span>: <span class="string">"Valor de CO2 ajustado após re-medição"</span>
+}</pre>
+                    </div>
+
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Emissão:</label>
+                            <input type="text" id="path-update-emi-id" class="fake-input" style="width:50px; margin-bottom:10px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-update-emi" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <textarea class="req-editor" id="req-update-emi">{ "co2": 180.0 }</textarea>
+                            <button class="execute-btn" onclick="executeRequest('PATCH', '/api/emissions/' + document.getElementById('path-update-emi-id').value + '/', 'req-update-emi', 'res-update-emi', 'token-update-emi')">Executar</button>
+                            <div class="response-box" id="res-update-emi"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna a entidade com os valores novos salvos e recalculados.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro de Validação:</strong> Gás com valor negativo enviado.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"ch4"</span>: <span class="string">"O valor de CH4 (ch4) não pode ser negativo"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> A emissão referenciada não existe.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"EmissionBatchGhg não encontrado com o id fornecido."</span> <span class="comment">// A Exceção aponta para o nome da classe usada na busca</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Falta de permissão para edição.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- DELETE EMISSION -->
+            <div class="op-block delete">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">DELETE</span>
+                    <span class="op-block-summary-path">/api/emissions/{emissionId}/</span>
+                    <span class="op-block-summary-desc">Excluir Emissão</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        Exclui um registro de gases específico permanentemente e engatilha o recálculo do Lote subtraindo o valor excluído.
+                    </div>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Emissão:</label>
+                            <input type="text" id="path-delete-emi-id" class="fake-input" style="width:50px; margin-bottom:10px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-delete-emi" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <button class="execute-btn" onclick="executeRequest('DELETE', '/api/emissions/' + document.getElementById('path-delete-emi-id').value + '/', null, 'res-delete-emi', 'token-delete-emi')">Executar</button>
+                            <div class="response-box" id="res-delete-emi"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-204">204</span></td><td><strong>Sucesso:</strong> Removido (Sem corpo de resposta).</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> Registro não existe.
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso negado.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET BY BATCH -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/emissions</span>
+                    <span class="op-block-summary-desc">Listar Emissões por Lote</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">Busca todos os registros de gases inseridos num Lote específico. Retorna uma Lista nativa JSON.</div>
+                    <div class="section-header">Parâmetros</div>
+                    <table>
+                        <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>batchId</td><td>Sim</td><td>O ID numérico do Lote a ser buscado.</td></tr>
+                    </table>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID do Lote:</label>
+                            <input type="text" id="query-batch-emi-id" class="fake-input" style="width:100px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-batch-emi" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/emissions?batchId=' + document.getElementById('query-batch-emi-id').value, null, 'res-batch-emi', 'token-batch-emi')">Executar</button>
+                            <div class="response-box" id="res-batch-emi"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Array de <code>EmissionGhg</code> `[ { ... }, { ... } ]`.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td><strong>Não Encontrado:</strong> O Lote não existe.</td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso de visualização negado ao lote solicitado.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SCHEMAS -->
+        <div class="models-section">
+            <div class="op-block-tag">Schemas (Modelos de Dados GHG)</div>
+            
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">BatchFarmRequest (Criar Lote) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="comment">// Campos Genéricos Desembrulhados (Unwrapped)</span><br>
+                    <span class="highlight">farmId</span>: <span class="number">long</span> (obrigatório)<br>
+                    <span class="highlight">startDate</span>: <span class="string">date</span> (obrigatório, yyyy-MM-dd)<br>
+                    <span class="highlight">endDate</span>: <span class="string">date</span> (obrigatório, yyyy-MM-dd, >= startDate)<br>
+                    <span class="highlight">batchName</span>: <span class="string">string</span> (obrigatório)<br>
+                    <span class="highlight">manager</span>: <span class="string">string</span> (opcional)<br>
+                    <span class="highlight">note</span>: <span class="string">string</span> (opcional)
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">EmissionBatchGhg (Entidade Lote Final) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">id</span>: <span class="number">long</span><br>
+                    <span class="highlight">batchName</span>: <span class="string">string</span><br>
+                    <span class="highlight">startDate</span>: <span class="string">date</span><br>
+                    <span class="highlight">endDate</span>: <span class="string">date</span><br>
+                    <span class="highlight">isComplete</span>: <span class="boolean">boolean</span><br>
+                    <span class="comment">// Totais calculados</span><br>
+                    <span class="highlight">co2</span>: <span class="number">float</span><br>
+                    <span class="highlight">ch4</span>: <span class="number">float</span><br>
+                    <span class="highlight">hfc</span>: <span class="number">float</span><br>
+                    <span class="highlight">pfc</span>: <span class="number">float</span><br>
+                    <span class="highlight">sf6</span>: <span class="number">float</span><br>
+                    <span class="highlight">nf3</span>: <span class="number">float</span><br>
+                    <span class="highlight">n2ho</span>: <span class="number">float</span><br>
+                    <span class="highlight">co2eTotal</span>: <span class="number">float</span><br>
+                    <span class="highlight">biogenicCo2Emissions</span>: <span class="number">float</span><br>
+                    <span class="highlight">biogenicCo2Removals</span>: <span class="number">float</span><br>
+                </div>
+            </div>
+            
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">EmissionGHGRequest (Requisição de Gases) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">batchId</span>: <span class="number">long</span> (Obrigatório)<br>
+                    <span class="highlight">emissionType</span>: <span class="string">enum</span> (Obrigatório)<br>
+                    <span class="highlight">note</span>: <span class="string">string</span><br>
+                    <span class="comment">// Todos abaixo são do tipo float >= 0. Apenas co2 é obrigatório.</span><br>
+                    <span class="highlight">co2</span>, <span class="highlight">ch4</span>, <span class="highlight">sf6</span>, <span class="highlight">nf3</span>, <span class="highlight">n2o</span>, <span class="highlight">emiCo2Bio</span>, <span class="highlight">remoCo2Bio</span><br>
+                    <span class="comment">// HFCs</span><br>
+                    <span class="highlight">hfc23</span>, <span class="highlight">hfc32</span>, <span class="highlight">hfc41</span>, <span class="highlight">hfc125</span>, <span class="highlight">hfc134</span>, <span class="highlight">hfc134a</span>, <span class="highlight">hfc143</span>, <span class="highlight">hfc143a</span>, <span class="highlight">hfc152</span>, <span class="highlight">hfc152a</span>, <span class="highlight">hfc161</span>, <span class="highlight">hfc227ea</span>, <span class="highlight">hfc236cb</span>, <span class="highlight">hfc236ea</span>, <span class="highlight">hfc236fa</span>, <span class="highlight">hfc245ca</span>, <span class="highlight">hfc245fa</span>, <span class="highlight">hfc365mfc</span>, <span class="highlight">hfc4310mee</span><br>
+                    <span class="comment">// PFCs</span><br>
+                    <span class="highlight">pfc</span>, <span class="highlight">pfc14</span>, <span class="highlight">pfc116</span>, <span class="highlight">pfc218</span>, <span class="highlight">pfc318</span>, <span class="highlight">pfc3110</span>, <span class="highlight">pfc412</span>, <span class="highlight">pfc514</span>, <span class="highlight">pfc918</span>, <span class="highlight">trifluorometilPentafluoretoEnxofre</span>, <span class="highlight">perfluorociclopropano</span>
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">Emission Types (Opções de Categoria) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    GOODS_SERVICES<br>
+                    CAPITAL_GOODS<br>
+                    ENERGY_AND_FUEL<br>
+                    TRANSPORT_DISTRIBUTION_UPSTREAM<br>
+                    WASTE<br>
+                    BUSINESS_TRAVEL<br>
+                    HOME_TO_WORK_EMISSION<br>
+                    LEASED_ASSETS_LESSOR<br>
+                    PROCESSING_OF_PRODUCTS<br>
+                    FRANCHISES<br>
+                    INVESTMENTS<br>
+                    UNCLASSIFIABLE<br>
+                    TRANSPORT_DISTRIBUTION_DOWN_STREAM<br>
+                    USE_OF_SOLD_PRODUCTS<br>
+                    END_OF_LIFE_TREATMENT<br>
+                    LEASED_ASSETS_AS_LESSEE
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCRIPT DE SINTAXE HIGHLIGHTER -->
+    <script>
+        function toggleSection(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'none') el.style.display = 'block';
+            else el.style.display = 'none';
+        }
+
+        function toggleBody(element) {
+            const body = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            if (body.style.display === "block") {
+                body.style.display = "none";
+                arrow.classList.remove('rotate');
+            } else {
+                body.style.display = "block";
+                arrow.classList.add('rotate');
+            }
+        }
+
+        function toggleModel(element) {
+            const content = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            if(content.style.display === "block") {
+                content.style.display = "none";
+                arrow.style.transform = "rotate(0deg)";
+            } else {
+                content.style.display = "block";
+                arrow.style.transform = "rotate(180deg)";
+            }
+        }
+
+        function toggleExecute(btn) {
+            const panel = btn.nextElementSibling;
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                btn.textContent = 'Testar Endpoint';
+            } else {
+                panel.style.display = 'block';
+                btn.textContent = 'Cancelar Teste';
+            }
+        }
+
+        async function executeRequest(method, path, bodyId, resId, tokenId) {
+            const baseUrl = 'https://api.rvcarbon.com.br';
+            const url = baseUrl + path;
+            const resBox = document.getElementById(resId);
+            
+            resBox.style.display = 'block';
+            resBox.innerHTML = '<span style="color:white">Enviando requisição...</span>';
+
+            const headers = { 'Content-Type': 'application/json' };
+            if (tokenId) {
+                const tokenVal = document.getElementById(tokenId).value;
+                if (tokenVal) headers['Authorization'] = 'Bearer ' + tokenVal;
+            }
+
+            const options = { method: method, headers: headers };
+
+            if (bodyId) {
+                try {
+                    const rawBody = document.getElementById(bodyId).value;
+                    JSON.parse(rawBody); 
+                    options.body = rawBody;
+                } catch (e) {
+                    resBox.innerHTML = '<span style="color:#f93e3e">Erro: JSON Inválido.</span>';
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch(url, options);
+                const statusColor = response.ok ? '#49cc90' : '#f93e3e';
+                
+                let responseData;
+                const contentType = response.headers.get("content-type");
+                
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    responseData = await response.json();
+                    
+                    // Simple syntax highlight function for formatting response
+                    function syntaxHighlight(json) {
+                        if (typeof json != 'string') {
+                             json = JSON.stringify(json, undefined, 2);
+                        }
+                        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                            var cls = 'number';
+                            if (/^"/.test(match)) {
+                                if (/:$/.test(match)) {
+                                    cls = 'highlight'; // Keys
+                                    return '<span class="' + cls + '">' + match.slice(0, -1) + '</span>:';
+                                } else {
+                                    cls = 'string'; // Strings
+                                }
+                            } else if (/true|false/.test(match)) {
+                                cls = 'boolean'; // Booleans
+                            } else if (/null/.test(match)) {
+                                cls = 'boolean'; // Nulls
+                            }
+                            return '<span class="' + cls + '">' + match + '</span>';
+                        });
+                    }
+
+                    responseData = syntaxHighlight(responseData);
+                } else {
+                    responseData = await response.text();
+                }
+
+                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span><pre>` + responseData + '</pre>';
+            } catch (error) {
+                resBox.innerHTML = '<span class="response-status" style="color:#f93e3e">Erro de Conexão (CORS ou Offline)</span>';
+                console.error(error);
+            }
+        }
+
+        function generatePDF() {
+            const element = document.getElementById('printable-area');
+            const opt = {
+                margin: [0.5, 0.5, 0.5, 0.5],
+                filename: 'RvCarbon_GHG_Docs.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            const bodies = document.querySelectorAll('.op-block-body');
+            const models = document.querySelectorAll('.model-content');
+            bodies.forEach(b => b.style.display = 'block');
+            models.forEach(m => m.style.display = 'block');
+            html2pdf().set(opt).from(element).save().then(() => {
+                bodies.forEach(b => b.style.display = 'none');
+                models.forEach(m => m.style.display = 'none');
+            });
+        }
+    </script>
+</body>
+</html>
