@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swagger UI - RvCarbon Farm</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* --- CSS SWAGGER GENUINE STYLE --- */
+        body { margin: 0; padding: 0; background: #fafafa; font-family: sans-serif; color: #3b4151; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; }
+
+        /* Topbar */
+        .topbar { background-color: #1b1b1b; padding: 10px 20px; display: flex; align-items: center; height: 60px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: bold; color: white; font-size: 24px; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .logo span { color: #89bf04; } 
+        .search-bar { margin-left: auto; display: flex; gap: 10px; }
+        .fake-input { background: #fff; border: 2px solid #89bf04; padding: 5px 10px; border-radius: 4px; width: 300px; font-size: 13px; color: #3b4151; }
+        .btn-explore { background: #89bf04; color: white; border: none; padding: 6px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+        /* Layout */
+        .container { max-width: 1460px; margin: 0 auto; padding: 20px; }
+
+        /* Header Info */
+        .info-header { margin: 20px 0 40px; border-bottom: 1px solid #ccc; padding-bottom: 20px; }
+        .info-title { font-size: 36px; font-weight: bold; margin: 0; display: flex; align-items: center; gap: 10px; }
+        .badge { font-size: 10px; background: #7d8492; color: white; padding: 4px 10px; border-radius: 15px; vertical-align: middle; }
+        .info-desc { margin-top: 15px; font-size: 14px; color: #3b4151; max-width: 800px; line-height: 1.6; }
+        .base-url { font-family: monospace; font-size: 12px; background: #333; color: white; padding: 4px 8px; border-radius: 4px; margin-top: 10px; display: inline-block; }
+        
+        .btn-pdf {
+            background: white; border: 2px solid #4990e2; color: #4990e2; 
+            padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;
+            float: right; transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .btn-pdf:hover { background: #4990e2; color: white; }
+
+        /* Sections (Tags) */
+        .op-block-tag { 
+            font-size: 24px; margin: 30px 0 10px; border-bottom: 1px solid rgba(59,65,81,.2); 
+            padding-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            font-family: sans-serif; font-weight: 700; color: #3b4151;
+        }
+        .op-block-tag:hover { color: #4990e2; border-color: #4990e2; }
+        
+        /* Operation Blocks (Accordions) */
+        .op-block {
+            border: 1px solid #000; border-radius: 4px; margin: 0 0 15px; box-shadow: 0 0 3px rgba(0,0,0,.19);
+            background: white; overflow: hidden; transition: height 0.3s ease;
+        }
+
+        /* Method Colors */
+        .op-block.post { border-color: #49cc90; background: rgba(73,204,144,.1); }
+        .op-block.post .op-block-summary-method { background: #49cc90; }
+        .op-block.post .op-block-body { border-top: 1px solid #49cc90; }
+
+        .op-block.get { border-color: #61affe; background: rgba(97,175,254,.1); }
+        .op-block.get .op-block-summary-method { background: #61affe; }
+        .op-block.get .op-block-body { border-top: 1px solid #61affe; }
+
+        .op-block.put { border-color: #fca130; background: rgba(252,161,48,.1); }
+        .op-block.put .op-block-summary-method { background: #fca130; }
+        .op-block.put .op-block-body { border-top: 1px solid #fca130; }
+
+        .op-block.patch { border-color: #50e3c2; background: rgba(80,227,194,.1); }
+        .op-block.patch .op-block-summary-method { background: #50e3c2; }
+        .op-block.patch .op-block-body { border-top: 1px solid #50e3c2; }
+
+        .op-block.delete { border-color: #f93e3e; background: rgba(249,62,62,.1); }
+        .op-block.delete .op-block-summary-method { background: #f93e3e; }
+        .op-block.delete .op-block-body { border-top: 1px solid #f93e3e; }
+
+        /* Summary Header */
+        .op-block-summary { padding: 5px; cursor: pointer; display: flex; align-items: center; }
+        .op-block-summary-method {
+            font-size: 14px; font-weight: 700; min-width: 80px; padding: 6px 15px; text-align: center; border-radius: 3px; color: white; text-shadow: 0 1px 0 rgba(0,0,0,.1); margin-right: 10px;
+        }
+        .op-block-summary-path { font-size: 16px; font-weight: 600; color: #3b4151; flex: 1; display: flex; align-items: center; font-family: monospace; }
+        .op-block-summary-desc { font-size: 13px; color: #3b4151; margin-left: 10px; flex: 1; }
+        .arrow { width: 20px; height: 20px; fill: #3b4151; transition: transform 0.2s; margin-right: 10px; }
+
+        /* Body Details */
+        .op-block-body { padding: 20px; background: #fff; display: none; }
+        
+        .section-header { font-size: 14px; font-weight: bold; margin: 20px 0 10px; color: #3b4151; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Interactive "Try it out" */
+        .try-out-wrapper { background: #f8f9fa; border: 1px solid #e9ecef; padding: 10px; margin-top: 20px; border-radius: 4px; }
+        .try-btn { background: #fff; border: 1px solid #3b4151; color: #3b4151; padding: 5px 15px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 12px; margin-bottom: 10px; }
+        .try-btn:hover { background: #3b4151; color: white; }
+        
+        .execute-panel { display: none; margin-top: 10px; }
+        .execute-btn { background: #4990e2; color: white; border: none; padding: 8px 40px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; display: block; margin-top: 10px; }
+        .execute-btn:hover { background: #357abd; }
+        
+        .req-editor { width: 100%; min-height: 150px; background: #333; color: #fff; font-family: monospace; padding: 10px; border-radius: 4px; border: 1px solid #555; }
+        .response-box { margin-top: 15px; background: #292b2c; color: #85d77c; padding: 10px; font-family: monospace; border-radius: 4px; white-space: pre-wrap; font-size: 12px; display: none; overflow-x: auto; }
+        .response-status { font-weight: bold; margin-bottom: 5px; display: block; color: #fff; }
+
+        /* Data Display */
+        .model-box { 
+            background: #333; color: #fff; padding: 15px; border-radius: 4px; 
+            font-family: "Source Code Pro", monospace; font-size: 12px; overflow-x: auto; margin-bottom: 20px;
+        }
+        .model-box pre { margin: 0; }
+        
+        /* Syntax Highlight */
+        .highlight { color: #dcb67a; } /* Keys */
+        .string { color: #a5c261; } /* Strings */
+        .number { color: #6897bb; } /* Numbers */
+        .boolean { color: #cc7832; } /* Booleans and Nulls */
+        .comment { color: #808080; font-style: italic; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+        th { text-align: left; padding: 12px; border-bottom: 1px solid rgba(59,65,81,.2); color: #3b4151; font-weight: bold; }
+        td { padding: 12px; border-bottom: 1px solid rgba(59,65,81,.2); vertical-align: top; color: #3b4151; }
+        
+        /* Badges */
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: bold; color: white; margin-right: 5px; }
+        .status-200 { background: #49cc90; }
+        .status-201 { background: #49cc90; }
+        .status-204 { background: #49cc90; }
+        .status-400 { background: #f93e3e; }
+        .status-401 { background: #fca130; }
+        .status-403 { background: #fca130; }
+        .status-404 { background: #f93e3e; }
+
+        .service-rule { 
+            background: #fff8e1; border-left: 4px solid #ffc107; padding: 10px; margin: 5px 0; font-size: 13px; color: #5f4b06;
+        }
+        
+        .error-example {
+            background: #333; color: #fff; padding: 15px; margin: 10px 0; font-size: 12px; font-family: "Source Code Pro", monospace; border-left: 4px solid #f93e3e; border-radius: 4px; overflow-x: auto;
+        }
+        .error-example pre { margin: 0; }
+        .error-example .comment { color: #808080; }
+
+        .validation-list {
+            background: #e3f2fd; border-radius: 4px; padding: 15px; margin: 10px 0; font-size: 13px;
+        }
+        .validation-list ul { margin: 5px 0 0 20px; padding: 0; }
+        .validation-list li { margin-bottom: 4px; color: #0d47a1; }
+        
+        /* Schemas Section */
+        .models-section { margin-top: 60px; border-top: 1px solid #3b4151; padding-top: 20px; }
+        .model-container { background: rgba(0,0,0,0.05); padding: 10px; margin-bottom: 10px; border-radius: 4px; transition: all 0.2s; }
+        .model-container:hover { background: rgba(0,0,0,0.08); }
+        .model-title { font-size: 16px; font-weight: bold; color: #3b4151; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; }
+        .model-content { display: none; padding: 10px; font-family: monospace; font-size: 13px; background: white; border-radius: 4px; }
+        .prop-req { color: #f93e3e; font-weight: bold; font-size: 10px; }
+
+        .rotate { transform: rotate(180deg); }
+    </style>
+</head>
+<body>
+
+    <div class="topbar">
+        <a href="#" class="logo">swagger<span>ui</span></a>
+        <div class="search-bar">
+            <input type="text" class="fake-input" value="https://api.rvcarbon.com.br/v1/openapi.json" disabled>
+            <button class="btn-explore">Explore</button>
+        </div>
+    </div>
+
+    <div class="container" id="printable-area">
+        
+        <div class="info-header">
+            <button onclick="generatePDF()" class="btn-pdf">Export PDF</button>
+            <h1 class="info-title">
+                RvCarbon API
+                <span class="badge">1.0.0</span>
+                <span class="badge" style="background:#49cc90;">Fazendas</span>
+            </h1>
+            <div class="base-url">[ Base URL: https://api.rvcarbon.com.br/ ]</div>
+            <p class="info-desc">
+                Gestão central de Fazendas (Farms) e Membros da equipe.
+                Esta seção permite cadastrar propriedades, gerenciar usuários vinculados à fazenda e seus níveis de permissão.
+            </p>
+        </div>
+
+        <!-- FARM CONTROLLER SECTION -->
+        <div class="op-block-tag" onclick="toggleSection('farm-container')">
+            <span>Farm Controller</span>
+            <small>Gestão de Fazendas e Membros</small>
+        </div>
+
+        <div id="farm-container">
+
+            <!-- POST CREATE FARM -->
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/farms/</span>
+                    <span class="op-block-summary-desc">Criar Nova Fazenda</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        Cria uma nova fazenda vinculando-a a um "Proprietário de Fazenda" (Farm Owner) existente. O usuário que criar a fazenda torna-se automaticamente o "Gerente" dela.
+                    </div>
+                    
+                    <div class="validation-list">
+                        <strong>⚠️ Regras de Validação (Obrigatórios na Criação):</strong>
+                        <ul>
+                            <li><strong>farmName:</strong> Obrigatório. Mínimo de 3 caracteres.</li>
+                            <li><strong>state & city:</strong> Obrigatórios (Estado e Cidade).</li>
+                            <li><strong>responsible:</strong> Obrigatório. Mínimo de 2 caracteres.</li>
+                            <li><strong>responsiblePhoneNumber:</strong> Obrigatório. Deve ser no formato <code>(XX) XXXXX-XXXX</code>.</li>
+                            <li><strong>ownerId:</strong> Obrigatório e deve ser maior que zero (ID do Proprietário).</li>
+                            <li><strong>totalAreaHectares:</strong> Obrigatório. Deve ser maior que zero.</li>
+                            <li><strong>businessEmail:</strong> Opcional, mas se enviado deve ser um e-mail válido com mais de 3 caracteres.</li>
+                            <li><strong>cpfCnpj:</strong> Opcional, mas se enviado deve ser em formato válido (com pontuação).</li>
+                        </ul>
+                    </div>
+
+                    <div class="section-header">Exemplo de Requisição (JSON)</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"farmName"</span>: <span class="string">"Fazenda Boa Vista"</span>,
+  <span class="highlight">"state"</span>: <span class="string">"SP"</span>,
+  <span class="highlight">"city"</span>: <span class="string">"Campinas"</span>,
+  <span class="highlight">"responsible"</span>: <span class="string">"Carlos Alberto"</span>,
+  <span class="highlight">"responsiblePhoneNumber"</span>: <span class="string">"(11) 98765-4321"</span>,
+  <span class="highlight">"ownerId"</span>: <span class="number">10</span>,
+  <span class="highlight">"businessEmail"</span>: <span class="string">"contato@boavista.com"</span>,
+  <span class="highlight">"cpfCnpj"</span>: <span class="string">"12.345.678/0001-99"</span>,
+  <span class="highlight">"totalAreaHectares"</span>: <span class="number">1500.5</span>
+}</pre>
+                    </div>
+
+                    <!-- TESTER -->
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
+                            <input type="text" id="token-create-farm" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <textarea class="req-editor" id="req-create-farm">{
+  "farmName": "Fazenda Exemplo",
+  "state": "GO",
+  "city": "Rio Verde",
+  "responsible": "João",
+  "responsiblePhoneNumber": "(64) 99999-9999",
+  "ownerId": 1,
+  "totalAreaHectares": 500.0
+}</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/farms/', 'req-create-farm', 'res-create-farm', 'token-create-farm')">Executar</button>
+                            <div class="response-box" id="res-create-farm"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td>
+                                <strong>Sucesso:</strong> Retorna a entidade Fazenda criada (FarmResponse).
+                                <div class="model-box" style="margin-top:5px;">
+<pre>{
+  <span class="highlight">"id"</span>: <span class="number">1</span>,
+  <span class="highlight">"farmName"</span>: <span class="string">"Fazenda Exemplo"</span>,
+  <span class="highlight">"active"</span>: <span class="boolean">true</span>,
+  <span class="highlight">"ownerId"</span>: <span class="number">10</span>,
+  <span class="highlight">"totalAreaHectares"</span>: <span class="number">1500.5</span>,
+  <span class="highlight">"userManagerName"</span>: <span class="string">"usuario_que_criou"</span>,
+  <span class="comment">// ... demais campos ...</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro de Validação:</strong> Faltam campos ou o formato está incorreto.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"farmName"</span>: <span class="string">"O nome da fazenda (farmName) é obrigatório."</span>,
+  <span class="highlight">"responsiblePhoneNumber"</span>: <span class="string">"numero de telefone invalido (phone), ele deve estar no formato (11) 11111-1111"</span>,
+  <span class="highlight">"totalAreaHectares"</span>: <span class="string">"A área total (totalAreaHectares) deve ser maior que zero."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> O Proprietário (ownerId) não existe.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"FarmOwner não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PATCH UPDATE FARM -->
+            <div class="op-block patch">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">PATCH</span>
+                    <span class="op-block-summary-path">/api/farms/{farmId}/</span>
+                    <span class="op-block-summary-desc">Atualizar Dados da Fazenda</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list">
+                        <strong>Permissões Necessárias:</strong> É necessário possuir a Permissão de Gerenciamento da Fazenda.
+                        <br>
+                        <strong>Importante:</strong> Para atualizações, <strong>todos os campos são opcionais</strong>. Envie apenas o que deseja modificar. Mas se enviar, as regras de validação (tamanho, formato de e-mail/telefone) continuam sendo aplicadas!
+                    </div>
+
+                    <div class="section-header">Exemplo de Requisição (JSON)</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"farmName"</span>: <span class="string">"Fazenda Boa Vista Editada"</span>,
+  <span class="highlight">"totalAreaHectares"</span>: <span class="number">1600.0</span>
+}</pre>
+                    </div>
+
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Fazenda:</label>
+                            <input type="text" id="path-update-farm-id" class="fake-input" style="width:50px; margin-bottom:10px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-update-farm" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <textarea class="req-editor" id="req-update-farm">{ "farmName": "Novo Nome" }</textarea>
+                            <button class="execute-btn" onclick="executeRequest('PATCH', '/api/farms/' + document.getElementById('path-update-farm-id').value + '/', 'req-update-farm', 'res-update-farm', 'token-update-farm')">Executar</button>
+                            <div class="response-box" id="res-update-farm"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td><strong>Sucesso:</strong> Retorna a Fazenda atualizada.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td><strong>Erro de Validação:</strong> Algum campo enviado não atende às regras (ex: telefone inválido).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td><strong>Não Encontrado:</strong> A Fazenda com o ID fornecido não existe.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-403">403</span></td>
+                            <td><strong>Proibido:</strong> Seu usuário não é o gerente da fazenda.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET ONE FARM -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/farms/{farmId}/</span>
+                    <span class="op-block-summary-desc">Buscar Fazenda por ID</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list">
+                        <strong>Permissão:</strong> Necessária Permissão de Leitura/Visualização da Fazenda.
+                    </div>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Fazenda:</label>
+                            <input type="text" id="path-get-farm-id" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-get-farm" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/farms/' + document.getElementById('path-get-farm-id').value + '/', null, 'res-get-farm', 'token-get-farm')">Executar</button>
+                            <div class="response-box" id="res-get-farm"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna a entidade detalhada da Fazenda.</td></tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> Fazenda não existe.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Você não faz parte desta fazenda.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- DELETE FARM -->
+            <div class="op-block delete">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">DELETE</span>
+                    <span class="op-block-summary-path">/api/farms/{farmId}/</span>
+                    <span class="op-block-summary-desc">Desativar Fazenda</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        Ao invés de excluir os dados do banco permanentemente, a Fazenda é <strong>Desativada</strong>. 
+                        As estatísticas do Proprietário (quantidade de fazendas e área total) são reduzidas automaticamente.
+                    </div>
+                    <div class="validation-list">
+                        <strong>Permissão Crítica:</strong> Somente o usuário com Permissão de Gerenciamento da Fazenda pode realizar esta ação.
+                    </div>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Fazenda:</label>
+                            <input type="text" id="path-del-farm-id" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-del-farm" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('DELETE', '/api/farms/' + document.getElementById('path-del-farm-id').value + '/', null, 'res-del-farm', 'token-del-farm')">Executar</button>
+                            <div class="response-box" id="res-del-farm"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-204">204</span></td><td><strong>Sucesso:</strong> Desativada. (Sem corpo de retorno).</td></tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> A Fazenda não existe.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso negado.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET MY FARMS -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/farms/</span>
+                    <span class="op-block-summary-desc">Listar Minhas Fazendas</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        Retorna uma lista contendo <strong>todas as Fazendas ativas</strong> em que o usuário autenticado faz parte da equipe (seja como Gerente ou Leitor).
+                    </div>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-my-farms" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/farms/', null, 'res-my-farms', 'token-my-farms')">Executar</button>
+                            <div class="response-box" id="res-my-farms"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td>
+                                <strong>Sucesso:</strong> Retorna uma Lista em Array de Fazendas.
+                                <div class="model-box" style="margin-top:5px;">
+<pre>[
+  {
+    <span class="highlight">"id"</span>: <span class="number">1</span>,
+    <span class="highlight">"farmName"</span>: <span class="string">"Fazenda Boa Vista"</span>,
+    <span class="highlight">"active"</span>: <span class="boolean">true</span>
+  }
+]</pre>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET FARMS BY OWNER -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/farms/by-owner/{ownerId}/</span>
+                    <span class="op-block-summary-desc">Listar Fazendas por Proprietário</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        Lista as fazendas pertencentes a um Proprietário específico, com a condição de que <strong>o usuário logado também faça parte da equipe</strong> destas fazendas.
+                    </div>
+                    <div class="section-header">Parâmetros</div>
+                    <table>
+                        <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>ownerId</td><td>Sim (Path)</td><td>ID numérico do Proprietário (FarmOwner)</td></tr>
+                        <tr><td>status</td><td>Não (Query)</td><td>Filtro de Status. Valores: <code>ACTIVE</code> (padrão), <code>INACTIVE</code>, <code>ALL</code>.</td></tr>
+                    </table>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID do Owner:</label>
+                            <input type="text" id="path-owner-id" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Filtro (Opcional):</label>
+                            <input type="text" id="query-owner-status" class="fake-input" style="width:100px;" value="?status=ACTIVE">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-farms-owner" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/farms/by-owner/' + document.getElementById('path-owner-id').value + '/' + document.getElementById('query-owner-status').value, null, 'res-farms-owner', 'token-farms-owner')">Executar</button>
+                            <div class="response-box" id="res-farms-owner"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Lista de Fazendas do proprietário escolhido.</td></tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="section-header" style="margin-top: 40px; border-bottom: 1px solid #ddd;">Gestão de Equipe (Membros da Fazenda)</div>
+
+            <!-- POST ADD MEMBER -->
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/farms/{farmId}/members/</span>
+                    <span class="op-block-summary-desc">Adicionar Membro na Equipe</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list">
+                        <strong>⚠️ Regras e Permissões:</strong>
+                        <ul>
+                            <li><strong>Permissão:</strong> Apenas o Gerente da fazenda pode adicionar novos membros.</li>
+                            <li><strong>Obrigatório:</strong> O <code>username</code> da pessoa a ser convidada e o nível de acesso (<code>role</code>).</li>
+                            <li><strong>Limitação:</strong> Não é permitido adicionar alguém já como <code>MANAGER_ROLE</code> por este endpoint.</li>
+                            <li><strong>Duplicidade:</strong> O sistema bloqueia a adição de um usuário que já é membro.</li>
+                        </ul>
+                    </div>
+                    <div class="section-header">Exemplo de Requisição (JSON)</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"username"</span>: <span class="string">"tecnico_joao"</span>,
+  <span class="highlight">"role"</span>: <span class="string">"VIEWER_ROLE"</span>
+}</pre>
+                    </div>
+
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Fazenda:</label>
+                            <input type="text" id="path-add-member-farm" class="fake-input" style="width:50px; margin-bottom:10px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-add-member" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <textarea class="req-editor" id="req-add-member">{
+  "username": "joao_silva",
+  "role": "RESTRICTED_ROLE"
+}</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/farms/' + document.getElementById('path-add-member-farm').value + '/members/', 'req-add-member', 'res-add-member', 'token-add-member')">Executar</button>
+                            <div class="response-box" id="res-add-member"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td>
+                                <strong>Sucesso:</strong> Usuário adicionado à fazenda.
+                                <div class="model-box" style="margin-top:5px;">
+<pre>{
+  <span class="highlight">"memberId"</span>: <span class="number">22</span>,
+  <span class="highlight">"username"</span>: <span class="string">"joao_silva"</span>,
+  <span class="highlight">"completeName"</span>: <span class="string">"João da Silva"</span>,
+  <span class="highlight">"email"</span>: <span class="string">"joao@email.com"</span>,
+  <span class="highlight">"role"</span>: <span class="string">"RESTRICTED_ROLE"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro de Negócio / Validação:</strong>
+                                <div class="error-example">
+<span class="comment">// Se tentar dar permissão de MANAGER:</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Não é permitido atribuir a role MANAGER_ROLE"</span>
+}</pre>
+<br>
+<span class="comment">// Se o usuário já estiver na equipe:</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"This user is already member of farm"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> A Fazenda ou o Usuário convidado não existem.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Somente gerentes podem adicionar membros.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PATCH UPDATE MEMBER ROLE -->
+            <div class="op-block patch">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">PATCH</span>
+                    <span class="op-block-summary-path">/api/farms/{farmId}/members/</span>
+                    <span class="op-block-summary-desc">Atualizar Permissão do Membro</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list">
+                        <strong>⚠️ Regras de Negócio:</strong>
+                        <ul>
+                            <li><strong>Permissão:</strong> Apenas o Gerente da fazenda pode alterar os níveis de acesso.</li>
+                            <li><strong>Proteção:</strong> Ninguém pode alterar a permissão do próprio Gerente (Manager).</li>
+                            <li><strong>Segurança:</strong> Não é permitido promover um membro para `MANAGER_ROLE` por este endpoint. A transição de liderança requer outro fluxo.</li>
+                        </ul>
+                    </div>
+                    <div class="section-header">Exemplo de Requisição (JSON)</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"username"</span>: <span class="string">"tecnico_joao"</span>,
+  <span class="highlight">"role"</span>: <span class="string">"MANAGER_AUX_ROLE"</span>
+}</pre>
+                    </div>
+
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Fazenda:</label>
+                            <input type="text" id="path-update-member-farm" class="fake-input" style="width:50px; margin-bottom:10px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-update-member" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <textarea class="req-editor" id="req-update-member">{
+  "username": "tecnico_joao",
+  "role": "MANAGER_AUX_ROLE"
+}</textarea>
+                            <button class="execute-btn" onclick="executeRequest('PATCH', '/api/farms/' + document.getElementById('path-update-member-farm').value + '/members/', 'req-update-member', 'res-update-member', 'token-update-member')">Executar</button>
+                            <div class="response-box" id="res-update-member"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Permissão atualizada com sucesso.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro de Negócio:</strong>
+                                <div class="error-example">
+<span class="comment">// Se tentar alterar a permissão do Gerente Principal:</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Cannot assign role to manager of farm"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> Usuário não faz parte da equipe ou fazenda não existe.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Apenas o gerente pode fazer isso.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- DELETE MEMBER -->
+            <div class="op-block delete">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">DELETE</span>
+                    <span class="op-block-summary-path">/api/farms/{farmId}/members/{memberId}/</span>
+                    <span class="op-block-summary-desc">Remover Membro da Equipe</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">Remove o acesso de um usuário à fazenda específica. Ele não poderá mais interagir com os dados deste local.</div>
+                    <div class="validation-list"><strong>Permissão:</strong> Apenas o Gerente da fazenda pode expulsar membros.</div>
+                    
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Fazenda:</label>
+                            <input type="text" id="path-del-member-farm" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">ID do Membro (Relação):</label>
+                            <input type="text" id="path-del-member-id" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-del-member" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('DELETE', '/api/farms/' + document.getElementById('path-del-member-farm').value + '/members/' + document.getElementById('path-del-member-id').value + '/', null, 'res-del-member', 'token-del-member')">Executar</button>
+                            <div class="response-box" id="res-del-member"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-204">204</span></td><td><strong>Sucesso:</strong> Membro removido.</td></tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> Vínculo de membro ou Fazenda inexistentes.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Apenas gerentes.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET LIST MEMBERS -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/farms/{farmId}/members/</span>
+                    <span class="op-block-summary-desc">Listar Todos os Membros</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list"><strong>Permissão:</strong> Requer Permissão de Leitura/Visualização na Fazenda.</div>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Fazenda:</label>
+                            <input type="text" id="path-get-members-farm" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-get-members" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/farms/' + document.getElementById('path-get-members-farm').value + '/members/', null, 'res-get-members', 'token-get-members')">Executar</button>
+                            <div class="response-box" id="res-get-members"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td>
+                                <strong>Sucesso:</strong> Retorna a Lista de Membros da Equipe (Array de <code>FarmMemberResponse</code>).
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td>Fazenda não encontrada.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td>Você não faz parte da equipe.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET OWNER BY FARM -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/farms/{farmId}/owner/</span>
+                    <span class="op-block-summary-desc">Ver Dados do Proprietário</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">Traz os detalhes de contato do Proprietário (Farm Owner) associado à Fazenda.</div>
+                    <div class="validation-list"><strong>Permissão:</strong> Requer Permissão de Leitura/Visualização na Fazenda.</div>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Fazenda:</label>
+                            <input type="text" id="path-get-owner-farm" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-get-owner" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/farms/' + document.getElementById('path-get-owner-farm').value + '/owner/', null, 'res-get-owner', 'token-get-owner')">Executar</button>
+                            <div class="response-box" id="res-get-owner"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td><strong>Sucesso:</strong> Retorna o perfil do Proprietário.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> Não há proprietário vinculado ou a fazenda não existe.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"FarmOwner não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td>Acesso negado.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET BATCHES BY FARM -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/farms/{farmId}/batches/</span>
+                    <span class="op-block-summary-desc">Listar Lotes da Fazenda</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">Busca todos os Lotes (Batches) globais associados a esta Fazenda. O Retorno é Paginado.</div>
+                    <div class="section-header">Parâmetros</div>
+                    <table>
+                        <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>farmId</td><td>path</td><td>Sim</td><td>O ID numérico da Fazenda</td></tr>
+                        <tr><td>page</td><td>query</td><td>Não</td><td>Número da página para paginação (Padrão: 0)</td></tr>
+                        <tr><td>size</td><td>query</td><td>Não</td><td>Quantidade de itens por página (Padrão: 10)</td></tr>
+                    </table>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID da Fazenda:</label>
+                            <input type="text" id="path-get-batches-farm" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Query Params:</label>
+                            <input type="text" id="query-get-batches" class="fake-input" style="width:100px;" value="?page=0&size=10">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-get-batches" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/farms/' + document.getElementById('path-get-batches-farm').value + '/batches/' + document.getElementById('query-get-batches').value, null, 'res-get-batches', 'token-get-batches')">Executar</button>
+                            <div class="response-box" id="res-get-batches"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Lista paginada com os Lotes (Page&lt;Batch&gt;).</td></tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> A Fazenda não existe.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso de visualização negado.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SCHEMAS -->
+        <div class="models-section">
+            <div class="op-block-tag">Schemas (Modelos de Dados da Fazenda)</div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">RoleEnum (Níveis de Acesso da Equipe) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">MANAGER_ROLE</span> <span class="comment">// Gerente: Criador da fazenda. Acesso total. Promove/expulsa membros.</span><br>
+                    <span class="highlight">MANAGER_AUX_ROLE</span> <span class="comment">// Subgerente: Cria, edita e deleta QUALQUER lote. Não gere equipe.</span><br>
+                    <span class="highlight">RESTRICTED_ROLE</span> <span class="comment">// Operador: Cria lotes, mas só pode editar e deletar OS PRÓPRIOS lotes que criou.</span><br>
+                    <span class="highlight">VIEWER_ROLE</span> <span class="comment">// Leitor: Apenas visualização de relatórios e painéis.</span>
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">CreateOrUpdateFarmRequest (Formulário) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">farmName</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação (Min 3)</span><br>
+                    <span class="highlight">state</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação</span><br>
+                    <span class="highlight">city</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação</span><br>
+                    <span class="highlight">responsible</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação (Min 2)</span><br>
+                    <span class="highlight">responsiblePhoneNumber</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação - Fmt: (XX) XXXXX-XXXX</span><br>
+                    <span class="highlight">ownerId</span>: <span class="number">long</span> <span class="prop-req">*Obrigatório na criação (Positivo)</span><br>
+                    <span class="highlight">businessEmail</span>: <span class="string">string</span> (e-mail válido)<br>
+                    <span class="highlight">cpfCnpj</span>: <span class="string">string</span> (Regex Válido)<br>
+                    <span class="highlight">totalAreaHectares</span>: <span class="number">float</span> <span class="prop-req">*Obrigatório na criação (Positivo)</span><br>
+                    <span class="highlight">farmImageUrl</span>: <span class="string">string</span>
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">AddMemberInFarm (Convite de Membro) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">username</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório</span><br>
+                    <span class="highlight">role</span>: <span class="string">enum</span> (RoleEnum) <span class="prop-req">*Obrigatório</span>
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">FarmResponse (Fazenda Simplificada) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">id</span>: <span class="number">long</span><br>
+                    <span class="highlight">farmName</span>: <span class="string">string</span><br>
+                    <span class="highlight">active</span>: <span class="boolean">boolean</span><br>
+                    <span class="highlight">ownerId</span>: <span class="number">long</span><br>
+                    <span class="highlight">responsible</span>: <span class="string">string</span><br>
+                    <span class="highlight">responsiblePhoneNumber</span>: <span class="string">string</span><br>
+                    <span class="highlight">businessEmail</span>: <span class="string">string</span><br>
+                    <span class="highlight">cpfCnpj</span>: <span class="string">string</span><br>
+                    <span class="highlight">totalAreaHectares</span>: <span class="number">float</span><br>
+                    <span class="highlight">state</span>: <span class="string">string</span><br>
+                    <span class="highlight">city</span>: <span class="string">string</span><br>
+                    <span class="highlight">createdAt</span>: <span class="string">datetime</span><br>
+                    <span class="highlight">updatedAt</span>: <span class="string">datetime</span><br>
+                    <span class="highlight">userManagerName</span>: <span class="string">string</span><br>
+                    <span class="highlight">color</span>: <span class="string">string</span><br>
+                    <span class="highlight">farmImageUrl</span>: <span class="string">string</span><br>
+                    <span class="highlight">farmOwnerName</span>: <span class="string">string</span><br>
+                    <span class="highlight">managerMembers</span>: <span class="string">Array&lt;FarmMemberResponse&gt;</span>
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">FarmMemberResponse (Membro da Equipe) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">memberId</span>: <span class="number">long</span><br>
+                    <span class="highlight">username</span>: <span class="string">string</span><br>
+                    <span class="highlight">completeName</span>: <span class="string">string</span><br>
+                    <span class="highlight">email</span>: <span class="string">string</span><br>
+                    <span class="highlight">role</span>: <span class="string">enum</span> (RoleEnum)
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCRIPT DE SINTAXE HIGHLIGHTER -->
+    <script>
+        function toggleSection(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'none') el.style.display = 'block';
+            else el.style.display = 'none';
+        }
+
+        function toggleBody(element) {
+            const body = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            if (body.style.display === "block") {
+                body.style.display = "none";
+                arrow.classList.remove('rotate');
+            } else {
+                body.style.display = "block";
+                arrow.classList.add('rotate');
+            }
+        }
+
+        function toggleModel(element) {
+            const content = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            if(content.style.display === "block") {
+                content.style.display = "none";
+                arrow.style.transform = "rotate(0deg)";
+            } else {
+                content.style.display = "block";
+                arrow.style.transform = "rotate(180deg)";
+            }
+        }
+
+        function toggleExecute(btn) {
+            const panel = btn.nextElementSibling;
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                btn.textContent = 'Testar Endpoint';
+            } else {
+                panel.style.display = 'block';
+                btn.textContent = 'Cancelar Teste';
+            }
+        }
+
+        async function executeRequest(method, path, bodyId, resId, tokenId) {
+            const baseUrl = 'https://api.rvcarbon.com.br';
+            const url = baseUrl + path;
+            const resBox = document.getElementById(resId);
+            
+            resBox.style.display = 'block';
+            resBox.innerHTML = '<span style="color:white">Enviando requisição...</span>';
+
+            const headers = { 'Content-Type': 'application/json' };
+            if (tokenId) {
+                const tokenVal = document.getElementById(tokenId).value;
+                if (tokenVal) headers['Authorization'] = 'Bearer ' + tokenVal;
+            }
+
+            const options = { method: method, headers: headers };
+
+            if (bodyId) {
+                try {
+                    const rawBody = document.getElementById(bodyId).value;
+                    JSON.parse(rawBody); 
+                    options.body = rawBody;
+                } catch (e) {
+                    resBox.innerHTML = '<span style="color:#f93e3e">Erro: JSON Inválido no corpo da requisição.</span>';
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch(url, options);
+                const statusColor = response.ok ? '#49cc90' : '#f93e3e';
+                
+                let responseData;
+                const contentType = response.headers.get("content-type");
+                
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    responseData = await response.json();
+                    
+                    // Simple syntax highlight function for formatting response
+                    function syntaxHighlight(json) {
+                        if (typeof json != 'string') {
+                             json = JSON.stringify(json, undefined, 2);
+                        }
+                        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                            var cls = 'number';
+                            if (/^"/.test(match)) {
+                                if (/:$/.test(match)) {
+                                    cls = 'highlight'; // Keys
+                                    return '<span class="' + cls + '">' + match.slice(0, -1) + '</span>:';
+                                } else {
+                                    cls = 'string'; // Strings
+                                }
+                            } else if (/true|false/.test(match)) {
+                                cls = 'boolean'; // Booleans
+                            } else if (/null/.test(match)) {
+                                cls = 'boolean'; // Nulls
+                            }
+                            return '<span class="' + cls + '">' + match + '</span>';
+                        });
+                    }
+
+                    responseData = syntaxHighlight(responseData);
+                } else {
+                    responseData = await response.text();
+                }
+
+                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span><pre>` + responseData + '</pre>';
+            } catch (error) {
+                resBox.innerHTML = '<span class="response-status" style="color:#f93e3e">Erro de Conexão (CORS ou Offline)</span>';
+                console.error(error);
+            }
+        }
+
+        function generatePDF() {
+            const element = document.getElementById('printable-area');
+            const opt = {
+                margin: [0.5, 0.5, 0.5, 0.5],
+                filename: 'RvCarbon_Farm_Docs.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            const bodies = document.querySelectorAll('.op-block-body');
+            const models = document.querySelectorAll('.model-content');
+            bodies.forEach(b => b.style.display = 'block');
+            models.forEach(m => m.style.display = 'block');
+            html2pdf().set(opt).from(element).save().then(() => {
+                bodies.forEach(b => b.style.display = 'none');
+                models.forEach(m => m.style.display = 'none');
+            });
+        }
+    </script>
+</body>
+</html>
