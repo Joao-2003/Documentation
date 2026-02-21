@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swagger UI - RvCarbon Fields (Talhões)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* --- CSS SWAGGER GENUINE STYLE --- */
+        body { margin: 0; padding: 0; background: #fafafa; font-family: sans-serif; color: #3b4151; -webkit-font-smoothing: antialiased; }
+        * { box-sizing: border-box; }
+
+        /* Topbar */
+        .topbar { background-color: #1b1b1b; padding: 10px 20px; display: flex; align-items: center; height: 60px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: bold; color: white; font-size: 24px; text-decoration: none; display: flex; align-items: center; gap: 5px; }
+        .logo span { color: #89bf04; } 
+        .search-bar { margin-left: auto; display: flex; gap: 10px; }
+        .fake-input { background: #fff; border: 2px solid #89bf04; padding: 5px 10px; border-radius: 4px; width: 300px; font-size: 13px; color: #3b4151; }
+        .btn-explore { background: #89bf04; color: white; border: none; padding: 6px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+        /* Layout */
+        .container { max-width: 1460px; margin: 0 auto; padding: 20px; }
+
+        /* Header Info */
+        .info-header { margin: 20px 0 40px; border-bottom: 1px solid #ccc; padding-bottom: 20px; }
+        .info-title { font-size: 36px; font-weight: bold; margin: 0; display: flex; align-items: center; gap: 10px; }
+        .badge { font-size: 10px; background: #7d8492; color: white; padding: 4px 10px; border-radius: 15px; vertical-align: middle; }
+        .info-desc { margin-top: 15px; font-size: 14px; color: #3b4151; max-width: 800px; line-height: 1.6; }
+        .base-url { font-family: monospace; font-size: 12px; background: #333; color: white; padding: 4px 8px; border-radius: 4px; margin-top: 10px; display: inline-block; }
+        
+        .btn-pdf {
+            background: white; border: 2px solid #4990e2; color: #4990e2; 
+            padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;
+            float: right; transition: all 0.2s; display: flex; align-items: center; gap: 5px;
+        }
+        .btn-pdf:hover { background: #4990e2; color: white; }
+
+        /* Sections (Tags) */
+        .op-block-tag { 
+            font-size: 24px; margin: 30px 0 10px; border-bottom: 1px solid rgba(59,65,81,.2); 
+            padding-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            font-family: sans-serif; font-weight: 700; color: #3b4151;
+        }
+        .op-block-tag:hover { color: #4990e2; border-color: #4990e2; }
+        
+        /* Operation Blocks (Accordions) */
+        .op-block {
+            border: 1px solid #000; border-radius: 4px; margin: 0 0 15px; box-shadow: 0 0 3px rgba(0,0,0,.19);
+            background: white; overflow: hidden; transition: height 0.3s ease;
+        }
+
+        /* Method Colors */
+        .op-block.post { border-color: #49cc90; background: rgba(73,204,144,.1); }
+        .op-block.post .op-block-summary-method { background: #49cc90; }
+        .op-block.post .op-block-body { border-top: 1px solid #49cc90; }
+
+        .op-block.get { border-color: #61affe; background: rgba(97,175,254,.1); }
+        .op-block.get .op-block-summary-method { background: #61affe; }
+        .op-block.get .op-block-body { border-top: 1px solid #61affe; }
+
+        .op-block.put { border-color: #fca130; background: rgba(252,161,48,.1); }
+        .op-block.put .op-block-summary-method { background: #fca130; }
+        .op-block.put .op-block-body { border-top: 1px solid #fca130; }
+
+        .op-block.patch { border-color: #50e3c2; background: rgba(80,227,194,.1); }
+        .op-block.patch .op-block-summary-method { background: #50e3c2; }
+        .op-block.patch .op-block-body { border-top: 1px solid #50e3c2; }
+
+        .op-block.delete { border-color: #f93e3e; background: rgba(249,62,62,.1); }
+        .op-block.delete .op-block-summary-method { background: #f93e3e; }
+        .op-block.delete .op-block-body { border-top: 1px solid #f93e3e; }
+
+        /* Summary Header */
+        .op-block-summary { padding: 5px; cursor: pointer; display: flex; align-items: center; }
+        .op-block-summary-method {
+            font-size: 14px; font-weight: 700; min-width: 80px; padding: 6px 15px; text-align: center; border-radius: 3px; color: white; text-shadow: 0 1px 0 rgba(0,0,0,.1); margin-right: 10px;
+        }
+        .op-block-summary-path { font-size: 16px; font-weight: 600; color: #3b4151; flex: 1; display: flex; align-items: center; font-family: monospace; }
+        .op-block-summary-desc { font-size: 13px; color: #3b4151; margin-left: 10px; flex: 1; }
+        .arrow { width: 20px; height: 20px; fill: #3b4151; transition: transform 0.2s; margin-right: 10px; }
+
+        /* Body Details */
+        .op-block-body { padding: 20px; background: #fff; display: none; }
+        
+        .section-header { font-size: 14px; font-weight: bold; margin: 20px 0 10px; color: #3b4151; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Interactive "Try it out" */
+        .try-out-wrapper { background: #f8f9fa; border: 1px solid #e9ecef; padding: 10px; margin-top: 20px; border-radius: 4px; }
+        .try-btn { background: #fff; border: 1px solid #3b4151; color: #3b4151; padding: 5px 15px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 12px; margin-bottom: 10px; }
+        .try-btn:hover { background: #3b4151; color: white; }
+        
+        .execute-panel { display: none; margin-top: 10px; }
+        .execute-btn { background: #4990e2; color: white; border: none; padding: 8px 40px; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; display: block; margin-top: 10px; }
+        .execute-btn:hover { background: #357abd; }
+        
+        .req-editor { width: 100%; min-height: 150px; background: #333; color: #fff; font-family: monospace; padding: 10px; border-radius: 4px; border: 1px solid #555; }
+        .response-box { margin-top: 15px; background: #292b2c; color: #85d77c; padding: 10px; font-family: monospace; border-radius: 4px; white-space: pre-wrap; font-size: 12px; display: none; overflow-x: auto; }
+        .response-status { font-weight: bold; margin-bottom: 5px; display: block; color: #fff; }
+
+        /* Data Display */
+        .model-box { 
+            background: #333; color: #fff; padding: 15px; border-radius: 4px; 
+            font-family: "Source Code Pro", monospace; font-size: 12px; overflow-x: auto; margin-bottom: 20px;
+        }
+        .model-box pre { margin: 0; }
+        
+        /* Syntax Highlight */
+        .highlight { color: #dcb67a; } /* Keys */
+        .string { color: #a5c261; } /* Strings */
+        .number { color: #6897bb; } /* Numbers */
+        .boolean { color: #cc7832; } /* Booleans and Nulls */
+        .comment { color: #808080; font-style: italic; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+        th { text-align: left; padding: 12px; border-bottom: 1px solid rgba(59,65,81,.2); color: #3b4151; font-weight: bold; }
+        td { padding: 12px; border-bottom: 1px solid rgba(59,65,81,.2); vertical-align: top; color: #3b4151; }
+        
+        /* Badges */
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 12px; font-weight: bold; color: white; margin-right: 5px; }
+        .status-200 { background: #49cc90; }
+        .status-201 { background: #49cc90; }
+        .status-204 { background: #49cc90; }
+        .status-400 { background: #f93e3e; }
+        .status-401 { background: #fca130; }
+        .status-403 { background: #fca130; }
+        .status-404 { background: #f93e3e; }
+        .status-500 { background: #f93e3e; }
+
+        .service-rule { 
+            background: #fff8e1; border-left: 4px solid #ffc107; padding: 10px; margin: 5px 0; font-size: 13px; color: #5f4b06;
+        }
+        
+        .error-example {
+            background: #333; color: #fff; padding: 15px; margin: 10px 0; font-size: 12px; font-family: "Source Code Pro", monospace; border-left: 4px solid #f93e3e; border-radius: 4px; overflow-x: auto;
+        }
+        .error-example pre { margin: 0; }
+        .error-example .comment { color: #808080; }
+
+        .validation-list {
+            background: #e3f2fd; border-radius: 4px; padding: 15px; margin: 10px 0; font-size: 13px;
+        }
+        .validation-list ul { margin: 5px 0 0 20px; padding: 0; }
+        .validation-list li { margin-bottom: 4px; color: #0d47a1; }
+        
+        /* Schemas Section */
+        .models-section { margin-top: 60px; border-top: 1px solid #3b4151; padding-top: 20px; }
+        .model-container { background: rgba(0,0,0,0.05); padding: 10px; margin-bottom: 10px; border-radius: 4px; transition: all 0.2s; }
+        .model-container:hover { background: rgba(0,0,0,0.08); }
+        .model-title { font-size: 16px; font-weight: bold; color: #3b4151; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; }
+        .model-content { display: none; padding: 10px; font-family: monospace; font-size: 13px; background: white; border-radius: 4px; }
+        .prop-req { color: #f93e3e; font-weight: bold; font-size: 10px; }
+
+        .rotate { transform: rotate(180deg); }
+    </style>
+</head>
+<body>
+
+    <div class="topbar">
+        <a href="#" class="logo">swagger<span>ui</span></a>
+        <div class="search-bar">
+            <input type="text" class="fake-input" value="https://api.rvcarbon.com.br/v1/openapi.json" disabled>
+            <button class="btn-explore">Explore</button>
+        </div>
+    </div>
+
+    <div class="container" id="printable-area">
+        
+        <div class="info-header">
+            <button onclick="generatePDF()" class="btn-pdf">Export PDF</button>
+            <h1 class="info-title">
+                RvCarbon API
+                <span class="badge">1.0.0</span>
+                <span class="badge" style="background:#49cc90;">Talhões (Fields)</span>
+            </h1>
+            <div class="base-url">[ Base URL: https://api.rvcarbon.com.br/ ]</div>
+            <p class="info-desc">
+                Gestão de Talhões (Fields). O Talhão é a área física de plantio dentro de uma Fazenda.
+                Neste módulo você pode criar novos talhões manualmente, importá-los em lote via arquivo GeoJSON e gerenciar os polígonos.
+            </p>
+        </div>
+
+        <!-- FIELD CONTROLLER SECTION -->
+        <div class="op-block-tag" onclick="toggleSection('field-container')">
+            <span>Field Controller</span>
+            <small>Gestão de Áreas de Cultivo e Polígonos</small>
+        </div>
+
+        <div id="field-container">
+
+            <!-- POST CREATE FIELD -->
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/fields/</span>
+                    <span class="op-block-summary-desc">Criar Novo Talhão Manualmente</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        Cria um novo Talhão dentro de uma Fazenda informando as coordenadas (polígono) ponto a ponto.
+                    </div>
+                    
+                    <div class="validation-list">
+                        <strong>⚠️ Regras de Validação:</strong>
+                        <ul>
+                            <li><strong>Permissão:</strong> Seu usuário deve ter a permissão de Gerenciamento da Fazenda (<code>MANAGE_FARM</code>).</li>
+                            <li><strong>farmId:</strong> Obrigatório. ID numérico da Fazenda pai. Deve ser positivo.</li>
+                            <li><strong>fieldName:</strong> Obrigatório. Nome do talhão com mínimo de 2 caracteres.</li>
+                            <li><strong>totalAreaHec:</strong> Obrigatório. Área total em hectares, deve ser maior que zero.</li>
+                            <li><strong>currentCulture:</strong> Obrigatório. Safra/cultura atual (Mín. 3 caracteres).</li>
+                            <li><strong>previousCulture:</strong> Obrigatório. Safra/cultura anterior (Mín. 3 caracteres).</li>
+                            <li><strong>coordinates:</strong> Obrigatório. O array de coordenadas precisa ter no <strong>mínimo 3 pontos</strong> para formar um polígono válido.</li>
+                            <li><strong>description:</strong> Opcional. Se enviado, mínimo de 3 caracteres.</li>
+                        </ul>
+                    </div>
+
+                    <div class="section-header">Exemplo de Requisição (JSON)</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"fieldName"</span>: <span class="string">"Talhão Sul 01"</span>,
+  <span class="highlight">"totalAreaHec"</span>: <span class="number">120.5</span>,
+  <span class="highlight">"currentCulture"</span>: <span class="string">"Soja"</span>,
+  <span class="highlight">"previousCulture"</span>: <span class="string">"Milho"</span>,
+  <span class="highlight">"farmId"</span>: <span class="number">1</span>,
+  <span class="highlight">"description"</span>: <span class="string">"Área de várzea"</span>,
+  <span class="highlight">"coordinates"</span>: [
+    { <span class="highlight">"latitude"</span>: <span class="number">-17.785</span>, <span class="highlight">"longitude"</span>: <span class="number">-50.923</span> },
+    { <span class="highlight">"latitude"</span>: <span class="number">-17.788</span>, <span class="highlight">"longitude"</span>: <span class="number">-50.923</span> },
+    { <span class="highlight">"latitude"</span>: <span class="number">-17.788</span>, <span class="highlight">"longitude"</span>: <span class="number">-50.920</span> }
+  ]
+}</pre>
+                    </div>
+
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
+                            <input type="text" id="token-create-field" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <textarea class="req-editor" id="req-create-field">{
+  "fieldName": "Talhão Teste",
+  "totalAreaHec": 10.0,
+  "currentCulture": "Soja",
+  "previousCulture": "Pastagem",
+  "farmId": 1,
+  "description": "Teste",
+  "coordinates": [
+    { "latitude": -17.785, "longitude": -50.923 },
+    { "latitude": -17.788, "longitude": -50.923 },
+    { "latitude": -17.788, "longitude": -50.920 }
+  ]
+}</textarea>
+                            <button class="execute-btn" onclick="executeRequest('POST', '/api/fields/', 'req-create-field', 'res-create-field', 'token-create-field')">Executar</button>
+                            <div class="response-box" id="res-create-field"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td>
+                                <strong>Sucesso:</strong> Retorna o Talhão (FieldResponse) criado.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro de Validação:</strong> Faltam campos ou formatos incorretos.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"coordinates"</span>: <span class="string">"No mínimo 3 coordenadas devem ser fornecidas."</span>,
+  <span class="highlight">"totalAreaHec"</span>: <span class="string">"A área total (totalAreaHec) deve ser maior que zero."</span>,
+  <span class="highlight">"fieldName"</span>: <span class="string">"O nome do campo (fieldName) é obrigatório."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> A Fazenda informada não existe.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Farm não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-403">403</span></td>
+                            <td><strong>Proibido:</strong> Você não tem permissão para gerenciar esta fazenda.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- POST FROM FILE -->
+            <div class="op-block post">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">POST</span>
+                    <span class="op-block-summary-path">/api/fields/from-file/</span>
+                    <span class="op-block-summary-desc">Criar Talhões via Arquivo GeoJSON</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        <strong>Funcionalidade de Importação em Lote:</strong> Lê um arquivo `.geojson` e cria todos os talhões (polígonos) automaticamente, mapeando os nomes e a área em hectares.
+                    </div>
+                    
+                    <div class="validation-list">
+                        <strong>⚠️ Regras do Arquivo GeoJSON:</strong>
+                        <ul>
+                            <li><strong>Permissão:</strong> Seu usuário deve ter a permissão de Gerenciamento da Fazenda (<code>MANAGE_FARM</code>).</li>
+                            <li><strong>Extensão:</strong> O arquivo <strong>DEVE</strong> ter a extensão <code>.geojson</code>.</li>
+                            <li><strong>Tamanho:</strong> O arquivo não pode exceder <strong>5 MB</strong>.</li>
+                            <li><strong>Estrutura Interna:</strong> Deve conter uma lista de <code>"features"</code> (FeatureCollection).</li>
+                            <li><strong>Geometria:</strong> O tipo de geometria na feature deve ser <code>"Polygon"</code>. Outros tipos são ignorados.</li>
+                            <li><strong>Propriedades:</strong> Cada polígono deve possuir as properties <code>"name"</code> (Nome do talhão) e <code>"area"</code> (Tamanho em hectares).</li>
+                        </ul>
+                    </div>
+
+                    <div class="section-header">Parâmetros (Form-Data / Multipart)</div>
+                    <table>
+                        <tr><th>Nome</th><th>Local</th><th>Tipo</th><th>Descrição</th></tr>
+                        <tr><td>farmId</td><td>Query</td><td>Long</td><td>ID da Fazenda que receberá os talhões.</td></tr>
+                        <tr><td>file</td><td>FormData</td><td>File</td><td>O arquivo .geojson com os polígonos.</td></tr>
+                    </table>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td><strong>Sucesso:</strong> Retorna a Lista (Array) dos Talhões criados com sucesso.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro na Importação:</strong> Arquivo inválido ou regras não atendidas.
+                                <div class="error-example">
+<span class="comment">// Se o arquivo não for .geojson:</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Arquivo deve ter extensão .geojson"</span>
+}</pre>
+<br>
+<span class="comment">// Se o arquivo for maior que 5MB:</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Arquivo muito grande, máximo permitido 5 MB"</span>
+}</pre>
+<br>
+<span class="comment">// Se o JSON interno não tiver features:</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"GeoJSON inválido: campo 'features' ausente ou não é um array"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-500">500</span></td>
+                            <td><strong>Erro Interno:</strong> Falha ao tentar ler a estrutura de árvore do GeoJSON (Erro de parser).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td><strong>Não Encontrado:</strong> Fazenda não existe.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET FIELDS BY FARM -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/fields/</span>
+                    <span class="op-block-summary-desc">Listar Talhões de uma Fazenda</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list">
+                        <strong>Permissão:</strong> Permissão de Leitura/Visualização (<code>VIEWER</code>) na Fazenda informada.
+                    </div>
+                    <div class="section-header">Parâmetros (Query String)</div>
+                    <table>
+                        <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>farmId</td><td>Sim</td><td>O ID numérico da Fazenda.</td></tr>
+                        <tr><td>page</td><td>Não</td><td>Página (Padrão: 0).</td></tr>
+                        <tr><td>size</td><td>Não</td><td>Itens por página (Padrão: 10).</td></tr>
+                    </table>
+                    
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">Query:</label>
+                            <input type="text" id="query-fields-farm" class="fake-input" style="width:100%;" value="?farmId=1">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-fields-farm" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/fields/' + document.getElementById('query-fields-farm').value, null, 'res-fields-farm', 'token-fields-farm')">Executar</button>
+                            <div class="response-box" id="res-fields-farm"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna uma lista paginada de Talhões (Page&lt;FieldResponse&gt;).</td></tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> Fazenda inexistente.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Sem acesso de visualização à fazenda.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET ONE FIELD -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/fields/{fieldId}/</span>
+                    <span class="op-block-summary-desc">Buscar Talhão por ID</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="validation-list">
+                        <strong>Permissão:</strong> Permissão de Leitura/Visualização (<code>VIEWER</code>) no Talhão informado.
+                    </div>
+                    
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID do Talhão:</label>
+                            <input type="text" id="path-get-field-id" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-get-field" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/fields/' + document.getElementById('path-get-field-id').value + '/', null, 'res-get-field', 'token-get-field')">Executar</button>
+                            <div class="response-box" id="res-get-field"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna os dados completos do Talhão.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> Talhão inexistente.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Field não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Sem acesso ao talhão.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PATCH UPDATE FIELD -->
+            <div class="op-block patch">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">PATCH</span>
+                    <span class="op-block-summary-path">/api/fields/{fieldId}/</span>
+                    <span class="op-block-summary-desc">Atualizar Dados do Talhão</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">
+                        <strong>Regra de Culturas:</strong> Se você enviar uma nova <code>currentCulture</code> (Cultura Atual), o sistema fará a substituição automaticamente, pegando a cultura antiga e movendo-a para a <code>previousCulture</code> (Cultura Anterior).
+                    </div>
+                    <div class="validation-list">
+                        <strong>⚠️ Regras e Permissões:</strong>
+                        <ul>
+                            <li><strong>Permissão:</strong> Requer permissão de Gerenciamento da Fazenda (<code>MANAGE_FARM</code>).</li>
+                            <li><strong>Parcial:</strong> Você pode enviar apenas os campos que deseja atualizar.</li>
+                            <li><strong>Coordenadas:</strong> Se for atualizar os pontos do polígono, você deve enviar um novo Array com no mínimo <strong>3 coordenadas</strong>. Isso limpará as coordenadas antigas e registrará as novas.</li>
+                        </ul>
+                    </div>
+
+                    <div class="section-header">Exemplo de Atualização Parcial</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"currentCulture"</span>: <span class="string">"Milho Safrinha"</span>,
+  <span class="highlight">"description"</span>: <span class="string">"Atualizado em 2024"</span>
+}</pre>
+                    </div>
+
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID do Talhão:</label>
+                            <input type="text" id="path-patch-field-id" class="fake-input" style="width:50px; margin-bottom:10px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-patch-field" class="fake-input" style="width:100%; margin-bottom:10px;">
+                            <textarea class="req-editor" id="req-patch-field">{ "currentCulture": "Milho" }</textarea>
+                            <button class="execute-btn" onclick="executeRequest('PATCH', '/api/fields/' + document.getElementById('path-patch-field-id').value + '/', 'req-patch-field', 'res-patch-field', 'token-patch-field')">Executar</button>
+                            <div class="response-box" id="res-patch-field"></div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna o Talhão atualizado.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro de Validação:</strong> Regra violada.
+                                <div class="error-example">
+<span class="comment">// Exemplo: Tentou limpar as coordenadas enviando menos de 3 pontos</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"No mínimo 3 coordenadas devem ser fornecidas para atualizar o campo."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> Talhão inexistente.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Falta de permissão de gerente.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- DELETE FIELD -->
+            <div class="op-block delete">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">DELETE</span>
+                    <span class="op-block-summary-path">/api/fields/{fieldId}/</span>
+                    <span class="op-block-summary-desc">Excluir Talhão</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">Exclui permanentemente o Talhão e todas as suas coordenadas do banco de dados. Atenção: Quaisquer Lotes do ARVA vinculados a ele serão apagados em cascata.</div>
+                    <div class="validation-list">
+                        <strong>Permissão:</strong> Apenas o Gerente da Fazenda pode deletar Talhões.
+                    </div>
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID do Talhão:</label>
+                            <input type="text" id="path-del-field-id" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-del-field" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('DELETE', '/api/fields/' + document.getElementById('path-del-field-id').value + '/', null, 'res-del-field', 'token-del-field')">Executar</button>
+                            <div class="response-box" id="res-del-field"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-204">204</span></td><td><strong>Sucesso:</strong> Removido (Sem conteúdo de retorno).</td></tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> Talhão não existe.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso negado.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GET BATCHES BY FIELD -->
+            <div class="op-block get">
+                <div class="op-block-summary" onclick="toggleBody(this)">
+                    <span class="op-block-summary-method">GET</span>
+                    <span class="op-block-summary-path">/api/fields/{fieldId}/batches/</span>
+                    <span class="op-block-summary-desc">Listar Lotes Específicos do Talhão</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+                <div class="op-block-body">
+                    <div class="service-rule">Busca todos os Lotes (Batches do protocolo ARVA) que foram criados para este Talhão específico. Retorno paginado.</div>
+                    
+                    <div class="section-header">Parâmetros</div>
+                    <table>
+                        <tr><th>Nome</th><th>Local</th><th>Obrigatório</th><th>Descrição</th></tr>
+                        <tr><td>fieldId</td><td>path</td><td>Sim</td><td>ID do Talhão.</td></tr>
+                        <tr><td>page</td><td>query</td><td>Não</td><td>Página (0).</td></tr>
+                        <tr><td>size</td><td>query</td><td>Não</td><td>Itens (10).</td></tr>
+                    </table>
+                    
+                    <div class="try-out-wrapper">
+                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                        <div class="execute-panel">
+                            <label style="font-size:12px; font-weight:bold;">ID do Talhão:</label>
+                            <input type="text" id="path-get-field-batches-id" class="fake-input" style="width:50px;">
+                            <label style="font-size:12px; font-weight:bold;">Params:</label>
+                            <input type="text" id="query-field-batches" class="fake-input" style="width:100px;" value="?page=0&size=10">
+                            <label style="font-size:12px; font-weight:bold;">Token:</label>
+                            <input type="text" id="token-field-batches" class="fake-input" style="width:100%;">
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/fields/' + document.getElementById('path-get-field-batches-id').value + '/batches/' + document.getElementById('query-field-batches').value, null, 'res-field-batches', 'token-field-batches')">Executar</button>
+                            <div class="response-box" id="res-field-batches"></div>
+                        </div>
+                    </div>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna uma lista paginada (Page&lt;Batch&gt;).</td></tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> Talhão inexistente.</td></tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SCHEMAS -->
+        <div class="models-section">
+            <div class="op-block-tag">Schemas (Modelos de Dados de Talhões)</div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">CreateFieldRequest (Formulário) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">farmId</span>: <span class="number">long</span> <span class="prop-req">*Obrigatório e positivo</span><br>
+                    <span class="highlight">fieldName</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (mín 2 chars)</span><br>
+                    <span class="highlight">totalAreaHec</span>: <span class="number">float</span> <span class="prop-req">*Obrigatório e positivo (>0)</span><br>
+                    <span class="highlight">currentCulture</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (mín 3 chars)</span><br>
+                    <span class="highlight">previousCulture</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (mín 3 chars)</span><br>
+                    <span class="highlight">description</span>: <span class="string">string</span> <span class="comment">// Opcional, min 3 chars</span><br>
+                    <span class="highlight">coordinates</span>: <span class="string">Array&lt;CoordinateDto&gt;</span> <span class="prop-req">*Mínimo de 3 coordenadas para formar polígono</span>
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">UpdateFieldRequest (Edição Parcial) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="comment">// Todos opcionais. Se enviados, seguem as mesmas validações.</span><br>
+                    <span class="highlight">fieldName</span>: <span class="string">string</span><br>
+                    <span class="highlight">totalAreaHec</span>: <span class="number">float</span><br>
+                    <span class="highlight">currentCulture</span>: <span class="string">string</span> <span class="comment">// Atenção: Moverá a cultura atual para a anterior automaticamente</span><br>
+                    <span class="highlight">description</span>: <span class="string">string</span><br>
+                    <span class="highlight">coordinates</span>: <span class="string">Array&lt;CoordinateDto&gt;</span> <span class="comment">// Sobrescreve as coordenadas existentes</span>
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">CoordinateDto <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">latitude</span>: <span class="number">double</span><br>
+                    <span class="highlight">longitude</span>: <span class="number">double</span>
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">FieldResponse (Talhão Retornado) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">id</span>: <span class="number">long</span><br>
+                    <span class="highlight">fieldName</span>: <span class="string">string</span><br>
+                    <span class="highlight">farmId</span>: <span class="number">long</span><br>
+                    <span class="highlight">farmName</span>: <span class="string">string</span><br>
+                    <span class="highlight">totalAreaHec</span>: <span class="number">float</span><br>
+                    <span class="highlight">currentCulture</span>: <span class="string">string</span><br>
+                    <span class="highlight">previousCulture</span>: <span class="string">string</span><br>
+                    <span class="highlight">coordinates</span>: <span class="string">Array&lt;CoordinateDto&gt;</span><br>
+                    <span class="highlight">color</span>: <span class="string">string</span> (Hexcode gerado pela cor do dono)<br>
+                    <span class="highlight">description</span>: <span class="string">string</span><br>
+                    <span class="highlight">farmOwnerName</span>: <span class="string">string</span><br>
+                    <span class="highlight">createdAt</span>: <span class="string">datetime</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'none') el.style.display = 'block';
+            else el.style.display = 'none';
+        }
+
+        function toggleBody(element) {
+            const body = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            
+            if (body.style.display === "block") {
+                body.style.display = "none";
+                arrow.classList.remove('rotate');
+            } else {
+                body.style.display = "block";
+                arrow.classList.add('rotate');
+            }
+        }
+
+        function toggleModel(element) {
+            const content = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            if(content.style.display === "block") {
+                content.style.display = "none";
+                arrow.style.transform = "rotate(0deg)";
+            } else {
+                content.style.display = "block";
+                arrow.style.transform = "rotate(180deg)";
+            }
+        }
+
+        function toggleExecute(btn) {
+            const panel = btn.nextElementSibling;
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                btn.textContent = 'Testar Endpoint';
+            } else {
+                panel.style.display = 'block';
+                btn.textContent = 'Cancelar Teste';
+            }
+        }
+
+        async function executeRequest(method, path, bodyId, resId, tokenId) {
+            const baseUrl = 'https://api.rvcarbon.com.br';
+            const url = baseUrl + path;
+            const resBox = document.getElementById(resId);
+            
+            resBox.style.display = 'block';
+            resBox.innerHTML = '<span style="color:white">Enviando requisição...</span>';
+
+            const headers = { 'Content-Type': 'application/json' };
+            if (tokenId) {
+                const tokenVal = document.getElementById(tokenId).value;
+                if (tokenVal) headers['Authorization'] = 'Bearer ' + tokenVal;
+            }
+
+            const options = { method: method, headers: headers };
+
+            if (bodyId) {
+                try {
+                    const rawBody = document.getElementById(bodyId).value;
+                    JSON.parse(rawBody); 
+                    options.body = rawBody;
+                } catch (e) {
+                    resBox.innerHTML = '<span style="color:#f93e3e">Erro: JSON Inválido no corpo da requisição.</span>';
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch(url, options);
+                const statusColor = response.ok ? '#49cc90' : '#f93e3e';
+                
+                let responseData;
+                const contentType = response.headers.get("content-type");
+                
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    responseData = await response.json();
+                    
+                    function syntaxHighlight(json) {
+                        if (typeof json != 'string') {
+                             json = JSON.stringify(json, undefined, 2);
+                        }
+                        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                            var cls = 'number';
+                            if (/^"/.test(match)) {
+                                if (/:$/.test(match)) {
+                                    cls = 'highlight'; // Keys
+                                    return '<span class="' + cls + '">' + match.slice(0, -1) + '</span>:';
+                                } else {
+                                    cls = 'string'; // Strings
+                                }
+                            } else if (/true|false/.test(match)) {
+                                cls = 'boolean'; // Booleans
+                            } else if (/null/.test(match)) {
+                                cls = 'boolean'; // Nulls
+                            }
+                            return '<span class="' + cls + '">' + match + '</span>';
+                        });
+                    }
+
+                    responseData = syntaxHighlight(responseData);
+                } else {
+                    responseData = await response.text();
+                }
+
+                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span><pre>` + responseData + '</pre>';
+            } catch (error) {
+                resBox.innerHTML = '<span class="response-status" style="color:#f93e3e">Erro de Conexão (CORS ou Offline)</span>';
+                console.error(error);
+            }
+        }
+
+        function generatePDF() {
+            const element = document.getElementById('printable-area');
+            const opt = {
+                margin: [0.5, 0.5, 0.5, 0.5],
+                filename: 'RvCarbon_Fields_Docs.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            const bodies = document.querySelectorAll('.op-block-body');
+            const models = document.querySelectorAll('.model-content');
+            bodies.forEach(b => b.style.display = 'block');
+            models.forEach(m => m.style.display = 'block');
+            html2pdf().set(opt).from(element).save().then(() => {
+                bodies.forEach(b => b.style.display = 'none');
+                models.forEach(m => m.style.display = 'none');
+            });
+        }
+    </script>
+</body>
+</html>
