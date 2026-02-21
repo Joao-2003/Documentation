@@ -106,9 +106,9 @@
         
         /* Syntax Highlight */
         .highlight { color: #dcb67a; } /* Keys */
-        .string { color: #a5c261; }
-        .number { color: #ffc66d; }
-        .boolean { color: #cc7832; }
+        .string { color: #a5c261; } /* Strings */
+        .number { color: #6897bb; } /* Numbers */
+        .boolean { color: #cc7832; } /* Booleans and Nulls */
         .comment { color: #808080; font-style: italic; }
 
         /* Tables */
@@ -131,8 +131,11 @@
         }
         
         .error-example {
-            background: #ffe6e6; border-left: 4px solid #f93e3e; padding: 10px; margin: 10px 0; font-size: 12px; font-family: monospace; color: #a94442;
+            background: #333; color: #fff; padding: 15px; margin: 10px 0; font-size: 12px; font-family: "Source Code Pro", monospace; border-left: 4px solid #f93e3e; border-radius: 4px; overflow-x: auto;
         }
+        .error-example pre { margin: 0; }
+        .error-example .comment { color: #808080; }
+
         .validation-list {
             background: #e3f2fd; border-radius: 4px; padding: 15px; margin: 10px 0; font-size: 13px;
         }
@@ -242,8 +245,12 @@
                                 <td><span class="status-badge status-200">200</span></td>
                                 <td>
                                     <strong>Sucesso (Login Aprovado):</strong> Retorna suas chaves de acesso.
-                                    <div class="model-box" style="margin-top:5px; font-size:10px;">
-                                        { "token": "...", "refreshToken": "...", "tokenType": "bearer" }
+                                    <div class="model-box" style="margin-top:5px;">
+<pre>{
+  <span class="highlight">"token"</span>: <span class="string">"eyJhbGciOiJI..."</span>,
+  <span class="highlight">"refreshToken"</span>: <span class="string">"dGhpcyBpcyBh..."</span>,
+  <span class="highlight">"tokenType"</span>: <span class="string">"bearer"</span>
+}</pre>
                                     </div>
                                 </td>
                             </tr>
@@ -252,14 +259,16 @@
                                 <td>
                                     <strong>Erro na Requisição:</strong> Falta preencher campos ou JSON inválido.
                                     <div class="error-example">
-                                        // JSON mal formatado ou corpo vazio:<br>
-                                        { "detail": "JSON inválido." }
-                                        <br><br>
-                                        // Campos vazios:<br>
-                                        {<br>
-                                        &nbsp; "password": "não deve estar em branco",<br>
-                                        &nbsp; "loginIdentifier": "O e-mail ou username é obrigatório."<br>
-                                        }
+<span class="comment">// JSON mal formatado ou corpo vazio:</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"JSON inválido."</span>
+}</pre>
+<br>
+<span class="comment">// Campos vazios:</span>
+<pre>{
+  <span class="highlight">"password"</span>: <span class="string">"não deve estar em branco"</span>,
+  <span class="highlight">"loginIdentifier"</span>: <span class="string">"O e-mail ou username é obrigatório."</span>
+}</pre>
                                     </div>
                                 </td>
                             </tr>
@@ -268,7 +277,9 @@
                                 <td>
                                     <strong>Não Autorizado:</strong> Credenciais incorretas.
                                     <div class="error-example">
-                                        { "details": "Usuário inexistente ou senha inválida" }
+<pre>{
+  <span class="highlight">"details"</span>: <span class="string">"Usuário inexistente ou senha inválida"</span>
+}</pre>
                                     </div>
                                 </td>
                             </tr>
@@ -277,7 +288,9 @@
                                 <td>
                                     <strong>Acesso Negado:</strong> Usuário inativo. Necessário confirmar e-mail.
                                     <div class="error-example">
-                                        { "details": "User was not activated. Please check your email..." }
+<pre>{
+  <span class="highlight">"details"</span>: <span class="string">"User was not activated. Please check your email, or resend confirmation email"</span>
+}</pre>
                                     </div>
                                 </td>
                             </tr>
@@ -292,7 +305,7 @@
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/register/</span>
                     <span class="op-block-summary-desc">Criar Nova Conta</span>
-                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     
@@ -360,12 +373,21 @@
                                 <td><span class="status-badge status-200">200</span></td>
                                 <td>
                                     <strong>Sucesso (Cadastro Realizado):</strong> Retorna o usuário criado.
-                                    <div class="model-box" style="margin-top:5px; font-size:10px;">
-                                        {<br>
-                                        &nbsp; "userId": 1, "name": "joao", "email": "jvglima03@gmail.com",<br>
-                                        &nbsp; "phone": null, "cpfCnpj": "999.999.999-99", "state": "go",<br>
-                                        &nbsp; "city": "rio quente", "birthday": "2003-03-20", ...<br>
-                                        }
+                                    <div class="model-box" style="margin-top:5px;">
+<pre>{
+  <span class="highlight">"userId"</span>: <span class="number">1</span>,
+  <span class="highlight">"name"</span>: <span class="string">"joao"</span>,
+  <span class="highlight">"email"</span>: <span class="string">"jvglima03@gmail.com"</span>,
+  <span class="highlight">"phone"</span>: <span class="boolean">null</span>,
+  <span class="highlight">"cpfCnpj"</span>: <span class="string">"999.999.999-99"</span>,
+  <span class="highlight">"state"</span>: <span class="string">"go"</span>,
+  <span class="highlight">"city"</span>: <span class="string">"rio quente"</span>,
+  <span class="highlight">"birthday"</span>: <span class="string">"2003-03-20"</span>,
+  <span class="highlight">"occupation"</span>: <span class="boolean">null</span>,
+  <span class="highlight">"academicTitle"</span>: <span class="boolean">null</span>,
+  <span class="highlight">"username"</span>: <span class="string">"joao"</span>,
+  <span class="highlight">"imageProfileUrl"</span>: <span class="boolean">null</span>
+}</pre>
                                     </div>
                                 </td>
                             </tr>
@@ -374,20 +396,25 @@
                                 <td>
                                     <strong>Erros de Validação (Campos Inválidos):</strong>
                                     <div class="error-example">
-                                        // Mapa Plano de Erros (Campo: Mensagem):<br>
-                                        {<br>
-                                        &nbsp; "password": "A senha (password) deve ter no mínimo 6 caracteres.",<br>
-                                        &nbsp; "name": "O nome (name) deve ter pelo menos 3 caracteres.",<br>
-                                        &nbsp; "cpfCnpj": "O CPF ou CNPJ (cpfCnpj) está em formato inválido.",<br>
-                                        &nbsp; "email": "O email (email) deve ser válido.",<br>
-                                        &nbsp; "birthday": "A data de nascimento (birthday) deve estar no passado."<br>
-                                        }
-                                        <br><br>
-                                        // Erro de Parsing (Data/Tipo inválido):<br>
-                                        { "detail": "Campo 'birthday' tem valor inválido. Use o formato yyyy-MM-dd." }
-                                        <br><br>
-                                        // Duplicidade (E-mail/Username já existe):<br>
-                                        { "email": "email já está em uso.", "username": "username já está em uso." }
+                                        <span class="comment">// Mapa Plano de Erros (Campo: Mensagem):</span>
+<pre>{
+  <span class="highlight">"password"</span>: <span class="string">"A senha (password) deve ter no mínimo 6 caracteres."</span>,
+  <span class="highlight">"name"</span>: <span class="string">"O nome (name) deve ter pelo menos 3 caracteres."</span>,
+  <span class="highlight">"cpfCnpj"</span>: <span class="string">"O CPF ou CNPJ (cpfCnpj) está em formato inválido."</span>,
+  <span class="highlight">"email"</span>: <span class="string">"O email (email) deve ser válido."</span>,
+  <span class="highlight">"birthday"</span>: <span class="string">"A data de nascimento (birthday) deve estar no passado."</span>
+}</pre>
+                                        <br>
+                                        <span class="comment">// Erro de Parsing (Data/Tipo inválido):</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Campo 'birthday' tem valor inválido. Use o formato yyyy-MM-dd."</span>
+}</pre>
+                                        <br>
+                                        <span class="comment">// Duplicidade (E-mail/Username já existe):</span>
+<pre>{
+  <span class="highlight">"email"</span>: <span class="string">"email já está em uso."</span>,
+  <span class="highlight">"username"</span>: <span class="string">"username já está em uso."</span>
+}</pre>
                                     </div>
                                 </td>
                             </tr>
@@ -409,7 +436,11 @@
                         <strong>⚠️ Regras:</strong>
                         <ul><li><strong>refreshToken:</strong> Obrigatório. É a chave secundária recebida no login.</li></ul>
                     </div>
-                    <div class="model-box"><pre>{ "refreshToken": "string" }</pre></div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"refreshToken"</span>: <span class="string">"string"</span>
+}</pre>
+                    </div>
 
                     <!-- TESTER -->
                     <div class="try-out-wrapper">
@@ -427,8 +458,12 @@
                             <td><span class="status-badge status-200">200</span></td>
                             <td>
                                 <strong>Sucesso:</strong> Retorna um novo par de chaves de acesso.
-                                <div class="model-box" style="margin-top:5px; font-size:10px;">
-                                    { "token": "...", "refreshToken": "...", "tokenType": "bearer" }
+                                <div class="model-box" style="margin-top:5px;">
+<pre>{
+  <span class="highlight">"token"</span>: <span class="string">"..."</span>,
+  <span class="highlight">"refreshToken"</span>: <span class="string">"..."</span>,
+  <span class="highlight">"tokenType"</span>: <span class="string">"bearer"</span>
+}</pre>
                                 </div>
                             </td>
                         </tr>
@@ -437,7 +472,9 @@
                             <td>
                                 <strong>Erro na Requisição:</strong> Enviou Token errado (ex: AccessToken em vez de Refresh).
                                 <div class="error-example">
-                                    { "detail": "O token informado é um AccessToken, mas esperava-se um RefreshToken." }
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"O token informado é um AccessToken, mas esperava-se um RefreshToken."</span>
+}</pre>
                                 </div>
                             </td>
                         </tr>
@@ -446,7 +483,9 @@
                             <td>
                                 <strong>Não Autorizado:</strong> Chave inválida, expirada ou já usada (Blacklisted).
                                 <div class="error-example">
-                                    { "detail": "Refresh token invalid or expired. Please make login again." }
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Refresh token invalid or expired. Please make login again."</span>
+}</pre>
                                 </div>
                             </td>
                         </tr>
@@ -466,7 +505,11 @@
                     <div class="validation-list">
                         <strong>⚠️ Regras:</strong> Envie o <code>refreshToken</code> para invalidá-lo no banco e impedir novos acessos.
                     </div>
-                    <div class="model-box"><pre>{ "refreshToken": "string" }</pre></div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"refreshToken"</span>: <span class="string">"string"</span>
+}</pre>
+                    </div>
 
                     <!-- TESTER -->
                     <div class="try-out-wrapper">
@@ -604,7 +647,9 @@
                             <td>
                                 <strong>Erro:</strong> Impossível excluir.
                                 <div class="error-example">
-                                    { "detail": "Você não pode deletar sua conta tendo clientes associados" }
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Você não pode deletar sua conta tendo clientes associados"</span>
+}</pre>
                                 </div>
                             </td>
                         </tr>
@@ -741,7 +786,11 @@
                     <div class="validation-list">
                         <ul><li><strong>email:</strong> Obrigatório e formato válido.</li></ul>
                     </div>
-                    <div class="model-box"><pre>{ "email": "user@email.com" }</pre></div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"email"</span>: <span class="string">"user@email.com"</span>
+}</pre>
+                    </div>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
@@ -767,7 +816,12 @@
                     <div class="validation-list">
                         <ul><li><strong>token:</strong> Obrigatório (Vem no link do e-mail).</li><li><strong>newPassword:</strong> Mínimo 6 caracteres.</li></ul>
                     </div>
-                    <div class="model-box"><pre>{ "token": "...", "newPassword": "123456" }</pre></div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"token"</span>: <span class="string">"..."</span>,
+  <span class="highlight">"newPassword"</span>: <span class="string">"123456"</span>
+}</pre>
+                    </div>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
@@ -783,14 +837,22 @@
                             <td><span class="status-badge status-400">400</span></td>
                             <td>
                                 <strong>Erro:</strong> Senha igual à atual.
-                                <div class="error-example">{ "detail": "A nova senha não pode ser igual à senha atual." }</div>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"A nova senha não pode ser igual à senha atual."</span>
+}</pre>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td><span class="status-badge status-401">401</span></td>
                             <td>
                                 <strong>Erro:</strong> Token expirado ou inválido.
-                                <div class="error-example">{ "detail": "Token de confirmação invalido ou expirado!" }</div>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Token de confirmação invalido ou expirado!"</span>
+}</pre>
+                                </div>
                             </td>
                         </tr>
                     </table>
@@ -976,7 +1038,7 @@
             const element = document.getElementById('printable-area');
             const opt = {
                 margin: [0.5, 0.5, 0.5, 0.5],
-                filename: 'RvCarbon_Auth_Docs_v14.pdf',
+                filename: 'RvCarbon_Auth_Docs.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
