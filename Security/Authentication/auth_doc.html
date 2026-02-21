@@ -124,6 +124,7 @@
         .status-400 { background: #f93e3e; }
         .status-401 { background: #fca130; }
         .status-403 { background: #fca130; }
+        .status-404 { background: #f93e3e; }
         .status-302 { background: #9013fe; } /* Redirect */
 
         .service-rule { 
@@ -305,7 +306,7 @@
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/register/</span>
                     <span class="op-block-summary-desc">Criar Nova Conta</span>
-                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     
@@ -493,7 +494,7 @@
                 </div>
             </div>
 
-            <!-- POST LOGOUT (NOVO) -->
+            <!-- POST LOGOUT -->
             <div class="op-block post">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
@@ -657,7 +658,7 @@
                 </div>
             </div>
 
-            <!-- GET RESEND EMAIL (NOVO) -->
+            <!-- GET RESEND EMAIL -->
             <div class="op-block get">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">GET</span>
@@ -681,11 +682,28 @@
                         </div>
                     </div>
                     <div class="section-header">Respostas</div>
-                    <table><tr><td><span class="status-badge status-200">200</span></td><td>Sucesso.</td></tr></table>
+                    <table>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> E-mail enviado com sucesso.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> O e-mail informado não existe no sistema.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"User not found with email: user@email.com"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-403">403</span></td>
+                            <td><strong>Proibido:</strong> Não foi possível reenviar o e-mail (ex: a conta já pode estar ativa).</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
-            <!-- GET CONFIRM EMAIL (NOVO) -->
+            <!-- GET CONFIRM EMAIL -->
             <div class="op-block get">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">GET</span>
@@ -716,7 +734,7 @@
                 </div>
             </div>
 
-            <!-- GET CONFIRM DELETE (NOVO) -->
+            <!-- GET CONFIRM DELETE -->
             <div class="op-block get">
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">GET</span>
@@ -751,26 +769,26 @@
             <div class="section-header" style="margin-top: 40px; border-bottom: 1px solid #ddd;">Fluxos de Recuperação (Senha / Confirmação)</div>
 
             <div class="flow-diagram">
-                <strong>Fluxo Completo de Reset de Senha:</strong>
+                <strong>Como funciona o Reset de Senha:</strong>
                 <div class="flow-step" style="margin-top:10px;">
                     <span class="step-num">1</span>
-                    <div>Usuário envia E-mail para <code>/forgot-password</code>.</div>
+                    <div>Usuário pede o reset informando o e-mail no endpoint <code>/forgot-password</code>.</div>
                 </div>
                 <div class="flow-step">
                     <span class="step-num">2</span>
-                    <div>Backend envia e-mail contendo link: <code>https://app.rvcarbon.com.br/reset-password?token=XYZ...</code></div>
+                    <div>Sistema envia e-mail com um link seguro.</div>
                 </div>
                 <div class="flow-step">
                     <span class="step-num">3</span>
-                    <div>Usuário clica no link. Frontend abre, captura o <code>token</code> da URL.</div>
+                    <div>Usuário clica no link e digita a nova senha no Frontend.</div>
                 </div>
                 <div class="flow-step">
                     <span class="step-num">4</span>
-                    <div>Usuário digita a nova senha na tela.</div>
+                    <div>Frontend envia a nova senha para o endpoint <code>/reset-password</code>.</div>
                 </div>
                 <div class="flow-step">
                     <span class="step-num">5</span>
-                    <div>Frontend envia <code>token</code> capturado + <code>novaSenha</code> para o endpoint <code>/reset-password</code>.</div>
+                    <div>Sistema valida o link e salva a nova senha.</div>
                 </div>
             </div>
 
@@ -779,7 +797,7 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/forgot-password/</span>
-                    <span class="op-block-summary-desc">Esqueci Minha Senha</span>
+                    <span class="op-block-summary-desc">Solicitar Link de Recuperação de Senha</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
@@ -791,6 +809,7 @@
   <span class="highlight">"email"</span>: <span class="string">"user@email.com"</span>
 }</pre>
                     </div>
+                    
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
@@ -799,8 +818,25 @@
                             <div class="response-box" id="res-forgot"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
-                    <table><tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> E-mail de recuperação enviado (se o usuário existir).</td></tr></table>
+
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td><strong>Sucesso:</strong> E-mail de recuperação enviado (se o usuário existir).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> O e-mail informado não pertence a nenhuma conta no sistema.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"User not found with email: user@email.com"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
@@ -809,52 +845,34 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/auth/reset-password/</span>
-                    <span class="op-block-summary-desc">Salvar Nova Senha</span>
+                    <span class="op-block-summary-desc">Confirmar Nova Senha</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="validation-list">
-                        <ul><li><strong>token:</strong> Obrigatório (Vem no link do e-mail).</li><li><strong>newPassword:</strong> Mínimo 6 caracteres.</li></ul>
-                    </div>
+                    <div class="section-header">Request Body</div>
                     <div class="model-box">
 <pre>{
-  <span class="highlight">"token"</span>: <span class="string">"..."</span>,
-  <span class="highlight">"newPassword"</span>: <span class="string">"123456"</span>
+  <span class="highlight">"token"</span>: <span class="string">"token_da_url"</span>,
+  <span class="highlight">"newPassword"</span>: <span class="string">"NovaSenh@123"</span>
 }</pre>
                     </div>
+                    
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <textarea class="req-editor" id="req-reset">{ "token": "string", "newPassword": "string" }</textarea>
+                            <textarea class="req-editor" id="req-reset">{
+  "token": "string",
+  "newPassword": "string"
+}</textarea>
                             <button class="execute-btn" onclick="executeRequest('POST', '/api/auth/reset-password/', 'req-reset', 'res-reset')">Executar</button>
                             <div class="response-box" id="res-reset"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
+
+                    <div class="section-header">Responses</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Senha alterada.</td></tr>
-                        <tr>
-                            <td><span class="status-badge status-400">400</span></td>
-                            <td>
-                                <strong>Erro:</strong> Senha igual à atual.
-                                <div class="error-example">
-<pre>{
-  <span class="highlight">"detail"</span>: <span class="string">"A nova senha não pode ser igual à senha atual."</span>
-}</pre>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><span class="status-badge status-401">401</span></td>
-                            <td>
-                                <strong>Erro:</strong> Token expirado ou inválido.
-                                <div class="error-example">
-<pre>{
-  <span class="highlight">"detail"</span>: <span class="string">"Token de confirmação invalido ou expirado!"</span>
-}</pre>
-                                </div>
-                            </td>
-                        </tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td>Senha alterada.</td></tr>
+                        <tr><td><span class="status-badge status-400">400</span></td><td>Token inválido ou senha repetida.</td></tr>
                     </table>
                 </div>
             </div>
@@ -866,66 +884,74 @@
             <div class="op-block-tag">Schemas (Modelos de Dados)</div>
 
             <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">Par de Chaves de Acesso (Tokens) <span class="arrow">▼</span></div>
+                <div class="model-title" onclick="toggleModel(this)">
+                    JwtTokenPair (Chaves de Acesso) <span class="arrow">▼</span>
+                </div>
                 <div class="model-content">
-                    <span class="highlight">token</span>: string<br>
-                    <span class="highlight">refreshToken</span>: string<br>
-                    <span class="highlight">tokenType</span>: string (bearer)
+                    <span class="highlight">token</span>: string <span class="comment">// Token principal usado para acessar o sistema</span><br>
+                    <span class="highlight">refreshToken</span>: string <span class="comment">// Token secundário usado para renovar o acesso sem senha</span><br>
+                    <span class="highlight">tokenType</span>: string (default: "bearer")
                 </div>
             </div>
 
             <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">Dados de Cadastro (Requisição) <span class="arrow">▼</span></div>
+                <div class="model-title" onclick="toggleModel(this)">
+                    AuthRegisterRequest (Formulário de Cadastro) <span class="arrow">▼</span>
+                </div>
                 <div class="model-content">
-                    <span class="highlight">name</span>: string (min 3)<br>
-                    <span class="highlight">email</span>: string (email)<br>
-                    <span class="highlight">phone</span>: string ((XX) XXXXX-XXXX)<br>
-                    <span class="highlight">username</span>: string (3-30)<br>
-                    <span class="highlight">password</span>: string (min 6)<br>
-                    <span class="highlight">birthday</span>: string (yyyy-MM-dd, past)<br>
-                    <span class="highlight">state</span>: string<br>
-                    <span class="highlight">city</span>: string<br>
-                    <span class="highlight">cpfCnpj</span>: string (regex)<br>
-                    <span class="highlight">occupation</span>: string (min 2)<br>
-                    <span class="highlight">academicTitle</span>: string (min 2)<br>
-                    <span class="highlight">imageProfileUrl</span>: string (min 5)
+                    <span class="highlight">name</span>: string <span class="prop-req">*Obrigatório (min 3 letras)</span><br>
+                    <span class="highlight">email</span>: string <span class="prop-req">*Obrigatório (e-mail válido)</span><br>
+                    <span class="highlight">phone</span>: string <span class="prop-req">*Padrão: (XX) XXXXX-XXXX</span><br>
+                    <span class="highlight">username</span>: string <span class="prop-req">*Obrigatório (3-30 caracteres)</span><br>
+                    <span class="highlight">password</span>: string <span class="prop-req">*Obrigatório (min 6 caracteres)</span><br>
+                    <span class="highlight">birthday</span>: string <span class="prop-req">*Obrigatório (Data no passado)</span><br>
+                    <span class="highlight">state</span>: string <span class="prop-req">*Obrigatório</span><br>
+                    <span class="highlight">city</span>: string <span class="prop-req">*Obrigatório</span><br>
+                    <span class="highlight">cpfCnpj</span>: string <span class="prop-req">*CPF ou CNPJ válido</span><br>
+                    <span class="highlight">occupation</span>: string <span class="prop-req">*Min 2 caracteres</span><br>
+                    <span class="highlight">academicTitle</span>: string <span class="prop-req">*Min 2 caracteres</span><br>
+                    <span class="highlight">imageProfileUrl</span>: string <span class="prop-req">*Link da imagem de perfil</span>
                 </div>
             </div>
 
             <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">Dados do Usuário Cadastrado (Resposta) <span class="arrow">▼</span></div>
+                <div class="model-title" onclick="toggleModel(this)">
+                    UserInfosResponse (Perfil Completo) <span class="arrow">▼</span>
+                </div>
                 <div class="model-content">
-                    <span class="highlight">userId</span>: long<br>
+                    <span class="highlight">userId</span>: integer<br>
                     <span class="highlight">name</span>: string<br>
                     <span class="highlight">email</span>: string<br>
                     <span class="highlight">phone</span>: string<br>
-                    <span class="highlight">cpfCnpj</span>: string<br>
+                    <span class="highlight">username</span>: string<br>
+                    <span class="highlight">birthday</span>: string($date)<br>
                     <span class="highlight">state</span>: string<br>
                     <span class="highlight">city</span>: string<br>
-                    <span class="highlight">birthday</span>: string<br>
+                    <span class="highlight">cpfCnpj</span>: string<br>
                     <span class="highlight">occupation</span>: string<br>
                     <span class="highlight">academicTitle</span>: string<br>
-                    <span class="highlight">username</span>: string<br>
-                    <span class="highlight">imageProfileUrl</span>: string
-                </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">Perfil Completo do Usuário <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="comment">// Herda campos de Dados do Usuário Cadastrado e adiciona:</span><br>
-                    <span class="highlight">totalFarmOwnerByUser</span>: long<br>
-                    <span class="highlight">totalFarmsByUser</span>: long<br>
-                    <span class="highlight">durationAccountUse</span>: string<br>
-                    <span class="highlight">createdAt</span>: string($date-time)<br>
-                    <span class="highlight">color</span>: string
+                    <span class="highlight">imageProfileUrl</span>: string<br>
+                    <span class="highlight">totalFarmOwnerByUser</span>: long <span class="comment">// Qtd de fazendas próprias</span><br>
+                    <span class="highlight">totalFarmsByUser</span>: long <span class="comment">// Qtd de fazendas vinculadas</span><br>
+                    <span class="highlight">createdAt</span>: string($date-time)
                 </div>
             </div>
             
              <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">Mensagem de Erro Detalhada <span class="arrow">▼</span></div>
+                <div class="model-title" onclick="toggleModel(this)">
+                    AuthUpdateRequest (Atualização de Perfil) <span class="arrow">▼</span>
+                </div>
                 <div class="model-content">
-                    <span class="highlight">details</span>: string (ou "detail")
+                    <span class="comment">// Todos os campos são opcionais (Envie só o que mudar)</span><br>
+                    <span class="highlight">name</span>: string <span class="comment">// min 3 letras</span><br>
+                    <span class="highlight">phone</span>: string <span class="comment">// Padrão (XX) XXXXX-XXXX</span><br>
+                    <span class="highlight">state</span>: string<br>
+                    <span class="highlight">city</span>: string<br>
+                    <span class="highlight">birthday</span>: string($date)<br>
+                    <span class="highlight">cpfCnpj</span>: string <span class="comment">// CPF/CNPJ válido</span><br>
+                    <span class="highlight">occupation</span>: string <span class="comment">// min 2</span><br>
+                    <span class="highlight">academicTitle</span>: string <span class="comment">// min 2</span><br>
+                    <span class="highlight">imageProfileUrl</span>: string <span class="comment">// min 5</span>
                 </div>
             </div>
 
@@ -935,12 +961,14 @@
     <script>
         function toggleSection(id) {
             const el = document.getElementById(id);
-            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+            if (el.style.display === 'none') el.style.display = 'block';
+            else el.style.display = 'none';
         }
 
         function toggleBody(element) {
             const body = element.nextElementSibling;
             const arrow = element.querySelector('.arrow');
+            
             if (body.style.display === "block") {
                 body.style.display = "none";
                 arrow.classList.remove('rotate');
@@ -981,55 +1009,81 @@
             resBox.style.display = 'block';
             resBox.innerHTML = '<span style="color:white">Enviando requisição...</span>';
 
-            const headers = { 'Content-Type': 'application/json' };
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // Add Token if exists
             if (tokenId) {
                 const tokenVal = document.getElementById(tokenId).value;
                 if (tokenVal) headers['Authorization'] = 'Bearer ' + tokenVal;
             }
 
-            const options = { method: method, headers: headers };
+            const options = {
+                method: method,
+                headers: headers
+            };
 
             if (bodyId) {
                 try {
                     const rawBody = document.getElementById(bodyId).value;
+                    // Validate JSON
                     JSON.parse(rawBody); 
                     options.body = rawBody;
                 } catch (e) {
-                    resBox.innerHTML = '<span style="color:#f93e3e">Erro: JSON Inválido.</span>';
+                    resBox.innerHTML = '<span style="color:#f93e3e">Erro: JSON Inválido no corpo da requisição.</span>';
                     return;
                 }
             }
 
             try {
                 const response = await fetch(url, options);
-                
-                // Tratamento especial para REDIRECT (302) que o fetch segue automaticamente e retorna 200 da página final
-                // ou se o backend retornar 302 com Location
-                const statusColor = (response.status >= 200 && response.status < 300) || response.status === 302 ? '#49cc90' : '#f93e3e';
+                const statusColor = response.ok ? '#49cc90' : '#f93e3e';
                 
                 let responseData;
                 const contentType = response.headers.get("content-type");
-                
                 if (contentType && contentType.indexOf("application/json") !== -1) {
                     responseData = await response.json();
-                    responseData = JSON.stringify(responseData, null, 2);
+                    
+                    // Simple syntax highlight function for formatting response
+                    function syntaxHighlight(json) {
+                        if (typeof json != 'string') {
+                             json = JSON.stringify(json, undefined, 2);
+                        }
+                        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                            var cls = 'number';
+                            if (/^"/.test(match)) {
+                                if (/:$/.test(match)) {
+                                    cls = 'highlight'; // Keys
+                                    return '<span class="' + cls + '">' + match.slice(0, -1) + '</span>:';
+                                } else {
+                                    cls = 'string'; // Strings
+                                }
+                            } else if (/true|false/.test(match)) {
+                                cls = 'boolean'; // Booleans
+                            } else if (/null/.test(match)) {
+                                cls = 'boolean'; // Nulls
+                            }
+                            return '<span class="' + cls + '">' + match + '</span>';
+                        });
+                    }
+
+                    responseData = syntaxHighlight(responseData);
                 } else {
                     responseData = await response.text();
-                    // Se for HTML (página de sucesso), mostra um aviso amigável
-                    if (responseData.includes("<!DOCTYPE html>")) {
-                        responseData = "(HTML Page Content - Redirecionamento realizado com sucesso)";
-                    }
-                }
-                
-                // Se houve redirecionamento (response.redirected é true)
-                let statusText = response.statusText;
-                if (response.redirected) {
-                    statusText += " (Redirecionado)";
                 }
 
-                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${statusText}</span>` + responseData;
+                resBox.innerHTML = 
+                    `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span><pre>` +
+                    responseData + '</pre>';
+
             } catch (error) {
-                resBox.innerHTML = '<span class="response-status" style="color:#f93e3e">Erro de Conexão (CORS ou Offline)</span>';
+                resBox.innerHTML = 
+                    '<span class="response-status" style="color:#f93e3e">Erro de Conexão</span>' +
+                    'Falha ao conectar com o backend. Verifique se:\n' +
+                    `1. O servidor está acessível em ${baseUrl}\n` +
+                    '2. O CORS está habilitado no backend para permitir esta origem.';
                 console.error(error);
             }
         }
@@ -1037,17 +1091,22 @@
         function generatePDF() {
             const element = document.getElementById('printable-area');
             const opt = {
-                margin: [0.5, 0.5, 0.5, 0.5],
-                filename: 'RvCarbon_Auth_Docs.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                margin:       [0.5, 0.5, 0.5, 0.5],
+                filename:     'RvCarbon_Auth_Docs_v8.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
+
+            // Expand all sections for printing
             const bodies = document.querySelectorAll('.op-block-body');
             const models = document.querySelectorAll('.model-content');
+            
             bodies.forEach(b => b.style.display = 'block');
             models.forEach(m => m.style.display = 'block');
+
             html2pdf().set(opt).from(element).save().then(() => {
+                // Collapse back
                 bodies.forEach(b => b.style.display = 'none');
                 models.forEach(m => m.style.display = 'none');
             });
