@@ -106,9 +106,9 @@
         
         /* Syntax Highlight */
         .highlight { color: #dcb67a; } /* Keys */
-        .string { color: #a5c261; }
-        .number { color: #ffc66d; }
-        .boolean { color: #cc7832; }
+        .string { color: #a5c261; } /* Strings */
+        .number { color: #6897bb; } /* Numbers */
+        .boolean { color: #cc7832; } /* Booleans and Nulls */
         .comment { color: #808080; font-style: italic; }
 
         /* Tables */
@@ -131,13 +131,20 @@
         }
         
         .error-example {
-            background: #ffe6e6; border-left: 4px solid #f93e3e; padding: 10px; margin: 10px 0; font-size: 12px; font-family: monospace; color: #a94442;
+            background: #333; color: #fff; padding: 15px; margin: 10px 0; font-size: 12px; font-family: "Source Code Pro", monospace; border-left: 4px solid #f93e3e; border-radius: 4px; overflow-x: auto;
         }
+        .error-example pre { margin: 0; }
+        .error-example .comment { color: #808080; }
+
         .validation-list {
             background: #e3f2fd; border-radius: 4px; padding: 15px; margin: 10px 0; font-size: 13px;
         }
         .validation-list ul { margin: 5px 0 0 20px; padding: 0; }
         .validation-list li { margin-bottom: 4px; color: #0d47a1; }
+        
+        .custom-select {
+            padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; width: 100%; margin-bottom: 15px; background-color: #fff;
+        }
 
         /* Schemas Section */
         .models-section { margin-top: 60px; border-top: 1px solid #3b4151; padding-top: 20px; }
@@ -177,10 +184,10 @@
             </p>
         </div>
 
-        <!-- BATCH CONTROLLER SECTION (INHERITED) -->
+        <!-- BATCH CONTROLLER SECTION -->
         <div class="op-block-tag" onclick="toggleSection('batch-container')">
-            <span>Batch Controller</span>
-            <small>Gestão de Lotes/Safras (Herdado)</small>
+            <span>Analysis Batch Controller (Arva)</span>
+            <small>Gestão de Lotes de Cultivo e Safras</small>
         </div>
 
         <div id="batch-container">
@@ -190,24 +197,25 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/analysis/batches/</span>
-                    <span class="op-block-summary-desc">Criar Novo Lote</span>
+                    <span class="op-block-summary-desc">Criar Novo Lote (Safra)</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
                         Cria um novo ciclo de cultivo (Lote/Safra) para um Talhão específico.
-                        <br><strong>Atenção:</strong> JSON Plano (Flattened). Os campos de nome e data ficam na raiz do JSON junto com os IDs.
+                        <br><strong>Atenção:</strong> Os dados de criação são enviados todos juntos no mesmo JSON (JSON plano).
                     </div>
                     
                     <div class="validation-list">
                         <strong>⚠️ Regras de Validação:</strong>
                         <ul>
-                            <li><strong>fieldId:</strong> Obrigatório. ID do Talhão.</li>
-                            <li><strong>season:</strong> Obrigatório. Formato Rígido: <code>YYYY</code> ou <code>YYYY/YYYY</code>.</li>
-                            <li><strong>culture:</strong> Obrigatório. Enum: <code>SOJA</code>, <code>CANA_DE_ACUCAR</code>, <code>MILHO</code>.</li>
-                            <li><strong>startDate:</strong> Obrigatório (Data Início).</li>
-                            <li><strong>endDate:</strong> Obrigatório (Data Fim). Deve ser >= Data Início.</li>
-                            <li><strong>batchName:</strong> Obrigatório (Não pode ser vazio).</li>
+                            <li><strong>Permissão Necessária:</strong> Seu usuário deve ter a permissão de criar dados naquele talhão específico.</li>
+                            <li><strong>fieldId:</strong> Obrigatório. É o ID numérico do Talhão.</li>
+                            <li><strong>season:</strong> Obrigatório. A safra deve seguir estritamente o formato <code>YYYY</code> (ex: 2023) ou <code>YYYY/YYYY</code> (ex: 2023/2024).</li>
+                            <li><strong>culture:</strong> Obrigatório. Culturas permitidas: <code>SOJA</code>, <code>CANA_DE_ACUCAR</code> ou <code>MILHO</code>.</li>
+                            <li><strong>startDate:</strong> Obrigatório. Data em que o lote se inicia.</li>
+                            <li><strong>endDate:</strong> Obrigatório. Data em que o lote se encerra. <strong>A data de fim não pode ser anterior à data de início.</strong></li>
+                            <li><strong>batchName:</strong> Obrigatório. Um nome descritivo para facilitar a identificação.</li>
                         </ul>
                     </div>
 
@@ -243,29 +251,46 @@
                         </div>
                     </div>
 
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
                         <tr>
                             <td><span class="status-badge status-200">200</span></td>
                             <td>
-                                <strong>Sucesso:</strong> Retorna a entidade <code>ArvaBatch</code> criada.
-                                <div class="model-box" style="margin-top:5px; font-size:10px;">
-                                    { "id": 102, "culture": "SOJA", "season": "2023/2024", "analysisMask": 2048, ... }
+                                <strong>Sucesso:</strong> Retorna a entidade do Lote completa recém criada.
+                                <div class="model-box" style="margin-top:5px;">
+<pre>{
+  <span class="highlight">"id"</span>: <span class="number">102</span>,
+  <span class="highlight">"culture"</span>: <span class="string">"SOJA"</span>,
+  <span class="highlight">"season"</span>: <span class="string">"2023/2024"</span>,
+  <span class="highlight">"batchName"</span>: <span class="string">"Safra Teste"</span>,
+  <span class="highlight">"analysisMask"</span>: <span class="number">2048</span>,
+  <span class="highlight">"isComplete"</span>: <span class="boolean">false</span>
+}</pre>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td><span class="status-badge status-400">400</span></td>
                             <td>
-                                <strong>Erro na Requisição (Múltiplas Causas):</strong>
+                                <strong>Erro de Validação:</strong> Dados enviados ferem as regras de negócio.
                                 <div class="error-example">
-                                    // 1. Validação de Formato (Safra inválida):<br>
-                                    { "season": "A safra deve estar no formato YYYY ou YYYY/YYYY" }
-                                    <br><br>
-                                    // 2. Regra de Negócio (Datas inválidas):<br>
-                                    { "detail": "A data de fim (endDate) deve ser posterior à data de início (startDate)" }
+<span class="comment">// Exemplo 1: Erros de campos</span>
+<pre>{
+  <span class="highlight">"season"</span>: <span class="string">"A safra deve estar no formato YYYY ou YYYY/YYYY"</span>,
+  <span class="highlight">"fieldId"</span>: <span class="string">"O id do talhão (fieldId) é obrigatório"</span>,
+  <span class="highlight">"culture"</span>: <span class="string">"A cultura (culture) é obrigatório"</span>
+}</pre>
+<br>
+<span class="comment">// Exemplo 2: Datas Inconsistentes</span>
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"A data de fim (endDate) deve ser posterior à data de início (startDate)"</span>
+}</pre>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge status-403">403</span></td>
+                            <td><strong>Proibido:</strong> Seu usuário não tem permissão para criar lotes neste talhão.</td>
                         </tr>
                     </table>
                 </div>
@@ -276,20 +301,30 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">PATCH</span>
                     <span class="op-block-summary-path">/api/analysis/batches/{batchId}/</span>
-                    <span class="op-block-summary-desc">Atualizar Lote</span>
+                    <span class="op-block-summary-desc">Atualizar Dados do Lote</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="validation-list">
-                        <strong>Permissão:</strong> <code>EDIT_ALL_BATCH_DATA</code> ou <code>EDIT_OWN_BATCH_DATA</code>.
-                        <br>Envie apenas os campos que deseja alterar.
+                        <strong>⚠️ Regras e Permissões:</strong>
+                        <ul>
+                            <li><strong>Permissão:</strong> Você deve ter permissão para editar todos os lotes da fazenda, ou ser o próprio criador deste lote.</li>
+                            <li><strong>Praticidade:</strong> Envie no JSON apenas os campos que você deseja alterar. O restante será mantido.</li>
+                            <li><strong>Datas:</strong> Se você alterar as datas, o sistema garantirá que a data de fim ainda seja maior ou igual à data de início.</li>
+                        </ul>
                     </div>
-                    <div class="model-box"><pre>{ "batchName": "Correção Nome", "endDate": "2024-03-01" }</pre></div>
+                    <div class="section-header">Exemplo de Envio (JSON)</div>
+                    <div class="model-box">
+<pre>{
+  <span class="highlight">"batchName"</span>: <span class="string">"Correção do Nome da Safra"</span>,
+  <span class="highlight">"endDate"</span>: <span class="string">"2024-03-01"</span>
+}</pre>
+                    </div>
                     
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">Batch ID:</label>
+                            <label style="font-size:12px; font-weight:bold;">ID do Lote:</label>
                             <input type="text" id="path-patch-batch-id" class="fake-input" style="width:50px; margin-bottom:10px;">
                             <label style="font-size:12px; font-weight:bold;">Token:</label>
                             <input type="text" id="token-patch-batch" class="fake-input" style="width:100%; margin-bottom:10px;">
@@ -298,23 +333,26 @@
                             <div class="response-box" id="res-patch-batch"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna o Lote atualizado.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-200">200</span></td>
+                            <td><strong>Sucesso:</strong> Retorna o Lote com os dados atualizados.</td>
+                        </tr>
                         <tr>
                             <td><span class="status-badge status-400">400</span></td>
                             <td>
-                                <strong>Erro de Negócio:</strong>
+                                <strong>Erro de Validação:</strong> Inconsistência nas datas informadas.
                                 <div class="error-example">
-                                    { "detail": "A data de fim (endDate) deve ser posterior à data de início (startDate)" }
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"A data de fim (endDate) deve ser posterior à data de início (startDate)"</span>
+}</pre>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td><span class="status-badge status-403">403</span></td>
-                            <td>
-                                <strong>Proibido:</strong> Falta de permissão para editar.
-                            </td>
+                            <td><strong>Proibido:</strong> Você não tem permissão para editar este lote.</td>
                         </tr>
                     </table>
                 </div>
@@ -325,16 +363,20 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">GET</span>
                     <span class="op-block-summary-path">/api/analysis/batches/</span>
-                    <span class="op-block-summary-desc">Listar Lotes da Fazenda</span>
+                    <span class="op-block-summary-desc">Listar Lotes de uma Fazenda</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="section-header">Parâmetros</div>
+                    <div class="service-rule">
+                        Retorna uma lista paginada de todos os lotes (ArvaBatch) pertencentes a uma fazenda específica. Inclui metadados como total de páginas e total de elementos.
+                        <br><strong>Permissão:</strong> O usuário deve ter permissão de leitura (visualização) na Fazenda alvo.
+                    </div>
+                    <div class="section-header">Filtros (Query Params)</div>
                     <table>
                         <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td>farmId</td><td>Sim</td><td>ID da Fazenda</td></tr>
-                        <tr><td>page</td><td>Não</td><td>Página (0)</td></tr>
-                        <tr><td>size</td><td>Não</td><td>Itens (10)</td></tr>
+                        <tr><td>farmId</td><td>Sim</td><td>O ID numérico da Fazenda</td></tr>
+                        <tr><td>page</td><td>Não</td><td>Número da página para paginação (Padrão: 0)</td></tr>
+                        <tr><td>size</td><td>Não</td><td>Quantidade de itens por página (Padrão: 10)</td></tr>
                     </table>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
@@ -347,10 +389,10 @@
                             <div class="response-box" id="res-batches-farm"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna Page&lt;ArvaBatch&gt;.</td></tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td>Proibido (Falta permissão de visualização).</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna uma lista paginada (Page&lt;ArvaBatch&gt;).</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Você não tem permissão para visualizar os dados desta fazenda.</td></tr>
                     </table>
                 </div>
             </div>
@@ -364,11 +406,11 @@
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="validation-list">Permissão: <code>VIEWER</code> no Batch.</div>
+                    <div class="validation-list"><strong>Permissão Necessária:</strong> Permissão de leitura/visualização no Lote específico.</div>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">ID:</label>
+                            <label style="font-size:12px; font-weight:bold;">ID do Lote:</label>
                             <input type="text" id="path-get-batch-id" class="fake-input" style="width:50px;">
                             <label style="font-size:12px; font-weight:bold;">Token:</label>
                             <input type="text" id="token-get-batch" class="fake-input" style="width:100%;">
@@ -376,10 +418,11 @@
                             <div class="response-box" id="res-get-batch"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna Entidade <code>ArvaBatch</code>.</td></tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td>Proibido.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna a entidade do Lote solicitada.</td></tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> O Lote com este ID não existe.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Você não tem permissão de leitura.</td></tr>
                     </table>
                 </div>
             </div>
@@ -389,15 +432,21 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">DELETE</span>
                     <span class="op-block-summary-path">/api/analysis/batches/{batchId}/</span>
-                    <span class="op-block-summary-desc">Excluir Lote</span>
+                    <span class="op-block-summary-desc">Excluir Lote (Deleção em Cascata)</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="service-rule">Permissão Crítica: <code>DELETE_ALL_BATCH_DATA</code> ou <code>DELETE_OWN_BATCH_DATA</code>.</div>
+                    <div class="service-rule">
+                        Exclui um lote permanentemente. 
+                        <br><strong>Atenção:</strong> Como as análises estão atreladas ao lote, excluir o lote excluirá automaticamente todas as análises pertencentes a ele.
+                    </div>
+                    <div class="validation-list">
+                        <strong>⚠️ Permissão Crítica:</strong> Seu usuário deve ter autorização para excluir todos os dados do lote, ou ser o proprietário que criou o próprio lote.
+                    </div>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">ID:</label>
+                            <label style="font-size:12px; font-weight:bold;">ID do Lote:</label>
                             <input type="text" id="path-del-batch-id" class="fake-input" style="width:50px;">
                             <label style="font-size:12px; font-weight:bold;">Token:</label>
                             <input type="text" id="token-del-batch" class="fake-input" style="width:100%;">
@@ -405,10 +454,10 @@
                             <div class="response-box" id="res-del-batch"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-204">204</span></td><td>Sucesso. Removido.</td></tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Falta de permissão para excluir.</td></tr>
+                        <tr><td><span class="status-badge status-204">204</span></td><td><strong>Sucesso:</strong> Lote e análises removidos. (Sem conteúdo no retorno).</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Falta de permissão para exclusão.</td></tr>
                     </table>
                 </div>
             </div>
@@ -422,7 +471,7 @@
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="service-rule">Retorna lotes criados pelo usuário autenticado.</div>
+                    <div class="service-rule">Busca todos os lotes que foram criados pelo usuário que está atualmente logado.</div>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
@@ -432,8 +481,8 @@
                             <div class="response-box" id="res-mine-batch"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
-                    <table><tr><td><span class="status-badge status-200">200</span></td><td>Page&lt;ArvaBatch&gt;.</td></tr></table>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table><tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna uma lista paginada (Page&lt;ArvaBatch&gt;).</td></tr></table>
                 </div>
             </div>
 
@@ -442,7 +491,7 @@
         <!-- ANALYSIS CONTROLLER SECTION -->
         <div class="op-block-tag" onclick="toggleSection('analysis-container')">
             <span>Analysis Arva Controller</span>
-            <small>Gestão de Análises Agrícolas</small>
+            <small>Gestão de Atividades Agrícolas (Análises do Protocolo ARVA)</small>
         </div>
 
         <div id="analysis-container">
@@ -452,36 +501,42 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">POST</span>
                     <span class="op-block-summary-path">/api/analysis/</span>
-                    <span class="op-block-summary-desc">Criar Nova Análise</span>
+                    <span class="op-block-summary-desc">Criar Nova Análise / Operação</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
-                        <strong>Polimorfismo:</strong> O JSON enviado deve conter o campo <code>analysisType</code>. Este campo define quais outros campos específicos são esperados.
-                    </div>
-                    
-                    <div class="validation-list">
-                        <strong>⚠️ Regras Comuns (DataAnalysisBaseRequest):</strong>
-                        <ul>
-                            <li><strong>batchId:</strong> Obrigatório e Positivo.</li>
-                            <li><strong>analysisType:</strong> Obrigatório (Enum). Define o subtipo.</li>
-                            <li><strong>startDate:</strong> Obrigatório. Não pode ser futura.</li>
-                            <li><strong>endDate:</strong> Opcional. Não pode ser futura. Se existir, deve ser >= startDate.</li>
-                            <li><strong>collectedBy:</strong> Opcional. Min 2 caracteres.</li>
-                        </ul>
+                        <strong>Polimorfismo (Atenção):</strong> O tipo de análise que você quer criar é definido pela propriedade <code>analysisType</code> dentro do JSON. 
+                        A API lerá essa propriedade e esperará campos diferentes dependendo da escolha.
+                        <br><br>
+                        <strong>Dica:</strong> Altere a caixa seletora abaixo para ver o corpo (JSON), as regras específicas e os erros retornados para cada tipo de análise!
                     </div>
 
-                    <div class="section-header">Dados para Envio (Genérico)</div>
-                    <div class="model-box">
-<pre>{
-  <span class="highlight">"analysisType"</span>: <span class="string">"PLANTING_OPERATION"</span>,
-  <span class="highlight">"batchId"</span>: <span class="number">102</span>,
-  <span class="highlight">"startDate"</span>: <span class="string">"2023-10-01"</span>,
-  <span class="highlight">"endDate"</span>: <span class="string">"2023-10-02"</span>,
-  <span class="highlight">"notes"</span>: <span class="string">"Plantio de soja safra verão"</span>,
-  <span class="highlight">"collectedBy"</span>: <span class="string">"Técnico João"</span>,
-  <span class="comment">// + Campos específicos do PLANTING_OPERATION aqui (no mesmo nível)</span>
-}</pre>
+                    <div class="section-header">Selecione o Tipo de Análise</div>
+                    <select id="analysisTypeSelector" class="custom-select" onchange="updateAnalysisDocumentation(this.value)">
+                        <option value="GENERIC" selected>Selecione um Tipo Específico... (Regras Genéricas Base)</option>
+                        <option value="PLANTING_OPERATION">Plantio (PLANTING_OPERATION)</option>
+                        <option value="HARVEST">Colheita (HARVEST)</option>
+                        <option value="SOIL_PREPARATION">Preparo de Solo (SOIL_PREPARATION)</option>
+                        <option value="FERTILIZER_APPLICATION">Aplicação de Fertilizante (FERTILIZER_APPLICATION)</option>
+                        <option value="CROP_CORRECTIVE_APPLICATION">Corretivos Agrícolas (CROP_CORRECTIVE_APPLICATION)</option>
+                        <option value="CROP_PROTECTION_APPLICATION">Proteção de Cultivos/Defensivos (CROP_PROTECTION_APPLICATION)</option>
+                        <option value="IRRIGATION">Irrigação (IRRIGATION)</option>
+                        <option value="MANAGEMENT_GRAZING">Manejo de Pastagem/Gado (MANAGEMENT_GRAZING)</option>
+                        <option value="COVER_CROPPING">Cultivo de Cobertura (COVER_CROPPING)</option>
+                        <option value="SOIL_SAMPLE">Amostra de Solo (SOIL_SAMPLE)</option>
+                        <option value="CONSERVATION_PROGRAM">Programa de Conservação (CONSERVATION_PROGRAM)</option>
+                        <option value="ENERGY_AND_FUEL">Uso de Energia e Combustível (ENERGY_AND_FUEL)</option>
+                        <option value="PRECISION_AGRICULTURE">Agricultura de Precisão (PRECISION_AGRICULTURE)</option>
+                    </select>
+                    
+                    <div class="validation-list" id="dynamic-validations">
+                        <!-- Conteúdo injetado via JS -->
+                    </div>
+
+                    <div class="section-header">Exemplo de JSON para Envio (<span id="dynamic-json-title">Base Genérica</span>)</div>
+                    <div class="model-box" id="dynamic-json-box">
+                        <!-- Conteúdo injetado via JS -->
                     </div>
 
                     <!-- TESTER -->
@@ -490,41 +545,44 @@
                         <div class="execute-panel">
                             <label style="font-size:12px; font-weight:bold;">Token:</label>
                             <input type="text" id="token-create" class="fake-input" style="width:100%; margin-bottom:10px;">
-                            <textarea class="req-editor" id="req-create">{
-  "batchId": 102,
-  "analysisType": "PLANTING_OPERATION",
-  "startDate": "2023-10-01"
-}</textarea>
+                            <textarea class="req-editor" id="req-create">{}</textarea>
                             <button class="execute-btn" onclick="executeRequest('POST', '/api/analysis/', 'req-create', 'res-create', 'token-create')">Executar</button>
                             <div class="response-box" id="res-create"></div>
                         </div>
                     </div>
 
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
                         <tr>
                             <td><span class="status-badge status-200">200</span></td>
                             <td>
-                                <strong>Sucesso:</strong> Retorna a entidade <code>Analysis</code> criada (estrutura completa).
-                                <div class="model-box" style="margin-top:5px; font-size:10px;">
-                                    { "id": 501, "analysisType": "PLANTING_OPERATION", "batch": { "id": 102 }, ... }
+                                <strong>Sucesso:</strong> Retorna a entidade da Análise recém criada.
+                                <div class="model-box" id="dynamic-success-response" style="margin-top:5px;">
+                                    <!-- Conteúdo injetado via JS -->
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td><span class="status-badge status-400">400</span></td>
                             <td>
-                                <strong>Erro (Validação / Regra de Negócio):</strong>
-                                <div class="error-example">
-                                    // 1. Campos inválidos (Datas futuras):<br>
-                                    { "startDate": "A data de início (startDate) não pode ser futura." }
-                                    <br><br>
-                                    // 2. Consistência de Datas (ValidationPoolException):<br>
-                                    { "detail": "A data de término não pode ser anterior à data de início." }
+                                <strong>Erro de Validação ou Regra de Negócio:</strong> Erros específicos do tipo selecionado.
+                                <div class="error-example" id="dynamic-error-response">
+                                    <!-- Conteúdo injetado via JS -->
                                 </div>
                             </td>
                         </tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Você não tem permissão para editar este lote.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"ArvaBatch não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Você não tem permissão para inserir análises neste lote.</td></tr>
                     </table>
                 </div>
             </div>
@@ -539,13 +597,19 @@
                 </div>
                 <div class="op-block-body">
                     <div class="validation-list">
-                        <strong>⚠️ Regras:</strong> Envie apenas os campos que deseja alterar. O tipo da análise não pode ser mudado.
-                        <br>
-                        <strong>Permissão:</strong> Requer <code>EDIT_ALL_BATCH_DATA</code> na Análise ou <code>EDIT_OWN_BATCH_DATA</code> no Batch.
+                        <strong>⚠️ Regras Importantes:</strong> 
+                        <ul>
+                            <li><strong>Polimorfismo Ativo:</strong> Você é obrigado a enviar o <code>analysisType</code> na requisição, mesmo que seja apenas para atualizar as anotações.</li>
+                            <li><strong>Tipo Inalterável:</strong> O sistema lançará erro se você tentar enviar um <code>analysisType</code> diferente do tipo original que a análise foi criada (Ex: Você não pode transformar uma Colheita num Plantio).</li>
+                            <li><strong>Atualização Parcial:</strong> Os campos específicos que você não enviar serão mantidos com os valores antigos.</li>
+                            <li><strong>Permissão:</strong> Permissão para editar todos os dados do lote, ou ter sido o autor dele.</li>
+                        </ul>
                     </div>
+                    <div class="section-header">Exemplo de Atualização</div>
                     <div class="model-box">
 <pre>{
-  <span class="highlight">"notes"</span>: <span class="string">"Correção: Plantio atrasou 1 dia"</span>,
+  <span class="highlight">"analysisType"</span>: <span class="string">"PLANTING_OPERATION"</span>,
+  <span class="highlight">"notes"</span>: <span class="string">"Correção: Plantio atrasou 1 dia devido a chuvas"</span>,
   <span class="highlight">"endDate"</span>: <span class="string">"2023-10-03"</span>
 }</pre>
                     </div>
@@ -553,34 +617,42 @@
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">ID:</label>
+                            <label style="font-size:12px; font-weight:bold;">ID da Análise:</label>
                             <input type="text" id="path-update-id" class="fake-input" style="width:50px; margin-bottom:10px;" value="501">
                             <label style="font-size:12px; font-weight:bold;">Token:</label>
                             <input type="text" id="token-update" class="fake-input" style="width:100%; margin-bottom:10px;">
-                            <textarea class="req-editor" id="req-update">{ "notes": "Editado" }</textarea>
+                            <textarea class="req-editor" id="req-update">{ "analysisType": "PLANTING_OPERATION", "notes": "Editado" }</textarea>
                             <button class="execute-btn" onclick="executeRequest('PATCH', '/api/analysis/' + document.getElementById('path-update-id').value + '/', 'req-update', 'res-update', 'token-update')">Executar</button>
                             <div class="response-box" id="res-update"></div>
                         </div>
                     </div>
 
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna a entidade atualizada.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna a entidade com os dados novos salvos.</td></tr>
                         <tr>
                             <td><span class="status-badge status-400">400</span></td>
                             <td>
-                                <strong>Erro:</strong> Tipo de análise incompatível.
-                                <div class="error-example">{ "detail": "AnalysisTypeMismatchException: Analysis ID 501..." }</div>
+                                <strong>Erro de Tipo Incompatível:</strong> Ocorre se você enviou o JSON de um tipo para atualizar uma análise de outro tipo.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"AnalysisTypeMismatchException: Analysis ID 501..."</span>
+}</pre>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td><span class="status-badge status-400">400</span></td>
                             <td>
-                                <strong>Erro:</strong> Validação falhou (Datas inconsistentes).
-                                <div class="error-example">{ "detail": "A data de início não pode ser posterior à data de término." }</div>
+                                <strong>Erro de Datas:</strong> Validação falhou (A nova data de início ficou posterior à data de término existente).
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"A data de início não pode ser posterior à data de término."</span>
+}</pre>
+                                </div>
                             </td>
                         </tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Falta de permissão.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Falta de permissão para edição.</td></tr>
                     </table>
                 </div>
             </div>
@@ -595,13 +667,13 @@
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
-                        <strong>Permissão Crítica:</strong> Requer <code>DELETE_ALL_BATCH_DATA</code> ou <code>DELETE_OWN_BATCH_DATA</code>.
-                        A exclusão é permanente.
+                        Exclui um evento/atividade específico do Lote de forma permanente.
+                        <br><strong>Permissão Necessária:</strong> Autorização para apagar todos os dados do lote, ou ser o proprietário que o criou.
                     </div>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">ID:</label>
+                            <label style="font-size:12px; font-weight:bold;">ID da Análise:</label>
                             <input type="text" id="path-delete-id" class="fake-input" style="width:50px; margin-bottom:10px;">
                             <label style="font-size:12px; font-weight:bold;">Token:</label>
                             <input type="text" id="token-delete" class="fake-input" style="width:100%; margin-bottom:10px;">
@@ -609,10 +681,10 @@
                             <div class="response-box" id="res-delete"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-204">204</span></td><td><strong>Sucesso:</strong> Removido (Sem conteúdo).</td></tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Falta de permissão.</td></tr>
+                        <tr><td><span class="status-badge status-204">204</span></td><td><strong>Sucesso:</strong> Removido (Sem corpo de resposta).</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Seu usuário não tem o nível de acesso necessário.</td></tr>
                     </table>
                 </div>
             </div>
@@ -622,15 +694,15 @@
                 <div class="op-block-summary" onclick="toggleBody(this)">
                     <span class="op-block-summary-method">GET</span>
                     <span class="op-block-summary-path">/api/analysis/{id}/</span>
-                    <span class="op-block-summary-desc">Buscar por ID</span>
+                    <span class="op-block-summary-desc">Buscar Análise por ID</span>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="validation-list">Permissão: <code>VIEWER</code>.</div>
+                    <div class="validation-list"><strong>Permissão:</strong> Permissão de Leitura/Visualização exigida para ver dados deste lote.</div>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">ID:</label>
+                            <label style="font-size:12px; font-weight:bold;">ID da Análise:</label>
                             <input type="text" id="path-get-id" class="fake-input" style="width:50px;">
                             <label style="font-size:12px; font-weight:bold;">Token:</label>
                             <input type="text" id="token-get" class="fake-input" style="width:100%;">
@@ -638,11 +710,11 @@
                             <div class="response-box" id="res-get"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna a entidade <code>Analysis</code>.</td></tr>
-                        <tr><td><span class="status-badge status-404">404</span></td><td>Não encontrado.</td></tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td>Proibido.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna a entidade detalhada <code>Analysis</code>.</td></tr>
+                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> Nenhuma análise com o ID informado.</td></tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso não permitido.</td></tr>
                     </table>
                 </div>
             </div>
@@ -656,13 +728,13 @@
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="service-rule">Lista análises vinculadas ao usuário autenticado.</div>
-                    <div class="section-header">Filtros (Query Params)</div>
+                    <div class="service-rule">Lista de forma paginada todas as análises inseridas pelo usuário que fez o login. É possível filtrar essa busca.</div>
+                    <div class="section-header">Filtros Opcionais (Parâmetros da URL)</div>
                     <table>
                         <tr><th>Nome</th><th>Tipo</th><th>Descrição</th></tr>
-                        <tr><td>page</td><td>int</td><td>Número da página (padrão 0)</td></tr>
-                        <tr><td>size</td><td>int</td><td>Itens por página (padrão 10)</td></tr>
-                        <tr><td>fieldId</td><td>long</td><td>Filtrar por Talhão (Opcional)</td></tr>
+                        <tr><td>page</td><td>int</td><td>Número da página para navegação (padrão 0)</td></tr>
+                        <tr><td>size</td><td>int</td><td>Quantidade de itens desejados por página (padrão 10)</td></tr>
+                        <tr><td>fieldId</td><td>long</td><td>Trazer apenas de um Talhão específico</td></tr>
                         <tr><td>analysisType</td><td>string</td><td>Tipo da análise (ex: 'IRRIGATION')</td></tr>
                     </table>
                     <div class="try-out-wrapper">
@@ -674,8 +746,8 @@
                             <div class="response-box" id="res-mine"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
-                    <table><tr><td><span class="status-badge status-200">200</span></td><td>Retorna Objeto Paginado (Page&lt;Analysis&gt;).</td></tr></table>
+                    <div class="section-header">Respostas Possíveis</div>
+                    <table><tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna uma lista paginada (Page&lt;Analysis&gt;).</td></tr></table>
                 </div>
             </div>
 
@@ -688,16 +760,20 @@
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
-                    <div class="validation-list">Obrigatório informar <code>batchId</code> na URL.</div>
+                    <div class="service-rule">Busca todas as análises inseridas em um determinado lote (Ciclo de Safra). Retorna uma lista de Arrays pura, sem paginação.</div>
+                    <div class="validation-list">
+                        <strong>Permissões:</strong> Permissão de Visualização no Lote.
+                        <br><strong>Obrigatório</strong> informar o <code>batchId</code> na URL da requisição.
+                    </div>
                     <div class="section-header">Parâmetros</div>
                     <table>
                         <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td>batchId</td><td>Sim</td><td>ID do Lote para buscar</td></tr>
+                        <tr><td>batchId</td><td>Sim</td><td>O ID numérico do Lote</td></tr>
                     </table>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">Batch ID:</label>
+                            <label style="font-size:12px; font-weight:bold;">ID do Lote:</label>
                             <input type="text" id="query-batch-id" class="fake-input" style="width:100px;">
                             <label style="font-size:12px; font-weight:bold;">Token:</label>
                             <input type="text" id="token-batch" class="fake-input" style="width:100%;">
@@ -705,10 +781,21 @@
                             <div class="response-box" id="res-batch"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Lista de Análises (Array).</td></tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td>Proibido.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Lista pura de Análises `[ { ... }, { ... } ]`.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Batch não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso de visualização negado ao lote solicitado.</td></tr>
                     </table>
                 </div>
             </div>
@@ -722,12 +809,16 @@
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
+                    <div class="validation-list">
+                        <strong>Permissões:</strong> Permissão de Visualização no Talhão.
+                    </div>
                     <div class="section-header">Parâmetros</div>
                     <table>
                         <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td>fieldId</td><td>Sim</td><td>ID do Talhão</td></tr>
-                        <tr><td>analysisType</td><td>Não</td><td>Filtro por tipo</td></tr>
-                        <tr><td>page</td><td>Não</td><td>Paginação (padrão 0)</td></tr>
+                        <tr><td>fieldId</td><td>Sim</td><td>ID do Talhão específico</td></tr>
+                        <tr><td>analysisType</td><td>Não</td><td>Filtro de busca por tipo de análise (Opcional)</td></tr>
+                        <tr><td>page</td><td>Não</td><td>Página (padrão 0)</td></tr>
+                        <tr><td>size</td><td>Não</td><td>Itens por página (padrão 10)</td></tr>
                     </table>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
@@ -740,10 +831,21 @@
                             <div class="response-box" id="res-field"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Retorna Objeto Paginado (Page&lt;Analysis&gt;).</td></tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td>Proibido.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna uma lista paginada de análises (Page&lt;Analysis&gt;).</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Field não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso de visualização negado ao talhão.</td></tr>
                     </table>
                 </div>
             </div>
@@ -758,30 +860,41 @@
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
-                        Gera um arquivo <code>.xlsx</code> (Planilha Excel) com o histórico de análises.
+                        Gera um arquivo físico <code>.xlsx</code> (Planilha Excel) pronto para download, contendo todo o histórico de análises de um determinado período.
                     </div>
-                    <div class="section-header">Parâmetros Obrigatórios</div>
+                    <div class="section-header">Parâmetros Obrigatórios da URL</div>
                     <table>
                         <tr><th>Nome</th><th>Descrição</th></tr>
-                        <tr><td>start</td><td>Data Inicial (yyyy-MM-dd)</td></tr>
-                        <tr><td>end</td><td>Data Final (yyyy-MM-dd)</td></tr>
-                        <tr><td>farmId</td><td>ID da Fazenda (ou fieldId)</td></tr>
+                        <tr><td>start</td><td>Data Inicial do período (Formato: yyyy-MM-dd)</td></tr>
+                        <tr><td>end</td><td>Data Final do período (Formato: yyyy-MM-dd)</td></tr>
+                        <tr><td>farmId</td><td>Obrigatório informar pelo menos o ID da Fazenda <strong>OU</strong> o ID do Talhão (fieldId).</td></tr>
                     </table>
                     <div class="try-out-wrapper">
                         <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                         <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">Query:</label>
+                            <label style="font-size:12px; font-weight:bold;">Query Parâmetros:</label>
                             <input type="text" id="query-xls" class="fake-input" style="width:100%;" value="?start=2023-01-01&end=2023-12-31&farmId=1">
                             <label style="font-size:12px; font-weight:bold;">Token:</label>
                             <input type="text" id="token-xls" class="fake-input" style="width:100%;">
-                            <button class="execute-btn" onclick="executeRequest('GET', '/api/analysis/xls/' + document.getElementById('query-xls').value, null, 'res-xls', 'token-xls')">Baixar Relatório</button>
+                            <button class="execute-btn" onclick="executeRequest('GET', '/api/analysis/xls/' + document.getElementById('query-xls').value, null, 'res-xls', 'token-xls')">Testar e Fazer Download</button>
                             <div class="response-box" id="res-xls"></div>
                         </div>
                     </div>
-                    <div class="section-header">Respostas</div>
+                    <div class="section-header">Respostas Possíveis</div>
                     <table>
-                        <tr><td><span class="status-badge status-200">200</span></td><td>Download de Arquivo (application/vnd.openxmlformats...).</td></tr>
-                        <tr><td><span class="status-badge status-403">403</span></td><td>Proibido.</td></tr>
+                        <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Arquivo binário transferido (Content-Type: application/vnd.openxmlformats...).</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-400">400</span></td>
+                            <td>
+                                <strong>Erro de Validação:</strong>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"O farmId ou fieldId é obrigatório"</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso de visualização negado à Fazenda ou Talhão.</td></tr>
                     </table>
                 </div>
             </div>
@@ -790,76 +903,545 @@
 
         <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas (Entidades)</div>
+            <div class="op-block-tag">Schemas (Entidades Base)</div>
 
             <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">CreateArvaBatchRequest (Dados Lote) <span class="arrow">▼</span></div>
+                <div class="model-title" onclick="toggleModel(this)">ArvaBatch (Entidade do Lote) <span class="arrow">▼</span></div>
                 <div class="model-content">
-                    <span class="comment">// Campos específicos ARVA + Campos Genéricos (Unwrapped)</span><br>
-                    <span class="highlight">fieldId</span>: long (obrigatório)<br>
-                    <span class="highlight">season</span>: string (YYYY ou YYYY/YYYY)<br>
-                    <span class="highlight">culture</span>: enum (SOJA, CANA_DE_ACUCAR, MILHO)<br>
-                    <span class="highlight">startDate</span>: date (obrigatório, yyyy-MM-dd)<br>
-                    <span class="highlight">endDate</span>: date (obrigatório, yyyy-MM-dd, >= startDate)<br>
-                    <span class="highlight">batchName</span>: string (obrigatório)<br>
-                    <span class="highlight">manager</span>: string (opcional)<br>
-                    <span class="highlight">note</span>: string (opcional)
-                </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">ArvaBatch (Entidade Lote) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">id</span>: long<br>
-                    <span class="highlight">culture</span>: enum<br>
-                    <span class="highlight">season</span>: string<br>
-                    <span class="highlight">color</span>: string<br>
-                    <span class="highlight">isComplete</span>: boolean<br>
-                    <span class="highlight">analysisMask</span>: long<br>
-                    <span class="highlight">createdAt</span>: datetime<br>
-                    <span class="highlight">startDate</span>: date<br>
-                    <span class="highlight">endDate</span>: date<br>
-                    <span class="highlight">batchName</span>: string<br>
-                    <span class="highlight">field</span>: object (resumo)
-                </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">DataAnalysisBaseRequest (Dados Base de Análise) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">batchId</span>: long (obrigatório)<br>
-                    <span class="highlight">analysisType</span>: enum (obrigatório)<br>
-                    <span class="highlight">startDate</span>: date (não futura)<br>
-                    <span class="highlight">endDate</span>: date (não futura)<br>
-                    <span class="highlight">notes</span>: string<br>
-                    <span class="highlight">collectedBy</span>: string (min 2 chars)<br>
-                    <span class="highlight">attachments</span>: list&lt;string&gt;
-                </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">Analysis Types (Enum) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    MANAGEMENT_GRAZING<br>
-                    IRRIGATION<br>
-                    COVER_CROPPING<br>
-                    SOIL_SAMPLE<br>
-                    SOIL_PREPARATION<br>
-                    HARVEST<br>
-                    CONSERVATION_PROGRAM<br>
-                    ENERGY_AND_FUEL<br>
-                    PRECISION_AGRICULTURE<br>
-                    FERTILIZER_APPLICATION<br>
-                    CROP_PROTECTION_APPLICATION<br>
-                    PLANTING_OPERATION<br>
-                    CROP_CORRECTIVE_APPLICATION
+                    <span class="highlight">id</span>: <span class="number">long</span><br>
+                    <span class="highlight">culture</span>: <span class="string">enum</span> (SOJA, CANA_DE_ACUCAR, MILHO)<br>
+                    <span class="highlight">season</span>: <span class="string">string</span> (Ex: 2023/2024)<br>
+                    <span class="highlight">color</span>: <span class="string">string</span> (Hexcode)<br>
+                    <span class="highlight">isComplete</span>: <span class="boolean">boolean</span> (Verdadeiro se cumpriu o pacote mínimo do ARVA)<br>
+                    <span class="highlight">analysisMask</span>: <span class="number">long</span> (Máscara de bits de controle interno)<br>
+                    <span class="highlight">createdAt</span>: <span class="string">datetime</span><br>
+                    <span class="highlight">startDate</span>: <span class="string">date</span><br>
+                    <span class="highlight">endDate</span>: <span class="string">date</span><br>
+                    <span class="highlight">batchName</span>: <span class="string">string</span><br>
+                    <span class="highlight">field</span>: <span class="string">object</span> (Resumo do Talhão)<br>
+                    <span class="highlight">farmId</span>: <span class="number">long</span><br>
+                    <span class="highlight">userCreatorId</span>: <span class="number">long</span><br>
                 </div>
             </div>
 
         </div>
     </div>
 
+    <!-- SCRIPT DE SINTAXE HIGHLIGHTER E LÓGICA DO DROPDOWN -->
     <script>
+        // Dados de cada tipo de análise (Regras de Validação + JSON Base + JSON de Erro/Sucesso)
+        const analysisDataMap = {
+            'GENERIC': {
+                title: "Base Genérica",
+                validations: "<strong>⚠️ Regras Comuns a Todas as Análises:</strong><ul><li><strong>Permissão Necessária:</strong> Seu usuário deve ter permissão de editar dados no Lote, ou ter a permissão de dono do próprio lote.</li><li><strong>batchId:</strong> Obrigatório e Maior que zero. É o Lote onde a atividade ocorreu.</li><li><strong>analysisType:</strong> Obrigatório (Enum). Define o subtipo (ex: 'HARVEST').</li><li><strong>startDate:</strong> Obrigatório. A data que a atividade iniciou. Não pode ser no futuro.</li><li><strong>endDate:</strong> Opcional. A data de fim. Não pode ser no futuro. Se for enviada, deve ser posterior ou igual a startDate.</li><li><strong>collectedBy:</strong> Opcional. Nome do técnico/responsável pela coleta. Mínimo 2 letras.</li><li><strong>attachments:</strong> Opcional. Array de strings (URLs de fotos/documentos).</li></ul>",
+                json: {
+                    "analysisType": "TIPO_DA_ANALISE",
+                    "batchId": 102,
+                    "startDate": "2023-10-01",
+                    "endDate": "2023-10-02",
+                    "notes": "Observações gerais...",
+                    "collectedBy": "Técnico João",
+                    "attachments": ["url-foto-1.jpg"]
+                },
+                success: {
+                    "id": 501,
+                    "analysisType": "TIPO_DA_ANALISE",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-10-01",
+                    "createdAt": "2023-10-01T12:00:00Z"
+                },
+                error: {
+                    "detail": "A data de término não pode ser anterior à data de início.",
+                    "startDate": "A data de início (startDate) não pode ser futura.",
+                    "endDate": "A data de término (endDate) não pode ser futura.",
+                    "batchId": "O identificador da batch (batchId) é obrigatório.",
+                    "analysisType": "O tipo de análise (analysisType) é obrigatório.",
+                    "collectedBy": "O nome de quem coletou (manager) deve ter pelo menos 2 caracteres."
+                }
+            },
+            'PLANTING_OPERATION': {
+                title: "Plantio",
+                validations: "<strong>⚠️ Regras Específicas do Plantio:</strong><ul><li><strong>Siga também as Regras Comuns (batchId, datas, etc).</strong></li><li><strong>seedsPerBeg:</strong> Sementes por saco (Número inteiro, não negativo, Obrigatório).</li><li><strong>costPerBeg:</strong> Custo por saco (Número, não negativo, Obrigatório).</li><li><strong>unity:</strong> Enum Obrigatório: <code>SEMENTES_PER_HA</code>, <code>KGS_PER_HA</code>.</li><li><strong>brand:</strong> Marca (Texto, não vazio, Obrigatório).</li><li><strong>plantingRate:</strong> Taxa de plantio (Número, não negativo, Obrigatório).</li><li><strong>cultivationType:</strong> Cultivo Enum Obrigatório: <code>SOJA</code>, <code>MILHO</code>, <code>CANA_DE_ACUCAR</code>.</li><li><strong>hybridVariation:</strong> Variação híbrida (Texto, não vazio, Obrigatório).</li><li><strong>biologicals:</strong> Biológicos (Texto, não vazio, Obrigatório).</li></ul>",
+                json: {
+                    "analysisType": "PLANTING_OPERATION",
+                    "batchId": 102,
+                    "startDate": "2023-10-01",
+                    "seedsPerBeg": 200000,
+                    "costPerBeg": 150.50,
+                    "unity": "SEMENTES_PER_HA",
+                    "brand": "Monsoy",
+                    "plantingRate": 12.5,
+                    "cultivationType": "SOJA",
+                    "hybridVariation": "M5947",
+                    "biologicals": "Inoculante Premium"
+                },
+                success: {
+                    "id": 501,
+                    "analysisType": "PLANTING_OPERATION",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-10-01",
+                    "seedsPerBeg": 200000,
+                    "costPerBeg": 150.50,
+                    "unity": "SEMENTES_PER_HA",
+                    "brand": "Monsoy",
+                    "plantingRate": 12.5,
+                    "cultivationType": "SOJA",
+                    "hybridVariation": "M5947",
+                    "biologicals": "Inoculante Premium"
+                },
+                error: {
+                    "baseRequest": "Os dados base (baseRequest) são obrigatórios",
+                    "seedsPerBeg": "O numero de sementes por saco (seedsPerBeg) é obrigatório",
+                    "costPerBeg": "O custo (costPerBeg) é obrigatório",
+                    "unity": "A unidade (unity) é obrigatória",
+                    "brand": "A marca (brand) é obrigatória",
+                    "plantingRate": "A taxa de plantio (plantingRate) é obrigatória",
+                    "cultivationType": "O tipo de cultivo (cultivationType) é obrigatório",
+                    "hybridVariation": "A variação híbrida (hybridVariation) é obrigatória",
+                    "biologicals": "Os biológicos (biologicals) são obrigatórios"
+                }
+            },
+            'HARVEST': {
+                title: "Colheita",
+                validations: "<strong>⚠️ Regras Específicas da Colheita:</strong><ul><li><strong>cropType:</strong> Cultura Enum Obrigatório: <code>SOJA</code>, <code>MILHO</code>, <code>CANA</code>.</li><li><strong>harvestType:</strong> Tipo de Colheita Enum Obrigatório: <code>GRAO</code>, <code>TOLETE</code>.</li><li><strong>unity:</strong> Unidade Enum Obrigatório: <code>KG_PER_HA</code>, <code>TON_PER_HA</code>, <code>SC_PER_HA</code>.</li><li><strong>residueRemovalCount:</strong> Contagem de remoção de resíduos (Número inteiro, não negativo, Obrigatório).</li><li><strong>residueBurning:</strong> Queima de resíduos (Booleano true/false, Obrigatório).</li><li><strong>yield:</strong> Produtividade (Número estritamente positivo, > 0, Obrigatório).</li></ul>",
+                json: {
+                    "analysisType": "HARVEST",
+                    "batchId": 102,
+                    "startDate": "2024-02-15",
+                    "cropType": "SOJA",
+                    "harvestType": "GRAO",
+                    "unity": "SC_PER_HA",
+                    "residueRemovalCount": 0,
+                    "residueBurning": false,
+                    "yield": 65.5
+                },
+                success: {
+                    "id": 502,
+                    "analysisType": "HARVEST",
+                    "batch": { "id": 102 },
+                    "startDate": "2024-02-15",
+                    "cropType": "SOJA",
+                    "harvestType": "GRAO",
+                    "unity": "SC_PER_HA",
+                    "residueRemovalCount": 0,
+                    "residueBurning": false,
+                    "yield": 65.5
+                },
+                error: {
+                    "cropType": "O tipo de cultura (cropType) é obrigatório",
+                    "harvestType": "O tipo de colheita (harvestType) é obrigatório",
+                    "unity": "A unidade de media (unity) é obrigatório",
+                    "residueRemovalCount": "O número de remoções de resíduo (residueRemovalCount) não pode ser negativo",
+                    "residueBurning": "A informação sobre queima de resíduos (residueBurning) é obrigatória",
+                    "yield": "A produtividade (yield) deve ser positiva"
+                }
+            },
+            'SOIL_PREPARATION': {
+                title: "Preparo de Solo",
+                validations: "<strong>⚠️ Regras Específicas do Preparo de Solo:</strong><ul><li><strong>depth:</strong> Profundidade (Número estritamente positivo, Obrigatório).</li><li><strong>implementUsed:</strong> Equipamento/Implemento Enum Obrigatório: <code>ARADO_DE_DISCO</code>, <code>SUB_SOLADOR</code>, <code>GRADE_PESADA</code>, <code>GRADE_LEVE</code>, <code>CULTIVADOR</code>, <code>ENXADA_ROTATIVA</code>, <code>NIVELADORA</code>, <code>OUTRO</code>, <code>NENHUM</code>.</li><li><strong>tillagePractice:</strong> Prática Enum Obrigatório: <code>PLANTIO_DIRETO</code>, <code>CULTIVO_MINIMO</code>, <code>CULTIVO_REDUZIDO</code>, <code>CONVENCIONAL</code>.</li></ul>",
+                json: {
+                    "analysisType": "SOIL_PREPARATION",
+                    "batchId": 102,
+                    "startDate": "2023-09-01",
+                    "depth": 20.5,
+                    "implementUsed": "GRADE_LEVE",
+                    "tillagePractice": "PLANTIO_DIRETO"
+                },
+                success: {
+                    "id": 503,
+                    "analysisType": "SOIL_PREPARATION",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-09-01",
+                    "depth": 20.5,
+                    "implementUsed": "GRADE_LEVE",
+                    "tillagePractice": "PLANTIO_DIRETO"
+                },
+                error: {
+                    "depth": "A profundidade (depth) é obrigatória",
+                    "implementUsed": "O implemento utilizado (implementUsed) é obrigatório",
+                    "tillagePractice": "O tipo de prática de preparo (tillagePractice) é obrigatório"
+                }
+            },
+            'FERTILIZER_APPLICATION': {
+                title: "Aplicação de Fertilizante",
+                validations: "<strong>⚠️ Regras Específicas de Fertilizantes:</strong><ul><li><strong>rate:</strong> Taxa de aplicação (Número, não negativo, Obrigatório).</li><li><strong>cost:</strong> Custo (Número, não negativo, Obrigatório).</li><li><strong>unity:</strong> Unidade Enum Obrigatório: <code>LITERS_PER_HA</code>, <code>KG_PER_HA</code>, <code>TON_PER_HA</code>, <code>LITERS</code>, <code>KG</code>.</li><li><strong>productName:</strong> Nome do Produto (Texto, Obrigatório).</li><li><strong>applicationMethod:</strong> Método Enum Obrigatório: <code>A_LANCO</code>, <code>NA_LINHA</code>, <code>FOLIAR</code>, <code>FERTIRRIGACAO</code>, <code>COMPOSTO</code>, <code>INCORPORADO</code>, <code>INJETADO</code>, <code>SPRAY</code>, <code>ESTERCO</code>, <code>VINHACA</code>, <code>OUTRO</code>, <code>NENHUM</code>.</li><li><strong>n, p, k, s:</strong> Elementos N, P, K, S (Números, não negativos, Obrigatórios).</li><li><strong>Booleanos Obrigatórios (true/false):</strong> hasFertilityPlan, isPrecisionApplication, isVariableRate, inhibitor, slowRelease.</li></ul>",
+                json: {
+                    "analysisType": "FERTILIZER_APPLICATION",
+                    "batchId": 102,
+                    "startDate": "2023-11-10",
+                    "rate": 150.0,
+                    "cost": 1200.0,
+                    "unity": "KG_PER_HA",
+                    "productName": "Adubo NPK 10-10-10",
+                    "applicationMethod": "A_LANCO",
+                    "hasFertilityPlan": true,
+                    "isPrecisionApplication": false,
+                    "isVariableRate": false,
+                    "n": 10.0,
+                    "p": 10.0,
+                    "k": 10.0,
+                    "s": 0.0,
+                    "inhibitor": false,
+                    "slowRelease": false
+                },
+                success: {
+                    "id": 504,
+                    "analysisType": "FERTILIZER_APPLICATION",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-11-10",
+                    "rate": 150.0,
+                    "cost": 1200.0,
+                    "unity": "KG_PER_HA",
+                    "productName": "Adubo NPK 10-10-10",
+                    "applicationMethod": "A_LANCO",
+                    "hasFertilityPlan": true,
+                    "isPrecisionApplication": false,
+                    "isVariableRate": false,
+                    "n": 10.0,
+                    "p": 10.0,
+                    "k": 10.0,
+                    "s": 0.0,
+                    "inhibitor": false,
+                    "slowRelease": false
+                },
+                error: {
+                    "baseRequest": "Os dados base (baseRequest) são obrigatórios",
+                    "rate": "A taxa de aplicação (rate) é obrigatória",
+                    "cost": "O custo (cost) é obrigatório",
+                    "unity": "A unidade (unity) é obrigatória",
+                    "productName": "O nome do produto (productName) é obrigatório",
+                    "applicationMethod": "O tipo de aplicação (applicationMethod) é obrigatório",
+                    "hasFertilityPlan": "O indicador de plano de fertilidade (hasFertilityPlan) é obrigatório",
+                    "isPrecisionApplication": "O indicador de aplicação de precisão (isPrecisionApplication) é obrigatório",
+                    "isVariableRate": "O indicador de taxa variável (isVariableRate) é obrigatório",
+                    "n": "O nitrogênio (n) é obrigatório",
+                    "p": "O fósforo (p) é obrigatório",
+                    "k": "O potássio (k) é obrigatório",
+                    "s": "O enxofre (s) é obrigatório",
+                    "inhibitor": "Indica se há inibidor (inhibitor) é obrigatório",
+                    "slowRelease": "Indica se é de liberação lenta (slowRelease) é obrigatório"
+                }
+            },
+            'CROP_CORRECTIVE_APPLICATION': {
+                title: "Corretivos Agrícolas",
+                validations: "<strong>⚠️ Regras Específicas de Corretivos:</strong><ul><li><strong>correctiveType:</strong> Tipo Enum Obrigatório: <code>CALCARIO_CALCITICO</code>, <code>CALCARIO_MOIDO</code>, <code>CALCARIO_DOLOMITICO</code>, <code>GESSO_AGRICOLA</code>, <code>ENXOFRE_ELEMENTAR</code>, <code>NADA</code>.</li><li><strong>quantity:</strong> Quantidade (Número, não negativo, Obrigatório).</li></ul>",
+                json: {
+                    "analysisType": "CROP_CORRECTIVE_APPLICATION",
+                    "batchId": 102,
+                    "startDate": "2023-08-15",
+                    "correctiveType": "CALCARIO_DOLOMITICO",
+                    "quantity": 2.5
+                },
+                success: {
+                    "id": 505,
+                    "analysisType": "CROP_CORRECTIVE_APPLICATION",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-08-15",
+                    "correctiveType": "CALCARIO_DOLOMITICO",
+                    "quantity": 2.5
+                },
+                error: {
+                    "correctiveType": "O tipo de corretivo (correctiveType) é obrigatório",
+                    "quantity": "A quantidade (quantity) é obrigatória"
+                }
+            },
+            'CROP_PROTECTION_APPLICATION': {
+                title: "Proteção de Cultivos (Defensivos)",
+                validations: "<strong>⚠️ Regras Específicas de Defensivos:</strong><ul><li><strong>unity:</strong> Unidade Enum Obrigatório: <code>KG_PER_HA</code>, <code>GRAMS_PER_HA</code>, <code>ML_PER_HA</code>, <code>LITERS_PER_HA</code>.</li><li><strong>productName:</strong> Nome do produto (Texto, Obrigatório).</li><li><strong>rate:</strong> Taxa (Número, não negativo, Obrigatório).</li><li><strong>cost:</strong> Custo (Número, não negativo, Opcional).</li><li><strong>pestControlType:</strong> Tipo Enum Obrigatório: <code>HERBICIDE</code>, <code>INSECTICIDE</code>, <code>FUNGICIDE</code>, <code>NONE</code>, <code>OTHER</code>, <code>GROWTH_REGULATOR</code>, <code>BIOLOGICAL</code>.</li><li><strong>applicationMethod:</strong> Método Enum Obrigatório: <code>FOLIAR</code>, <code>LANCO</code>, <code>EM_LINHA</code>, <code>INJETADO</code>, <code>MISTURA_EM_TANQUE</code>, <code>VIA_PIVOT</code>, <code>AEREA</code>.</li><li><strong>Booleanos Obrigatórios:</strong> isForPestControl, isForDiseaseControl, isForWeedControl.</li></ul>",
+                json: {
+                    "analysisType": "CROP_PROTECTION_APPLICATION",
+                    "batchId": 102,
+                    "startDate": "2023-12-05",
+                    "productName": "Fungicida Power",
+                    "unity": "LITERS_PER_HA",
+                    "rate": 1.5,
+                    "cost": 300.00,
+                    "pestControlType": "FUNGICIDE",
+                    "applicationMethod": "FOLIAR",
+                    "isForPestControl": false,
+                    "isForDiseaseControl": true,
+                    "isForWeedControl": false
+                },
+                success: {
+                    "id": 506,
+                    "analysisType": "CROP_PROTECTION_APPLICATION",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-12-05",
+                    "productName": "Fungicida Power",
+                    "unity": "LITERS_PER_HA",
+                    "rate": 1.5,
+                    "cost": 300.00,
+                    "pestControlType": "FUNGICIDE",
+                    "applicationMethod": "FOLIAR",
+                    "isForPestControl": false,
+                    "isForDiseaseControl": true,
+                    "isForWeedControl": false
+                },
+                error: {
+                    "unity": "A unidade de aplicação (unity) é obrigatória",
+                    "productName": "o nome do produto (productName) é obrigatória",
+                    "rate": "A taxa de aplicação (rate) é obrigatória",
+                    "pestControlType": "O tipo de protetivo (pestControlType) é obrigatória",
+                    "applicationMethod": "O método de aplicação (applicationMethod) é obrigatório",
+                    "isForPestControl": "Indica se é para controle de pragas (isForPestControl) é obrigatório",
+                    "isForDiseaseControl": "Indica se é para controle de doenças (isForDiseaseControl) é obrigatório",
+                    "isForWeedControl": "Indica se é para controle de plantas daninhas (isForWeedControl) é obrigatório"
+                }
+            },
+            'IRRIGATION': {
+                title: "Irrigação",
+                validations: "<strong>⚠️ Regras Específicas de Irrigação:</strong><ul><li><strong>method:</strong> Método Enum Obrigatório: <code>GOTEJAMENTO</code>, <code>EM_LINHA</code>, <code>PIVOT</code>, <code>ASPERSOR</code>, <code>SUPERFICIE</code>, <code>OUTRO</code>, <code>NENHUM</code>.</li><li><strong>quantity:</strong> Quantidade (Número, não negativo, Obrigatório).</li><li><strong>unity:</strong> Unidade Enum Obrigatório: <code>MM_GH</code>, <code>LITERS</code>.</li><li><strong>drainage:</strong> Drenagem (Número, não negativo, Obrigatório).</li><li><strong>waterSourceType:</strong> Fonte Enum Obrigatório: <code>POCO</code>, <code>RIO</code>, <code>REPRESA_LAGOA</code>.</li><li><strong>irrigationCategory:</strong> Categoria Enum Obrigatório: <code>REPRESAMENTO</code>, <code>CANAIS</code>, <code>OUTRO</code>, <code>NENHUM</code>.</li></ul>",
+                json: {
+                    "analysisType": "IRRIGATION",
+                    "batchId": 102,
+                    "startDate": "2023-10-15",
+                    "method": "PIVOT",
+                    "quantity": 10.5,
+                    "unity": "MM_GH",
+                    "drainage": 0.0,
+                    "waterSourceType": "POCO",
+                    "irrigationCategory": "CANAIS"
+                },
+                success: {
+                    "id": 507,
+                    "analysisType": "IRRIGATION",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-10-15",
+                    "method": "PIVOT",
+                    "quantity": 10.5,
+                    "unity": "MM_GH",
+                    "drainage": 0.0,
+                    "waterSourceType": "POCO",
+                    "irrigationCategory": "CANAIS"
+                },
+                error: {
+                    "method": "O método de irrigação (method) é obrigatório",
+                    "quantity": "A quantidade de irrigação (quantity) é obrigatório",
+                    "unity": "A unidade de medida da irrigação (unity) é obrigatória",
+                    "waterSourceType": "O tipo de fonte de água (waterSourceType) é obrigatório",
+                    "irrigationCategory": "A categoria da irrigação (irrigationCategory) é obrigatória"
+                }
+            },
+            'MANAGEMENT_GRAZING': {
+                title: "Manejo de Pastagem / Gado",
+                validations: "<strong>⚠️ Regras Específicas de Pastagem:</strong><ul><li><strong>stockingRate:</strong> Taxa de lotação (Número estritamente positivo, >0, Obrigatório).</li><li><strong>animalType:</strong> Tipo de Animal Enum Obrigatório: <code>GADO_BEZERRO_NO_PE</code>, <code>GADO_BEZERRO</code>, <code>GADO_BOI_MAGRO</code>, <code>GADO_VACA</code>, <code>GADO_TOURO</code>, <code>CABRAS</code>, <code>CAVALOS</code>, <code>SUINOS</code>, <code>OVELHAS</code>.</li></ul>",
+                json: {
+                    "analysisType": "MANAGEMENT_GRAZING",
+                    "batchId": 102,
+                    "startDate": "2023-01-01",
+                    "stockingRate": 2.5,
+                    "animalType": "GADO_VACA"
+                },
+                success: {
+                    "id": 508,
+                    "analysisType": "MANAGEMENT_GRAZING",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-01-01",
+                    "stockingRate": 2.5,
+                    "animalType": "GADO_VACA"
+                },
+                error: {
+                    "stockingRate": "A taxa de lotação (stockingRate) é obrigatória",
+                    "animalType": "O tipo de animal (animalType) é obrigatório"
+                }
+            },
+            'COVER_CROPPING': {
+                title: "Cultivo de Cobertura",
+                validations: "<strong>⚠️ Regras Específicas de Cobertura:</strong><ul><li><strong>cropType:</strong> Cultura Enum Obrigatório: <code>ALFAFA</code>, <code>FEIJAO</code>, <code>CEREAIS</code>, <code>TREVO</code>, <code>LENTILHA</code>, <code>TREMOCO</code>, <code>ERVILHACA</code>, <code>OUTRAS</code>.</li><li><strong>coverCroppingFamily:</strong> Família Enum Obrigatório: <code>GRAMINEAS</code>, <code>LEGUMINOSAS</code>, <code>PERENES</code>, <code>OUTRAS</code>, <code>NENHUM</code>.</li><li><strong>isInterspersed:</strong> Indica se é intercalada (Booleano, Obrigatório).</li></ul>",
+                json: {
+                    "analysisType": "COVER_CROPPING",
+                    "batchId": 102,
+                    "startDate": "2023-04-10",
+                    "cropType": "CEREAIS",
+                    "coverCroppingFamily": "GRAMINEAS",
+                    "isInterspersed": false
+                },
+                success: {
+                    "id": 509,
+                    "analysisType": "COVER_CROPPING",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-04-10",
+                    "cropType": "CEREAIS",
+                    "coverCroppingFamily": "GRAMINEAS",
+                    "isInterspersed": false
+                },
+                error: {
+                    "cropType": "O tipo de cultura (cropType) é obrigatório",
+                    "coverCroppingFamily": "A família da cobertura (coverCroppingFamily) é obrigatória",
+                    "isInterspersed": "Indica se é intercalada (isInterspersed) é obrigatório"
+                }
+            },
+            'SOIL_SAMPLE': {
+                title: "Amostra de Solo",
+                validations: "<strong>⚠️ Regras Específicas de Amostragem:</strong><ul><li><strong>soilSampleType:</strong> Tipo de Amostra Enum Obrigatório: <code>ZONA</code>, <code>GRADE</code>, <code>COMPOSTA</code>.</li></ul>",
+                json: {
+                    "analysisType": "SOIL_SAMPLE",
+                    "batchId": 102,
+                    "startDate": "2023-08-01",
+                    "soilSampleType": "COMPOSTA"
+                },
+                success: {
+                    "id": 510,
+                    "analysisType": "SOIL_SAMPLE",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-08-01",
+                    "soilSampleType": "COMPOSTA"
+                },
+                error: {
+                    "soilSampleType": "O tipo de amostra (soilSampleType) é obrigatório"
+                }
+            },
+            'CONSERVATION_PROGRAM': {
+                title: "Programa de Conservação",
+                validations: "<strong>⚠️ Regras Específicas do Programa de Conservação:</strong><ul><li><strong>Booleanos Obrigatórios (true/false):</strong> rccp, cscg, csp, practices, noDeforestation, carbonCredit, otherScope, biodiversity.</li></ul>",
+                json: {
+                    "analysisType": "CONSERVATION_PROGRAM",
+                    "batchId": 102,
+                    "startDate": "2023-01-01",
+                    "rccp": false,
+                    "cscg": false,
+                    "csp": false,
+                    "practices": true,
+                    "noDeforestation": true,
+                    "carbonCredit": false,
+                    "otherScope": false,
+                    "biodiversity": true
+                },
+                success: {
+                    "id": 511,
+                    "analysisType": "CONSERVATION_PROGRAM",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-01-01",
+                    "rccp": false,
+                    "cscg": false,
+                    "csp": false,
+                    "practices": true,
+                    "noDeforestation": true,
+                    "carbonCredit": false,
+                    "otherScope": false,
+                    "biodiversity": true
+                },
+                error: {
+                    "rccp": "O programa RCCP (rccp) é obrigatório",
+                    "cscg": "O programa CSCG (cscg) é obrigatório",
+                    "csp": "O programa CSP (csp) é obrigatório",
+                    "practices": "A prática de conservação (practices) é obrigatória",
+                    "noDeforestation": "O critério de não desmatamento (noDeforestation) é obrigatório",
+                    "carbonCredit": "O crédito de carbono (carbonCredit) é obrigatório",
+                    "otherScope": "O escopo adicional (otherScope) é obrigatório",
+                    "biodiversity": "A biodiversidade (biodiversity) é obrigatória"
+                }
+            },
+            'ENERGY_AND_FUEL': {
+                title: "Uso de Energia e Combustível",
+                validations: "<strong>⚠️ Regras Específicas de Energia:</strong><ul><li><strong>Todos os valores abaixo são Números Flutuantes, Não-Negativos (>= 0) e Obrigatórios:</strong></li><li>diesel</li><li>gasoline</li><li>naturalGas</li><li>lpg</li><li>electricityKw</li></ul>",
+                json: {
+                    "analysisType": "ENERGY_AND_FUEL",
+                    "batchId": 102,
+                    "startDate": "2023-01-01",
+                    "diesel": 1500.5,
+                    "gasoline": 200.0,
+                    "naturalGas": 0.0,
+                    "lpg": 15.0,
+                    "electricityKw": 5000.0
+                },
+                success: {
+                    "id": 512,
+                    "analysisType": "ENERGY_AND_FUEL",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-01-01",
+                    "diesel": 1500.5,
+                    "gasoline": 200.0,
+                    "naturalGas": 0.0,
+                    "lpg": 15.0,
+                    "electricityKw": 5000.0
+                },
+                error: {
+                    "diesel": "O consumo de diesel (diesel) é obrigatório",
+                    "gasoline": "O consumo de gasolina (gasoline) é obrigatório",
+                    "naturalGas": "O consumo de gás natural (naturalGas) é obrigatório",
+                    "lpg": "O consumo de GLP (lpg) é obrigatório",
+                    "electricityKw": "O consumo de eletricidade em kW (electricityKw) é obrigatório"
+                }
+            },
+            'PRECISION_AGRICULTURE': {
+                title: "Agricultura de Precisão",
+                validations: "<strong>⚠️ Regras Específicas de Agricultura de Precisão:</strong><ul><li><strong>Booleanos Obrigatórios (true/false):</strong> sectionControl, managementSoftware, opticalSensors, autotracAutosteer.</li></ul>",
+                json: {
+                    "analysisType": "PRECISION_AGRICULTURE",
+                    "batchId": 102,
+                    "startDate": "2023-01-01",
+                    "sectionControl": true,
+                    "managementSoftware": true,
+                    "opticalSensors": false,
+                    "autotracAutosteer": true
+                },
+                success: {
+                    "id": 513,
+                    "analysisType": "PRECISION_AGRICULTURE",
+                    "batch": { "id": 102 },
+                    "startDate": "2023-01-01",
+                    "sectionControl": true,
+                    "managementSoftware": true,
+                    "opticalSensors": false,
+                    "autotracAutosteer": true
+                },
+                error: {
+                    "sectionControl": "O controle de seções (sectionControl) é obrigatório",
+                    "managementSoftware": "O software de gestão (managementSoftware) é obrigatório",
+                    "opticalSensors": "Os sensores ópticos (opticalSensors) são obrigatórios",
+                    "autotracAutosteer": "O sistema Autotrac Autosteer (autotracAutosteer) é obrigatório"
+                }
+            }
+        };
+
+        // Função de Syntax Highlighting
+        function syntaxHighlight(json) {
+            if (typeof json != 'string') {
+                 json = JSON.stringify(json, undefined, 2);
+            }
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'highlight'; // Chaves
+                        return '<span class="' + cls + '">' + match.slice(0, -1) + '</span>:';
+                    } else {
+                        cls = 'string'; // Valores em string
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean'; // Booleanos
+                } else if (/null/.test(match)) {
+                    cls = 'boolean'; // Nulls
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
+        // Função que é acionada ao mudar o Dropdown
+        function updateAnalysisDocumentation(type) {
+            const data = analysisDataMap[type];
+            if (!data) return;
+
+            // 1. Atualizar Título do Bloco
+            document.getElementById('dynamic-json-title').innerText = data.title;
+            
+            // 2. Atualizar Lista de Validações
+            document.getElementById('dynamic-validations').innerHTML = data.validations;
+            
+            // 3. Atualizar Bloco de JSON Model (Colorido)
+            document.getElementById('dynamic-json-box').innerHTML = '<pre>' + syntaxHighlight(data.json) + '</pre>';
+            
+            // 4. Atualizar o TextArea executável
+            document.getElementById('req-create').value = JSON.stringify(data.json, null, 2);
+            
+            // 5. Atualizar as Caixas de Sucesso e Erro
+            document.getElementById('dynamic-success-response').innerHTML = '<pre>' + syntaxHighlight(data.success) + '</pre>';
+            document.getElementById('dynamic-error-response').innerHTML = '<pre>' + syntaxHighlight(data.error) + '</pre>';
+        }
+
+        // Lógica de Toggles do Swagger
         function toggleSection(id) {
             const el = document.getElementById(id);
             el.style.display = (el.style.display === 'none') ? 'block' : 'none';
@@ -900,6 +1482,7 @@
             }
         }
 
+        // Executor de Fetch API
         async function executeRequest(method, path, bodyId, resId, tokenId) {
             const baseUrl = 'https://api.rvcarbon.com.br';
             const url = baseUrl + path;
@@ -936,7 +1519,7 @@
                 if (contentType && contentType.includes("spreadsheetml")) {
                     resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} OK</span>` + 
                                        '<br>📥 <strong>Arquivo Excel recebido!</strong> (Download iniciado pelo navegador...)';
-                    // Lógica para forçar o download no navegador
+                    
                     const blob = await response.blob();
                     const downloadUrl = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -951,11 +1534,11 @@
                 let responseData;
                 if (contentType && contentType.indexOf("application/json") !== -1) {
                     responseData = await response.json();
-                    responseData = JSON.stringify(responseData, null, 2);
+                    responseData = syntaxHighlight(responseData); // Aplica a formatação colorida na resposta!
                 } else {
                     responseData = await response.text();
                 }
-                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span>` + responseData;
+                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span><pre>` + responseData + '</pre>';
             } catch (error) {
                 resBox.innerHTML = '<span class="response-status" style="color:#f93e3e">Erro de Conexão (CORS ou Offline)</span>';
                 console.error(error);
@@ -966,7 +1549,7 @@
             const element = document.getElementById('printable-area');
             const opt = {
                 margin: [0.5, 0.5, 0.5, 0.5],
-                filename: 'RvCarbon_Arva_Docs_v7.pdf',
+                filename: 'RvCarbon_Arva_Docs.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
@@ -980,6 +1563,11 @@
                 models.forEach(m => m.style.display = 'none');
             });
         }
+        
+        // Inicializa o syntax highlighter pro primeiro render da página (Generic)
+        document.addEventListener('DOMContentLoaded', () => {
+             updateAnalysisDocumentation('GENERIC');
+        });
     </script>
 </body>
 </html>
