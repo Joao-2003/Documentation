@@ -37,3 +37,7 @@ https://joao-2003.github.io/Documentation/Field/field_doc.html
 User Documentation: 
 
 https://joao-2003.github.io/Documentation/User/user_doc.html
+
+Reports Documentation: 
+
+https://joao-2003.github.io/Documentation/Reports/reports_doc.html
