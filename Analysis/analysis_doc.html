@@ -289,6 +289,17 @@
                             </td>
                         </tr>
                         <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> O Talhão referenciado (fieldId) não existe no banco de dados.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Field não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><span class="status-badge status-403">403</span></td>
                             <td><strong>Proibido:</strong> Seu usuário não tem permissão para criar lotes neste talhão.</td>
                         </tr>
@@ -351,6 +362,17 @@
                             </td>
                         </tr>
                         <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> O Lote referenciado não existe no banco de dados.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Batch não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><span class="status-badge status-403">403</span></td>
                             <td><strong>Proibido:</strong> Você não tem permissão para editar este lote.</td>
                         </tr>
@@ -392,6 +414,17 @@
                     <div class="section-header">Respostas Possíveis</div>
                     <table>
                         <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna uma lista paginada (Page&lt;ArvaBatch&gt;).</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> A Fazenda referenciada não existe no banco de dados.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Farm não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
                         <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Você não tem permissão para visualizar os dados desta fazenda.</td></tr>
                     </table>
                 </div>
@@ -421,7 +454,17 @@
                     <div class="section-header">Respostas Possíveis</div>
                     <table>
                         <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna a entidade do Lote solicitada.</td></tr>
-                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> O Lote com este ID não existe.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> O Lote com este ID não existe.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Batch não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
                         <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Você não tem permissão de leitura.</td></tr>
                     </table>
                 </div>
@@ -457,6 +500,17 @@
                     <div class="section-header">Respostas Possíveis</div>
                     <table>
                         <tr><td><span class="status-badge status-204">204</span></td><td><strong>Sucesso:</strong> Lote e análises removidos. (Sem conteúdo no retorno).</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong> O Lote com este ID não existe.
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Batch não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
                         <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Falta de permissão para exclusão.</td></tr>
                     </table>
                 </div>
@@ -574,10 +628,10 @@
                         <tr>
                             <td><span class="status-badge status-404">404</span></td>
                             <td>
-                                <strong>Não Encontrado:</strong>
+                                <strong>Não Encontrado:</strong> O Batch referenciado não existe.
                                 <div class="error-example">
 <pre>{
-  <span class="highlight">"detail"</span>: <span class="string">"ArvaBatch não encontrado com o id fornecido."</span>
+  <span class="highlight">"detail"</span>: <span class="string">"Batch não encontrado com o id fornecido."</span>
 }</pre>
                                 </div>
                             </td>
@@ -652,6 +706,17 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Analysis não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
                         <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Falta de permissão para edição.</td></tr>
                     </table>
                 </div>
@@ -663,7 +728,7 @@
                     <span class="op-block-summary-method">DELETE</span>
                     <span class="op-block-summary-path">/api/analysis/{analysisId}/</span>
                     <span class="op-block-summary-desc">Excluir Análise</span>
-                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
@@ -684,6 +749,17 @@
                     <div class="section-header">Respostas Possíveis</div>
                     <table>
                         <tr><td><span class="status-badge status-204">204</span></td><td><strong>Sucesso:</strong> Removido (Sem corpo de resposta).</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Analysis não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
                         <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Seu usuário não tem o nível de acesso necessário.</td></tr>
                     </table>
                 </div>
@@ -713,7 +789,17 @@
                     <div class="section-header">Respostas Possíveis</div>
                     <table>
                         <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso:</strong> Retorna a entidade detalhada <code>Analysis</code>.</td></tr>
-                        <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> Nenhuma análise com o ID informado.</td></tr>
+                        <tr>
+                            <td><span class="status-badge status-404">404</span></td>
+                            <td>
+                                <strong>Não Encontrado:</strong>
+                                <div class="error-example">
+<pre>{
+  <span class="highlight">"detail"</span>: <span class="string">"Analysis não encontrado com o id fornecido."</span>
+}</pre>
+                                </div>
+                            </td>
+                        </tr>
                         <tr><td><span class="status-badge status-403">403</span></td><td><strong>Proibido:</strong> Acesso não permitido.</td></tr>
                     </table>
                 </div>
@@ -921,6 +1007,25 @@
                     <span class="highlight">field</span>: <span class="string">object</span> (Resumo do Talhão)<br>
                     <span class="highlight">farmId</span>: <span class="number">long</span><br>
                     <span class="highlight">userCreatorId</span>: <span class="number">long</span><br>
+                </div>
+            </div>
+
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">Analysis Types (Opções do Enum) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    PLANTING_OPERATION (Plantio)<br>
+                    HARVEST (Colheita)<br>
+                    SOIL_PREPARATION (Preparo de Solo)<br>
+                    FERTILIZER_APPLICATION (Fertilizantes)<br>
+                    CROP_CORRECTIVE_APPLICATION (Corretivos)<br>
+                    CROP_PROTECTION_APPLICATION (Defensivos)<br>
+                    IRRIGATION (Irrigação)<br>
+                    MANAGEMENT_GRAZING (Manejo de Pastagem)<br>
+                    COVER_CROPPING (Cultivo de Cobertura)<br>
+                    SOIL_SAMPLE (Amostragem de Solo)<br>
+                    CONSERVATION_PROGRAM (Programa de Conservação)<br>
+                    ENERGY_AND_FUEL (Energia e Combustíveis)<br>
+                    PRECISION_AGRICULTURE (Agricultura de Precisão)<br>
                 </div>
             </div>
 
@@ -1519,7 +1624,7 @@
                 if (contentType && contentType.includes("spreadsheetml")) {
                     resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} OK</span>` + 
                                        '<br>📥 <strong>Arquivo Excel recebido!</strong> (Download iniciado pelo navegador...)';
-                    
+                    // Lógica para forçar o download no navegador
                     const blob = await response.blob();
                     const downloadUrl = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
