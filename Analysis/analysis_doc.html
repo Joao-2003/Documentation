@@ -728,7 +728,7 @@
                     <span class="op-block-summary-method">DELETE</span>
                     <span class="op-block-summary-path">/api/analysis/{analysisId}/</span>
                     <span class="op-block-summary-desc">Excluir Análise</span>
-                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
                 <div class="op-block-body">
                     <div class="service-rule">
@@ -990,6 +990,21 @@
         <!-- SCHEMAS -->
         <div class="models-section">
             <div class="op-block-tag">Schemas (Entidades Base)</div>
+            
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">CreateArvaBatchRequest (Dados Lote) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="comment">// Campos específicos ARVA + Campos Genéricos (Unwrapped)</span><br>
+                    <span class="highlight">fieldId</span>: long (obrigatório)<br>
+                    <span class="highlight">season</span>: string (YYYY ou YYYY/YYYY)<br>
+                    <span class="highlight">culture</span>: enum (SOJA, CANA_DE_ACUCAR, MILHO)<br>
+                    <span class="highlight">startDate</span>: date (obrigatório, yyyy-MM-dd)<br>
+                    <span class="highlight">endDate</span>: date (obrigatório, yyyy-MM-dd, >= startDate)<br>
+                    <span class="highlight">batchName</span>: string (obrigatório)<br>
+                    <span class="highlight">manager</span>: string (opcional)<br>
+                    <span class="highlight">note</span>: string (opcional)
+                </div>
+            </div>
 
             <div class="model-container">
                 <div class="model-title" onclick="toggleModel(this)">ArvaBatch (Entidade do Lote) <span class="arrow">▼</span></div>
@@ -1007,6 +1022,35 @@
                     <span class="highlight">field</span>: <span class="string">object</span> (Resumo do Talhão)<br>
                     <span class="highlight">farmId</span>: <span class="number">long</span><br>
                     <span class="highlight">userCreatorId</span>: <span class="number">long</span><br>
+                </div>
+            </div>
+            
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">DataAnalysisBaseRequest (Dados Base de Análise) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">batchId</span>: long (obrigatório)<br>
+                    <span class="highlight">analysisType</span>: enum (obrigatório)<br>
+                    <span class="highlight">startDate</span>: date (não futura)<br>
+                    <span class="highlight">endDate</span>: date (não futura)<br>
+                    <span class="highlight">notes</span>: string<br>
+                    <span class="highlight">collectedBy</span>: string (min 2 chars)<br>
+                    <span class="highlight">attachments</span>: list&lt;string&gt;
+                </div>
+            </div>
+            
+            <div class="model-container">
+                <div class="model-title" onclick="toggleModel(this)">Analysis (Entidade Base) <span class="arrow">▼</span></div>
+                <div class="model-content">
+                    <span class="highlight">id</span>: long<br>
+                    <span class="highlight">analysisType</span>: enum (PLANTING_OPERATION, HARVEST...)<br>
+                    <span class="highlight">startDate</span>: date<br>
+                    <span class="highlight">endDate</span>: date<br>
+                    <span class="highlight">notes</span>: string<br>
+                    <span class="highlight">collectedBy</span>: string<br>
+                    <span class="highlight">createdAt</span>: datetime<br>
+                    <span class="highlight">updatedAt</span>: datetime<br>
+                    <span class="highlight">attachments</span>: list&lt;string&gt; (URLs)<br>
+                    <span class="comment">// + Campos específicos de cada subtipo</span>
                 </div>
             </div>
 
