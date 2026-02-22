@@ -4511,159 +4511,9 @@
     <!-- ======================================================= -->
     <!-- SCRIPT GLOBAL (CONTÉM A LÓGICA DE TODOS OS MÓDULOS)     -->
     <!-- ======================================================= -->
+    <!-- SCRIPT DE SINTAXE HIGHLIGHTER E LÓGICA DO DROPDOWN -->
     <script>
-        // Lógica Global de UI
-        function toggleSection(id) {
-            const el = document.getElementById(id);
-            if (el.style.display === 'none') el.style.display = 'block';
-            else el.style.display = 'none';
-        }
-
-        function toggleBody(element) {
-            const body = element.nextElementSibling;
-            const arrow = element.querySelector('.arrow');
-            if (body.style.display === "block") {
-                body.style.display = "none";
-                arrow.classList.remove('rotate');
-            } else {
-                body.style.display = "block";
-                arrow.classList.add('rotate');
-            }
-        }
-
-        function toggleModel(element) {
-            const content = element.nextElementSibling;
-            const arrow = element.querySelector('.arrow');
-            if(content.style.display === "block") {
-                content.style.display = "none";
-                arrow.style.transform = "rotate(0deg)";
-            } else {
-                content.style.display = "block";
-                arrow.style.transform = "rotate(180deg)";
-            }
-        }
-
-        function toggleExecute(btn) {
-            const panel = btn.nextElementSibling;
-            if (panel.style.display === 'block') {
-                panel.style.display = 'none';
-                btn.textContent = 'Testar Endpoint';
-            } else {
-                panel.style.display = 'block';
-                btn.textContent = 'Cancelar Teste';
-            }
-        }
-
-        // Lógica Global de Fetch API
-        async function executeRequest(method, path, bodyId, resId, tokenId) {
-            const baseUrl = 'https://api.rvcarbon.com.br';
-            const url = baseUrl + path;
-            const resBox = document.getElementById(resId);
-            
-            resBox.style.display = 'block';
-            resBox.innerHTML = '<span style="color:white">Enviando requisição...</span>';
-
-            const headers = {};
-            if (method !== 'GET' && method !== 'DELETE' && !path.includes('from-file')) {
-                headers['Content-Type'] = 'application/json';
-            }
-
-            if (tokenId && document.getElementById(tokenId)) {
-                const tokenVal = document.getElementById(tokenId).value;
-                if (tokenVal) headers['Authorization'] = 'Bearer ' + tokenVal;
-            }
-
-            const options = { method: method, headers: headers };
-
-            if (bodyId && document.getElementById(bodyId)) {
-                try {
-                    const rawBody = document.getElementById(bodyId).value;
-                    JSON.parse(rawBody); 
-                    options.body = rawBody;
-                } catch (e) {
-                    resBox.innerHTML = '<span style="color:#f93e3e">Erro: JSON Inválido no corpo da requisição.</span>';
-                    return;
-                }
-            }
-
-            try {
-                const response = await fetch(url, options);
-                const statusColor = (response.status >= 200 && response.status < 300) || response.status === 302 ? '#49cc90' : '#f93e3e';
-                
-                let responseData;
-                const contentType = response.headers.get("content-type");
-                
-                // Tratamento Especial para Planilhas Excel
-                if (contentType && contentType.includes("spreadsheetml")) {
-                    resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} OK</span><br>📥 <strong>Arquivo Excel recebido!</strong>`;
-                    const blob = await response.blob();
-                    const downloadUrl = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = downloadUrl;
-                    a.download = "relatorio.xlsx";
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    return;
-                }
-
-                // Tratamento HTML (Reports Module)
-                if (contentType && contentType.includes("text/html")) {
-                    responseData = "(Conteúdo HTML Renderizado pelo Servidor. Tamanho: " + (await response.text()).length + " bytes)";
-                } 
-                // Tratamento Padrão JSON
-                else if (contentType && contentType.indexOf("application/json") !== -1) {
-                    responseData = await response.json();
-                    responseData = syntaxHighlight(responseData);
-                } 
-                // Text genérico
-                else {
-                    responseData = await response.text();
-                    if (responseData.includes("<!DOCTYPE html>")) {
-                        responseData = "(HTML Page Content - Redirecionamento realizado com sucesso)";
-                    }
-                }
-
-                let statusText = response.statusText;
-                if (response.redirected) {
-                    statusText += " (Redirecionado)";
-                }
-
-                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${statusText}</span><pre>` + responseData + '</pre>';
-            } catch (error) {
-                // FALLBACK GLOBAL DE MOCKS (CORS ou Servidor Offline)
-                console.warn("Fetch falhou. Exibindo Mock de Dados.");
-                const mockData = getGlobalMockData(method, path);
-                const prettyMock = typeof mockData === 'string' ? mockData : syntaxHighlight(mockData);
-
-                resBox.innerHTML = 
-                    '<div style="border-left: 3px solid #fca130; padding: 10px; background: rgba(252,161,48,0.1); margin-bottom: 10px; color: #d6810b; font-size: 11px;">' +
-                    '⚠️ <strong>Modo de Simulação Ativado:</strong><br>' +
-                    'Não foi possível conectar ao servidor real em <code>' + baseUrl + '</code> (Provável bloqueio de CORS ou servidor offline).<br>' +
-                    'Exibindo resposta de exemplo para fins de demonstração.' +
-                    '</div>' +
-                    '<span class="response-status" style="color:#49cc90">Status: 200 OK (Simulado)</span><pre>' +
-                    prettyMock + '</pre>';
-            }
-        }
-
-        // Colorizador de JSON Global
-        function syntaxHighlight(json) {
-            if (typeof json != 'string') json = JSON.stringify(json, undefined, 2);
-            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-                var cls = 'number';
-                if (/^"/.test(match)) {
-                    if (/:$/.test(match)) {
-                        return '<span class="highlight">' + match.slice(0, -1) + '</span>:';
-                    } else cls = 'string';
-                } else if (/true|false/.test(match)) cls = 'boolean';
-                else if (/null/.test(match)) cls = 'boolean';
-                return '<span class="' + cls + '">' + match + '</span>';
-            });
-        }
-
-        // DADOS DO DROPDOWN DO ARVA (Permite a atualização interativa do JSON na seção ARVA)
+        // Dados de cada tipo de análise (Regras de Validação + JSON Base + JSON de Erro/Sucesso)
         const analysisDataMap = {
             'GENERIC': {
                 title: "Base Genérica",
@@ -5129,6 +4979,30 @@
             }
         };
 
+        // Função de Syntax Highlighting
+        function syntaxHighlight(json) {
+            if (typeof json != 'string') {
+                 json = JSON.stringify(json, undefined, 2);
+            }
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'highlight'; // Chaves
+                        return '<span class="' + cls + '">' + match.slice(0, -1) + '</span>:';
+                    } else {
+                        cls = 'string'; // Valores em string
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean'; // Booleanos
+                } else if (/null/.test(match)) {
+                    cls = 'boolean'; // Nulls
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
         // Função que é acionada ao mudar o Dropdown
         function updateAnalysisDocumentation(type) {
             const data = analysisDataMap[type];
@@ -5151,45 +5025,133 @@
             document.getElementById('dynamic-error-response').innerHTML = '<pre>' + syntaxHighlight(data.error) + '</pre>';
         }
 
-        // Mock System Global (Para testes de CORS)
-        function getGlobalMockData(method, path) {
-            if (path.includes('/login/')) return { "token": "eyJhbGci...", "refreshToken": "dGhp...", "tokenType": "Bearer" };
-            if (path.includes('/register/')) return { "userId": 1, "name": "User", "email": "mock@email.com", "active": false };
-            if (path.includes('/refresh/')) return { "token": "novo_token", "refreshToken": "novo_refresh", "tokenType": "Bearer" };
-            if (path.includes('/auth/me/')) {
-                if (method === 'DELETE' || method === 'PATCH') return { "message": "Operação Mock Concluída" };
-                return { "userId": 1, "name": "User", "email": "mock@email.com", "username": "mock.user", "totalFarmOwnerByUser": 1, "totalFarmsByUser": 3 };
-            }
-            if (path.includes('/history/')) {
-                return { "content": [{ "id": 1024, "userId": 15, "url": "https://app.rvcarbon.com.br", "label": "Acesso Mock", "createdAt": "2023-11-20T14:30:00Z" }], "pageable": { "pageNumber": 0, "pageSize": 5 }, "totalElements": 1 };
-            }
-            if (path.includes('/owners/')) return { "id": 1, "name": "Agro Pecuária Silva", "cpfCnpj": "12.345.678/0001-99", "state": "GO", "city": "Rio Verde", "qtyFarms": 3 };
-            if (path.includes('/farms/')) {
-                if (path.includes('/members/')) return [{ "memberId": 22, "username": "joao_silva", "role": "RESTRICTED_ROLE" }];
-                return { "id": 1, "farmName": "Fazenda Boa Vista", "active": true, "totalAreaHectares": 1500.5 };
-            }
-            if (path.includes('/fields/')) return { "id": 5, "fieldName": "Talhão Sul 01", "totalAreaHec": 120.5, "currentCulture": "Soja" };
-            if (path.includes('/batches/') || path.includes('/api/analysis') || path.includes('/api/emissions')) {
-                return { "id": 102, "batchName": "Inventário/Safra 2023", "isComplete": false, "co2eTotal": 291.8 };
-            }
-            if (path.includes('/reports/')) return "&lt;!DOCTYPE html&gt;\n&lt;html&gt;\n&lt;body&gt;\n  &lt;h1&gt;Relatório RvCarbon&lt;/h1&gt;\n  &lt;p&gt;Visualização processada do lado do servidor via Thymeleaf...&lt;/p&gt;\n&lt;/body&gt;\n&lt;/html&gt;";
-
-            return { "mock": "Dados simulados globais" };
+        // Lógica de Toggles do Swagger
+        function toggleSection(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
         }
 
-        // Gerador de PDF
+        function toggleBody(element) {
+            const body = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            if (body.style.display === "block") {
+                body.style.display = "none";
+                arrow.classList.remove('rotate');
+            } else {
+                body.style.display = "block";
+                arrow.classList.add('rotate');
+            }
+        }
+
+        function toggleModel(element) {
+            const content = element.nextElementSibling;
+            const arrow = element.querySelector('.arrow');
+            if(content.style.display === "block") {
+                content.style.display = "none";
+                arrow.style.transform = "rotate(0deg)";
+            } else {
+                content.style.display = "block";
+                arrow.style.transform = "rotate(180deg)";
+            }
+        }
+
+        function toggleExecute(btn) {
+            const panel = btn.nextElementSibling;
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                btn.textContent = 'Testar Endpoint';
+            } else {
+                panel.style.display = 'block';
+                btn.textContent = 'Cancelar Teste';
+            }
+        }
+
+        // Executor de Fetch API
+        async function executeRequest(method, path, bodyId, resId, tokenId) {
+            const baseUrl = 'https://api.rvcarbon.com.br';
+            const url = baseUrl + path;
+            const resBox = document.getElementById(resId);
+            
+            resBox.style.display = 'block';
+            resBox.innerHTML = '<span style="color:white">Enviando requisição...</span>';
+
+            const headers = { 'Content-Type': 'application/json' };
+            if (tokenId) {
+                const tokenVal = document.getElementById(tokenId).value;
+                if (tokenVal) headers['Authorization'] = 'Bearer ' + tokenVal;
+            }
+
+            const options = { method: method, headers: headers };
+
+            if (bodyId) {
+                try {
+                    const rawBody = document.getElementById(bodyId).value;
+                    JSON.parse(rawBody); 
+                    options.body = rawBody;
+                } catch (e) {
+                    resBox.innerHTML = '<span style="color:#f93e3e">Erro: JSON Inválido.</span>';
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch(url, options);
+                const statusColor = response.ok ? '#49cc90' : '#f93e3e';
+                
+                // Tratamento especial para Download de XLS
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("spreadsheetml")) {
+                    resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} OK</span>` + 
+                                       '<br>📥 <strong>Arquivo Excel recebido!</strong> (Download iniciado pelo navegador...)';
+                    // Lógica para forçar o download no navegador
+                    const blob = await response.blob();
+                    const downloadUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = "relatorio-arva.xlsx";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    return;
+                }
+
+                let responseData;
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    responseData = await response.json();
+                    responseData = syntaxHighlight(responseData); // Aplica a formatação colorida na resposta!
+                } else {
+                    responseData = await response.text();
+                }
+                resBox.innerHTML = `<span class="response-status" style="color:${statusColor}">Status: ${response.status} ${response.statusText}</span><pre>` + responseData + '</pre>';
+            } catch (error) {
+                resBox.innerHTML = '<span class="response-status" style="color:#f93e3e">Erro de Conexão (CORS ou Offline)</span>';
+                console.error(error);
+            }
+        }
+
         function generatePDF() {
             const element = document.getElementById('printable-area');
-            const opt = { margin: [0.5, 0.5, 0.5, 0.5], filename: 'RvCarbon_API_Completa.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+            const opt = {
+                margin: [0.5, 0.5, 0.5, 0.5],
+                filename: 'RvCarbon_Arva_Docs.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
             const bodies = document.querySelectorAll('.op-block-body');
             const models = document.querySelectorAll('.model-content');
-            bodies.forEach(b => b.style.display = 'block'); models.forEach(m => m.style.display = 'block');
+            bodies.forEach(b => b.style.display = 'block');
+            models.forEach(m => m.style.display = 'block');
             html2pdf().set(opt).from(element).save().then(() => {
-                bodies.forEach(b => b.style.display = 'none'); models.forEach(m => m.style.display = 'none');
+                bodies.forEach(b => b.style.display = 'none');
+                models.forEach(m => m.style.display = 'none');
             });
         }
-
-        document.addEventListener('DOMContentLoaded', () => { updateAnalysisDocumentation('GENERIC'); });
+        
+        // Inicializa o syntax highlighter pro primeiro render da página (Generic)
+        document.addEventListener('DOMContentLoaded', () => {
+             updateAnalysisDocumentation('GENERIC');
+        });
     </script>
 </body>
 </html>
