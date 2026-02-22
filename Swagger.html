@@ -100,21 +100,21 @@
         .step-num { background: #4990e2; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
         /* REGRAS DE IMPRESSÃO PDF (NATIVO DO NAVEGADOR) */
         @media print {
-            .topbar, .btn-pdf, .try-out-wrapper { display: none !important; }
-            body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .container { max-width: 100%; padding: 0; margin: 0; border: none; box-shadow: none; }
-            
-            /* Força a abertura de tudo no PDF sem precisar clicar */
-            .op-block-body { display: block !important; } 
-            .model-content { display: block !important; }
-            
-            /* Quebras de página inteligentes */
-            .op-block { break-inside: avoid; margin-bottom: 20px; }
-            .module-wrapper { break-inside: auto; break-before: auto; margin-bottom: 30px; box-shadow: none; border: none; border-top: 3px solid #1b1b1b; border-radius: 0; padding: 10px 0;}
-            .module-header { break-after: avoid; }
-            .section-header { break-after: avoid; }
-            table, .model-box, .error-example { break-inside: avoid; }
-        }
+        /* Esconde barra superior, botões e painéis de teste */
+        .topbar, .btn-pdf, .try-out-wrapper { display: none !important; }
+    
+        body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .container { max-width: 100%; padding: 0; margin: 0; border: none; box-shadow: none; }
+    
+        /* Força tudo a ficar aberto no PDF */
+        .op-block-body, .model-content, div[id^="schemas-"] { display: block !important; } 
+    
+        /* Evita que blocos sejam cortados no meio da página */
+        .op-block, .model-container, table, .error-example { break-inside: avoid; margin-bottom: 20px; }
+    
+        /* Quebra de página antes de cada novo Módulo */
+        .module-wrapper { break-before: page; margin-bottom: 30px; box-shadow: none; border: none; border-top: 3px solid #1b1b1b; padding: 10px 0;}
+    }
     </style>
 </head>
 <body>
@@ -5148,9 +5148,11 @@
 
         // Gerador de PDF (AGORA USANDO O SISTEMA NATIVO DE IMPRESSÃO DO NAVEGADOR)
         function generatePDF() {
-            // Devido ao tamanho colossal da documentação junta, html2pdf.js esbarra no limite do canvas do navegador.
-            // O window.print() aliado ao @media print é perfeito para documentações gigantes. 
-            // Ele força a abertura de todos os menus automaticamente via CSS na hora de imprimir.
+            // 1. Expande todas as rotas e schemas automaticamente para a impressão
+            const bodies = document.querySelectorAll('.op-block-body, .model-content');
+            bodies.forEach(b => b.style.display = 'block');
+
+            // 2. Chama o gerador de PDF nativo do navegador (não trava e o texto fica selecionável)
             window.print();
         }
         
