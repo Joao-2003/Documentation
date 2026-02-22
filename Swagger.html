@@ -849,12 +849,11 @@
         </div>
 
         <!-- SCHEMAS -->
-        <!-- SCHEMAS -->
         <div class="models-section">
             
             <!-- 1. Título clicável com a setinha adicionada -->
             <div class="op-block-tag" onclick="toggleSection('schemas-auth')">
-                <span>Schemas (Modelos de Dados)</span>
+                <span>Schemas (Modelos de Dados da Autenticação)</span>
                 <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
         
@@ -1016,20 +1015,31 @@
 
         <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas (Modelos de Dados)</div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">UserSearchDTO (Resposta Simplificada) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="comment">// Objeto leve e seguro, não expõe dados sensíveis (como telefone ou cpf).</span><br>
-                    <span class="highlight">id</span>: <span class="number">long</span><br>
-                    <span class="highlight">username</span>: <span class="string">string</span><br>
-                    <span class="highlight">name</span>: <span class="string">string</span><br>
-                    <span class="highlight">email</span>: <span class="string">string</span><br>
-                    <span class="highlight">imageProfileUrl</span>: <span class="string">string</span>
-                </div>
+            
+            <!-- 1. Título clicável com a setinha adicionada -->
+            <div class="op-block-tag" onclick="toggleSection('schemas-users')">
+                <span>Schemas (Busca de Usuários)</span>
+                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
-
+        
+            <!-- 2. Div que "abraça" todos os seus containers para colapsar -->
+            <div id="schemas-users" style="display: block;">
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">UserSearchDTO (Resposta Simplificada) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="comment">// Objeto leve e seguro, não expõe dados sensíveis (como telefone ou cpf).</span><br>
+                        <span class="highlight">id</span>: <span class="number">long</span><br>
+                        <span class="highlight">username</span>: <span class="string">string</span><br>
+                        <span class="highlight">name</span>: <span class="string">string</span><br>
+                        <span class="highlight">email</span>: <span class="string">string</span><br>
+                        <span class="highlight">imageProfileUrl</span>: <span class="string">string</span>
+                    </div>
+                </div>
+        
+            <!-- 3. Fechamento da div que criamos no passo 2 -->
+            </div>
+        
         </div>
 
         </div>
@@ -1175,29 +1185,40 @@
 
         <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas (Modelos de Dados)</div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">CreateAccessHistoryRequest (Dados de Envio) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">url</span>: <span class="string">string</span> <span class="comment">// A rota ou link acessado</span><br>
-                    <span class="highlight">urlImage</span>: <span class="string">string</span> <span class="comment">// Imagem de referência ou ícone da rota</span><br>
-                    <span class="highlight">label</span>: <span class="string">string</span> <span class="comment">// Nome descritivo da ação/página</span>
-                </div>
+            
+            <!-- 1. Título clicável com a setinha adicionada -->
+            <div class="op-block-tag" onclick="toggleSection('schemas-history')">
+                <span>Schemas (Histórico de Acessos)</span>
+                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">AccessHistoryResponse (Dados de Retorno) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">id</span>: <span class="number">long</span><br>
-                    <span class="highlight">userId</span>: <span class="number">long</span><br>
-                    <span class="highlight">url</span>: <span class="string">string</span><br>
-                    <span class="highlight">urlImage</span>: <span class="string">string</span><br>
-                    <span class="highlight">label</span>: <span class="string">string</span><br>
-                    <span class="highlight">createdAt</span>: <span class="string">string($date-time)</span>
+        
+            <!-- 2. Div que "abraça" todos os seus containers para colapsar -->
+            <div id="schemas-history" style="display: block;">
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">CreateAccessHistoryRequest (Dados de Envio) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">url</span>: <span class="string">string</span> <span class="comment">// A rota ou link acessado</span><br>
+                        <span class="highlight">urlImage</span>: <span class="string">string</span> <span class="comment">// Imagem de referência ou ícone da rota</span><br>
+                        <span class="highlight">label</span>: <span class="string">string</span> <span class="comment">// Nome descritivo da ação/página</span>
+                    </div>
                 </div>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">AccessHistoryResponse (Dados de Retorno) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">id</span>: <span class="number">long</span><br>
+                        <span class="highlight">userId</span>: <span class="number">long</span><br>
+                        <span class="highlight">url</span>: <span class="string">string</span><br>
+                        <span class="highlight">urlImage</span>: <span class="string">string</span><br>
+                        <span class="highlight">label</span>: <span class="string">string</span><br>
+                        <span class="highlight">createdAt</span>: <span class="string">string($date-time)</span>
+                    </div>
+                </div>
+        
+            <!-- 3. Fechamento da div que criamos no passo 2 -->
             </div>
-
+        
         </div>
 
         </div>
@@ -1543,65 +1564,76 @@
 
         <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas (Modelos de Dados do Proprietário)</div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">CreateFarmOwnerRequest (Criação) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">name</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (3 a 150 chars)</span><br>
-                    <span class="highlight">cpfCnpj</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (Regex)</span><br>
-                    <span class="highlight">phone</span>: <span class="string">string</span> <span class="comment">// Padrão (XX) XXXXX-XXXX</span><br>
-                    <span class="highlight">state</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório</span><br>
-                    <span class="highlight">city</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório</span><br>
-                    <span class="highlight">email</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (Formato de e-mail)</span><br>
-                    <span class="highlight">birthDateFoundation</span>: <span class="string">date</span> (yyyy-MM-dd) <span class="prop-req">*Obrigatório (No passado)</span><br>
-                    <span class="highlight">profileImageUrl</span>: <span class="string">string</span> <span class="comment">// Mínimo 5 chars</span>
-                </div>
+            
+            <!-- 1. Título clicável com a setinha adicionada -->
+            <div class="op-block-tag" onclick="toggleSection('schemas-owners')">
+                <span>Schemas (Modelos de Dados do Proprietário)</span>
+                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">UpdateFarmOwnerRequest (Edição Parcial) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="comment">// Todos os campos opcionais. Validações de regex/tamanho se aplicam caso sejam enviados.</span><br>
-                    <span class="highlight">name</span>: <span class="string">string</span><br>
-                    <span class="highlight">cpfCnpj</span>: <span class="string">string</span><br>
-                    <span class="highlight">phone</span>: <span class="string">string</span><br>
-                    <span class="highlight">state</span>: <span class="string">string</span><br>
-                    <span class="highlight">city</span>: <span class="string">string</span><br>
-                    <span class="highlight">email</span>: <span class="string">string</span><br>
-                    <span class="highlight">birthDateFoundation</span>: <span class="string">date</span><br>
-                    <span class="highlight">profileImageUrl</span>: <span class="string">string</span>
+        
+            <!-- 2. Div que "abraça" todos os seus containers para colapsar -->
+            <div id="schemas-owners" style="display: block;">
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">CreateFarmOwnerRequest (Criação) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">name</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (3 a 150 chars)</span><br>
+                        <span class="highlight">cpfCnpj</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (Regex)</span><br>
+                        <span class="highlight">phone</span>: <span class="string">string</span> <span class="comment">// Padrão (XX) XXXXX-XXXX</span><br>
+                        <span class="highlight">state</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório</span><br>
+                        <span class="highlight">city</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório</span><br>
+                        <span class="highlight">email</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (Formato de e-mail)</span><br>
+                        <span class="highlight">birthDateFoundation</span>: <span class="string">date</span> (yyyy-MM-dd) <span class="prop-req">*Obrigatório (No passado)</span><br>
+                        <span class="highlight">profileImageUrl</span>: <span class="string">string</span> <span class="comment">// Mínimo 5 chars</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">FarmOwnerResponse (Visualização) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">id</span>: <span class="number">long</span><br>
-                    <span class="highlight">userResponsibleId</span>: <span class="number">long</span><br>
-                    <span class="highlight">userNameResponsible</span>: <span class="string">string</span><br>
-                    <span class="highlight">name</span>: <span class="string">string</span><br>
-                    <span class="highlight">cpfCnpj</span>: <span class="string">string</span><br>
-                    <span class="highlight">email</span>: <span class="string">string</span><br>
-                    <span class="highlight">birthDateFoundation</span>: <span class="string">date</span><br>
-                    <span class="highlight">state</span>: <span class="string">string</span><br>
-                    <span class="highlight">city</span>: <span class="string">string</span><br>
-                    <span class="highlight">phone</span>: <span class="string">string</span><br>
-                    <span class="highlight">profileImageUrl</span>: <span class="string">string</span><br>
-                    <span class="highlight">createdDate</span>: <span class="string">date</span><br>
-                    <span class="highlight">qtyFarms</span>: <span class="number">integer</span> <span class="comment">// Qtd atualizada de fazendas atreladas</span><br>
-                    <span class="highlight">farmsTotalAreaHectares</span>: <span class="number">float</span> <span class="comment">// Soma de hectares das fazendas</span><br>
-                    <span class="highlight">color</span>: <span class="string">string</span> <span class="comment">// Cor para UI Hexcode</span>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">UpdateFarmOwnerRequest (Edição Parcial) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="comment">// Todos os campos opcionais. Validações de regex/tamanho se aplicam caso sejam enviados.</span><br>
+                        <span class="highlight">name</span>: <span class="string">string</span><br>
+                        <span class="highlight">cpfCnpj</span>: <span class="string">string</span><br>
+                        <span class="highlight">phone</span>: <span class="string">string</span><br>
+                        <span class="highlight">state</span>: <span class="string">string</span><br>
+                        <span class="highlight">city</span>: <span class="string">string</span><br>
+                        <span class="highlight">email</span>: <span class="string">string</span><br>
+                        <span class="highlight">birthDateFoundation</span>: <span class="string">date</span><br>
+                        <span class="highlight">profileImageUrl</span>: <span class="string">string</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">TransferUserResponsibleRequest (Transferência) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">userResponsibleUserName</span>: <span class="string">string</span> <span class="comment">// Username exato do novo dono</span>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">FarmOwnerResponse (Visualização) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">id</span>: <span class="number">long</span><br>
+                        <span class="highlight">userResponsibleId</span>: <span class="number">long</span><br>
+                        <span class="highlight">userNameResponsible</span>: <span class="string">string</span><br>
+                        <span class="highlight">name</span>: <span class="string">string</span><br>
+                        <span class="highlight">cpfCnpj</span>: <span class="string">string</span><br>
+                        <span class="highlight">email</span>: <span class="string">string</span><br>
+                        <span class="highlight">birthDateFoundation</span>: <span class="string">date</span><br>
+                        <span class="highlight">state</span>: <span class="string">string</span><br>
+                        <span class="highlight">city</span>: <span class="string">string</span><br>
+                        <span class="highlight">phone</span>: <span class="string">string</span><br>
+                        <span class="highlight">profileImageUrl</span>: <span class="string">string</span><br>
+                        <span class="highlight">createdDate</span>: <span class="string">date</span><br>
+                        <span class="highlight">qtyFarms</span>: <span class="number">integer</span> <span class="comment">// Qtd atualizada de fazendas atreladas</span><br>
+                        <span class="highlight">farmsTotalAreaHectares</span>: <span class="number">float</span> <span class="comment">// Soma de hectares das fazendas</span><br>
+                        <span class="highlight">color</span>: <span class="string">string</span> <span class="comment">// Cor para UI Hexcode</span>
+                    </div>
                 </div>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">TransferUserResponsibleRequest (Transferência) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">userResponsibleUserName</span>: <span class="string">string</span> <span class="comment">// Username exato do novo dono</span>
+                    </div>
+                </div>
+        
+            <!-- 3. Fechamento da div que criamos no passo 2 -->
             </div>
-
+        
         </div>
 
         </div>
@@ -2238,77 +2270,88 @@
 
         <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas (Modelos de Dados da Fazenda)</div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">RoleEnum (Níveis de Acesso da Equipe) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">MANAGER_ROLE</span> <span class="comment">// Gerente: Criador da fazenda. Acesso total. Promove/expulsa membros.</span><br>
-                    <span class="highlight">MANAGER_AUX_ROLE</span> <span class="comment">// Subgerente: Cria, edita e deleta QUALQUER lote. Não gere equipe.</span><br>
-                    <span class="highlight">RESTRICTED_ROLE</span> <span class="comment">// Operador: Cria lotes, mas só pode editar e deletar OS PRÓPRIOS lotes que criou.</span><br>
-                    <span class="highlight">VIEWER_ROLE</span> <span class="comment">// Leitor: Apenas visualização de relatórios e painéis.</span>
-                </div>
+        
+            <!-- 1. Título clicável com a setinha adicionada -->
+            <div class="op-block-tag" onclick="toggleSection('schemas-farms')">
+                <span>Schemas (Modelos de Dados da Fazenda)</span>
+                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">CreateOrUpdateFarmRequest (Formulário) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">farmName</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação (Min 3)</span><br>
-                    <span class="highlight">state</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação</span><br>
-                    <span class="highlight">city</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação</span><br>
-                    <span class="highlight">responsible</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação (Min 2)</span><br>
-                    <span class="highlight">responsiblePhoneNumber</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação - Fmt: (XX) XXXXX-XXXX</span><br>
-                    <span class="highlight">ownerId</span>: <span class="number">long</span> <span class="prop-req">*Obrigatório na criação (Positivo)</span><br>
-                    <span class="highlight">businessEmail</span>: <span class="string">string</span> (e-mail válido)<br>
-                    <span class="highlight">cpfCnpj</span>: <span class="string">string</span> (Regex Válido)<br>
-                    <span class="highlight">totalAreaHectares</span>: <span class="number">float</span> <span class="prop-req">*Obrigatório na criação (Positivo)</span><br>
-                    <span class="highlight">farmImageUrl</span>: <span class="string">string</span>
+        
+            <!-- 2. Div que "abraça" todos os seus containers para colapsar -->
+            <div id="schemas-farms" style="display: block;">
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">RoleEnum (Níveis de Acesso da Equipe) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">MANAGER_ROLE</span> <span class="comment">// Gerente: Criador da fazenda. Acesso total. Promove/expulsa membros.</span><br>
+                        <span class="highlight">MANAGER_AUX_ROLE</span> <span class="comment">// Subgerente: Cria, edita e deleta QUALQUER lote. Não gere equipe.</span><br>
+                        <span class="highlight">RESTRICTED_ROLE</span> <span class="comment">// Operador: Cria lotes, mas só pode editar e deletar OS PRÓPRIOS lotes que criou.</span><br>
+                        <span class="highlight">VIEWER_ROLE</span> <span class="comment">// Leitor: Apenas visualização de relatórios e painéis.</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">AddMemberInFarm (Convite de Membro) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">username</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório</span><br>
-                    <span class="highlight">role</span>: <span class="string">enum</span> (RoleEnum) <span class="prop-req">*Obrigatório</span>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">CreateOrUpdateFarmRequest (Formulário) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">farmName</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação (Min 3)</span><br>
+                        <span class="highlight">state</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação</span><br>
+                        <span class="highlight">city</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação</span><br>
+                        <span class="highlight">responsible</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação (Min 2)</span><br>
+                        <span class="highlight">responsiblePhoneNumber</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório na criação - Fmt: (XX) XXXXX-XXXX</span><br>
+                        <span class="highlight">ownerId</span>: <span class="number">long</span> <span class="prop-req">*Obrigatório na criação (Positivo)</span><br>
+                        <span class="highlight">businessEmail</span>: <span class="string">string</span> (e-mail válido)<br>
+                        <span class="highlight">cpfCnpj</span>: <span class="string">string</span> (Regex Válido)<br>
+                        <span class="highlight">totalAreaHectares</span>: <span class="number">float</span> <span class="prop-req">*Obrigatório na criação (Positivo)</span><br>
+                        <span class="highlight">farmImageUrl</span>: <span class="string">string</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">FarmResponse (Fazenda Simplificada) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">id</span>: <span class="number">long</span><br>
-                    <span class="highlight">farmName</span>: <span class="string">string</span><br>
-                    <span class="highlight">active</span>: <span class="boolean">boolean</span><br>
-                    <span class="highlight">ownerId</span>: <span class="number">long</span><br>
-                    <span class="highlight">responsible</span>: <span class="string">string</span><br>
-                    <span class="highlight">responsiblePhoneNumber</span>: <span class="string">string</span><br>
-                    <span class="highlight">businessEmail</span>: <span class="string">string</span><br>
-                    <span class="highlight">cpfCnpj</span>: <span class="string">string</span><br>
-                    <span class="highlight">totalAreaHectares</span>: <span class="number">float</span><br>
-                    <span class="highlight">state</span>: <span class="string">string</span><br>
-                    <span class="highlight">city</span>: <span class="string">string</span><br>
-                    <span class="highlight">createdAt</span>: <span class="string">datetime</span><br>
-                    <span class="highlight">updatedAt</span>: <span class="string">datetime</span><br>
-                    <span class="highlight">userManagerName</span>: <span class="string">string</span><br>
-                    <span class="highlight">color</span>: <span class="string">string</span><br>
-                    <span class="highlight">farmImageUrl</span>: <span class="string">string</span><br>
-                    <span class="highlight">farmOwnerName</span>: <span class="string">string</span><br>
-                    <span class="highlight">managerMembers</span>: <span class="string">Array&lt;FarmMemberResponse&gt;</span>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">AddMemberInFarm (Convite de Membro) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">username</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório</span><br>
+                        <span class="highlight">role</span>: <span class="string">enum</span> (RoleEnum) <span class="prop-req">*Obrigatório</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">FarmMemberResponse (Membro da Equipe) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">memberId</span>: <span class="number">long</span><br>
-                    <span class="highlight">username</span>: <span class="string">string</span><br>
-                    <span class="highlight">completeName</span>: <span class="string">string</span><br>
-                    <span class="highlight">email</span>: <span class="string">string</span><br>
-                    <span class="highlight">role</span>: <span class="string">enum</span> (RoleEnum)
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">FarmResponse (Fazenda Simplificada) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">id</span>: <span class="number">long</span><br>
+                        <span class="highlight">farmName</span>: <span class="string">string</span><br>
+                        <span class="highlight">active</span>: <span class="boolean">boolean</span><br>
+                        <span class="highlight">ownerId</span>: <span class="number">long</span><br>
+                        <span class="highlight">responsible</span>: <span class="string">string</span><br>
+                        <span class="highlight">responsiblePhoneNumber</span>: <span class="string">string</span><br>
+                        <span class="highlight">businessEmail</span>: <span class="string">string</span><br>
+                        <span class="highlight">cpfCnpj</span>: <span class="string">string</span><br>
+                        <span class="highlight">totalAreaHectares</span>: <span class="number">float</span><br>
+                        <span class="highlight">state</span>: <span class="string">string</span><br>
+                        <span class="highlight">city</span>: <span class="string">string</span><br>
+                        <span class="highlight">createdAt</span>: <span class="string">datetime</span><br>
+                        <span class="highlight">updatedAt</span>: <span class="string">datetime</span><br>
+                        <span class="highlight">userManagerName</span>: <span class="string">string</span><br>
+                        <span class="highlight">color</span>: <span class="string">string</span><br>
+                        <span class="highlight">farmImageUrl</span>: <span class="string">string</span><br>
+                        <span class="highlight">farmOwnerName</span>: <span class="string">string</span><br>
+                        <span class="highlight">managerMembers</span>: <span class="string">Array&lt;FarmMemberResponse&gt;</span>
+                    </div>
                 </div>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">FarmMemberResponse (Membro da Equipe) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">memberId</span>: <span class="number">long</span><br>
+                        <span class="highlight">username</span>: <span class="string">string</span><br>
+                        <span class="highlight">completeName</span>: <span class="string">string</span><br>
+                        <span class="highlight">email</span>: <span class="string">string</span><br>
+                        <span class="highlight">role</span>: <span class="string">enum</span> (RoleEnum)
+                    </div>
+                </div>
+        
+            <!-- 3. Fechamento da div que criamos no passo 2 -->
             </div>
-
+        
         </div>
 
         </div>
@@ -2730,59 +2773,70 @@
 
         <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas (Modelos de Dados de Talhões)</div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">CreateFieldRequest (Formulário) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">farmId</span>: <span class="number">long</span> <span class="prop-req">*Obrigatório e positivo</span><br>
-                    <span class="highlight">fieldName</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (mín 2 chars)</span><br>
-                    <span class="highlight">totalAreaHec</span>: <span class="number">float</span> <span class="prop-req">*Obrigatório e positivo (>0)</span><br>
-                    <span class="highlight">currentCulture</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (mín 3 chars)</span><br>
-                    <span class="highlight">previousCulture</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (mín 3 chars)</span><br>
-                    <span class="highlight">description</span>: <span class="string">string</span> <span class="comment">// Opcional, min 3 chars</span><br>
-                    <span class="highlight">coordinates</span>: <span class="string">Array&lt;CoordinateDto&gt;</span> <span class="prop-req">*Mínimo de 3 coordenadas para formar polígono</span>
-                </div>
+            
+            <!-- 1. Título clicável com a setinha adicionada -->
+            <div class="op-block-tag" onclick="toggleSection('schemas-fields')">
+                <span>Schemas (Modelos de Dados de Talhões)</span>
+                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">UpdateFieldRequest (Edição Parcial) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="comment">// Todos opcionais. Se enviados, seguem as mesmas validações.</span><br>
-                    <span class="highlight">fieldName</span>: <span class="string">string</span><br>
-                    <span class="highlight">totalAreaHec</span>: <span class="number">float</span><br>
-                    <span class="highlight">currentCulture</span>: <span class="string">string</span> <span class="comment">// Atenção: Moverá a cultura atual para a anterior automaticamente</span><br>
-                    <span class="highlight">description</span>: <span class="string">string</span><br>
-                    <span class="highlight">coordinates</span>: <span class="string">Array&lt;CoordinateDto&gt;</span> <span class="comment">// Sobrescreve as coordenadas existentes</span>
+        
+            <!-- 2. Div que "abraça" todos os seus containers para colapsar -->
+            <div id="schemas-fields" style="display: block;">
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">CreateFieldRequest (Formulário) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">farmId</span>: <span class="number">long</span> <span class="prop-req">*Obrigatório e positivo</span><br>
+                        <span class="highlight">fieldName</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (mín 2 chars)</span><br>
+                        <span class="highlight">totalAreaHec</span>: <span class="number">float</span> <span class="prop-req">*Obrigatório e positivo (>0)</span><br>
+                        <span class="highlight">currentCulture</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (mín 3 chars)</span><br>
+                        <span class="highlight">previousCulture</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (mín 3 chars)</span><br>
+                        <span class="highlight">description</span>: <span class="string">string</span> <span class="comment">// Opcional, min 3 chars</span><br>
+                        <span class="highlight">coordinates</span>: <span class="string">Array&lt;CoordinateDto&gt;</span> <span class="prop-req">*Mínimo de 3 coordenadas para formar polígono</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">CoordinateDto <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">latitude</span>: <span class="number">double</span><br>
-                    <span class="highlight">longitude</span>: <span class="number">double</span>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">UpdateFieldRequest (Edição Parcial) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="comment">// Todos opcionais. Se enviados, seguem as mesmas validações.</span><br>
+                        <span class="highlight">fieldName</span>: <span class="string">string</span><br>
+                        <span class="highlight">totalAreaHec</span>: <span class="number">float</span><br>
+                        <span class="highlight">currentCulture</span>: <span class="string">string</span> <span class="comment">// Atenção: Moverá a cultura atual para a anterior automaticamente</span><br>
+                        <span class="highlight">description</span>: <span class="string">string</span><br>
+                        <span class="highlight">coordinates</span>: <span class="string">Array&lt;CoordinateDto&gt;</span> <span class="comment">// Sobrescreve as coordenadas existentes</span>
+                    </div>
                 </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">FieldResponse (Talhão Retornado) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">id</span>: <span class="number">long</span><br>
-                    <span class="highlight">fieldName</span>: <span class="string">string</span><br>
-                    <span class="highlight">farmId</span>: <span class="number">long</span><br>
-                    <span class="highlight">farmName</span>: <span class="string">string</span><br>
-                    <span class="highlight">totalAreaHec</span>: <span class="number">float</span><br>
-                    <span class="highlight">currentCulture</span>: <span class="string">string</span><br>
-                    <span class="highlight">previousCulture</span>: <span class="string">string</span><br>
-                    <span class="highlight">coordinates</span>: <span class="string">Array&lt;CoordinateDto&gt;</span><br>
-                    <span class="highlight">color</span>: <span class="string">string</span> (Hexcode gerado pela cor do dono)<br>
-                    <span class="highlight">description</span>: <span class="string">string</span><br>
-                    <span class="highlight">farmOwnerName</span>: <span class="string">string</span><br>
-                    <span class="highlight">createdAt</span>: <span class="string">datetime</span>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">CoordinateDto <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">latitude</span>: <span class="number">double</span><br>
+                        <span class="highlight">longitude</span>: <span class="number">double</span>
+                    </div>
                 </div>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">FieldResponse (Talhão Retornado) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">id</span>: <span class="number">long</span><br>
+                        <span class="highlight">fieldName</span>: <span class="string">string</span><br>
+                        <span class="highlight">farmId</span>: <span class="number">long</span><br>
+                        <span class="highlight">farmName</span>: <span class="string">string</span><br>
+                        <span class="highlight">totalAreaHec</span>: <span class="number">float</span><br>
+                        <span class="highlight">currentCulture</span>: <span class="string">string</span><br>
+                        <span class="highlight">previousCulture</span>: <span class="string">string</span><br>
+                        <span class="highlight">coordinates</span>: <span class="string">Array&lt;CoordinateDto&gt;</span><br>
+                        <span class="highlight">color</span>: <span class="string">string</span> (Hexcode gerado pela cor do dono)<br>
+                        <span class="highlight">description</span>: <span class="string">string</span><br>
+                        <span class="highlight">farmOwnerName</span>: <span class="string">string</span><br>
+                        <span class="highlight">createdAt</span>: <span class="string">datetime</span>
+                    </div>
+                </div>
+        
+            <!-- 3. Fechamento da div que criamos no passo 2 -->
             </div>
-
+        
         </div>
 
         </div>
@@ -3599,90 +3653,101 @@
 
         <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas (Entidades Base)</div>
             
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">CreateArvaBatchRequest (Dados Lote) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="comment">// Campos específicos ARVA + Campos Genéricos (Unwrapped)</span><br>
-                    <span class="highlight">fieldId</span>: long (obrigatório)<br>
-                    <span class="highlight">season</span>: string (YYYY ou YYYY/YYYY)<br>
-                    <span class="highlight">culture</span>: enum (SOJA, CANA_DE_ACUCAR, MILHO)<br>
-                    <span class="highlight">startDate</span>: date (obrigatório, yyyy-MM-dd)<br>
-                    <span class="highlight">endDate</span>: date (obrigatório, yyyy-MM-dd, >= startDate)<br>
-                    <span class="highlight">batchName</span>: string (obrigatório)<br>
-                    <span class="highlight">manager</span>: string (opcional)<br>
-                    <span class="highlight">note</span>: string (opcional)
-                </div>
+            <!-- 1. Título clicável com a setinha adicionada -->
+            <div class="op-block-tag" onclick="toggleSection('schemas-arva-base')">
+                <span>Schemas (Entidades Base)</span>
+                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">ArvaBatch (Entidade do Lote) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">id</span>: <span class="number">long</span><br>
-                    <span class="highlight">culture</span>: <span class="string">enum</span> (SOJA, CANA_DE_ACUCAR, MILHO)<br>
-                    <span class="highlight">season</span>: <span class="string">string</span> (Ex: 2023/2024)<br>
-                    <span class="highlight">color</span>: <span class="string">string</span> (Hexcode)<br>
-                    <span class="highlight">isComplete</span>: <span class="boolean">boolean</span> (Verdadeiro se cumpriu o pacote mínimo do ARVA)<br>
-                    <span class="highlight">analysisMask</span>: <span class="number">long</span> (Máscara de bits de controle interno)<br>
-                    <span class="highlight">createdAt</span>: <span class="string">datetime</span><br>
-                    <span class="highlight">startDate</span>: <span class="string">date</span><br>
-                    <span class="highlight">endDate</span>: <span class="string">date</span><br>
-                    <span class="highlight">batchName</span>: <span class="string">string</span><br>
-                    <span class="highlight">field</span>: <span class="string">object</span> (Resumo do Talhão)<br>
-                    <span class="highlight">farmId</span>: <span class="number">long</span><br>
-                    <span class="highlight">userCreatorId</span>: <span class="number">long</span><br>
+        
+            <!-- 2. Div que "abraça" todos os seus containers para colapsar -->
+            <div id="schemas-arva-base" style="display: block;">
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">CreateArvaBatchRequest (Dados Lote) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="comment">// Campos específicos ARVA + Campos Genéricos (Unwrapped)</span><br>
+                        <span class="highlight">fieldId</span>: long (obrigatório)<br>
+                        <span class="highlight">season</span>: string (YYYY ou YYYY/YYYY)<br>
+                        <span class="highlight">culture</span>: enum (SOJA, CANA_DE_ACUCAR, MILHO)<br>
+                        <span class="highlight">startDate</span>: date (obrigatório, yyyy-MM-dd)<br>
+                        <span class="highlight">endDate</span>: date (obrigatório, yyyy-MM-dd, >= startDate)<br>
+                        <span class="highlight">batchName</span>: string (obrigatório)<br>
+                        <span class="highlight">manager</span>: string (opcional)<br>
+                        <span class="highlight">note</span>: string (opcional)
+                    </div>
                 </div>
-            </div>
-            
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">DataAnalysisBaseRequest (Dados Base de Análise) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">batchId</span>: long (obrigatório)<br>
-                    <span class="highlight">analysisType</span>: enum (obrigatório)<br>
-                    <span class="highlight">startDate</span>: date (não futura)<br>
-                    <span class="highlight">endDate</span>: date (não futura)<br>
-                    <span class="highlight">notes</span>: string<br>
-                    <span class="highlight">collectedBy</span>: string (min 2 chars)<br>
-                    <span class="highlight">attachments</span>: list&lt;string&gt;
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">ArvaBatch (Entidade do Lote) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">id</span>: <span class="number">long</span><br>
+                        <span class="highlight">culture</span>: <span class="string">enum</span> (SOJA, CANA_DE_ACUCAR, MILHO)<br>
+                        <span class="highlight">season</span>: <span class="string">string</span> (Ex: 2023/2024)<br>
+                        <span class="highlight">color</span>: <span class="string">string</span> (Hexcode)<br>
+                        <span class="highlight">isComplete</span>: <span class="boolean">boolean</span> (Verdadeiro se cumpriu o pacote mínimo do ARVA)<br>
+                        <span class="highlight">analysisMask</span>: <span class="number">long</span> (Máscara de bits de controle interno)<br>
+                        <span class="highlight">createdAt</span>: <span class="string">datetime</span><br>
+                        <span class="highlight">startDate</span>: <span class="string">date</span><br>
+                        <span class="highlight">endDate</span>: <span class="string">date</span><br>
+                        <span class="highlight">batchName</span>: <span class="string">string</span><br>
+                        <span class="highlight">field</span>: <span class="string">object</span> (Resumo do Talhão)<br>
+                        <span class="highlight">farmId</span>: <span class="number">long</span><br>
+                        <span class="highlight">userCreatorId</span>: <span class="number">long</span><br>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">Analysis (Entidade Base) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">id</span>: long<br>
-                    <span class="highlight">analysisType</span>: enum (PLANTING_OPERATION, HARVEST...)<br>
-                    <span class="highlight">startDate</span>: date<br>
-                    <span class="highlight">endDate</span>: date<br>
-                    <span class="highlight">notes</span>: string<br>
-                    <span class="highlight">collectedBy</span>: string<br>
-                    <span class="highlight">createdAt</span>: datetime<br>
-                    <span class="highlight">updatedAt</span>: datetime<br>
-                    <span class="highlight">attachments</span>: list&lt;string&gt; (URLs)<br>
-                    <span class="comment">// + Campos específicos de cada subtipo</span>
+                
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">DataAnalysisBaseRequest (Dados Base de Análise) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">batchId</span>: long (obrigatório)<br>
+                        <span class="highlight">analysisType</span>: enum (obrigatório)<br>
+                        <span class="highlight">startDate</span>: date (não futura)<br>
+                        <span class="highlight">endDate</span>: date (não futura)<br>
+                        <span class="highlight">notes</span>: string<br>
+                        <span class="highlight">collectedBy</span>: string (min 2 chars)<br>
+                        <span class="highlight">attachments</span>: list&lt;string&gt;
+                    </div>
                 </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">Analysis Types (Opções do Enum) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    PLANTING_OPERATION (Plantio)<br>
-                    HARVEST (Colheita)<br>
-                    SOIL_PREPARATION (Preparo de Solo)<br>
-                    FERTILIZER_APPLICATION (Fertilizantes)<br>
-                    CROP_CORRECTIVE_APPLICATION (Corretivos)<br>
-                    CROP_PROTECTION_APPLICATION (Defensivos)<br>
-                    IRRIGATION (Irrigação)<br>
-                    MANAGEMENT_GRAZING (Manejo de Pastagem)<br>
-                    COVER_CROPPING (Cultivo de Cobertura)<br>
-                    SOIL_SAMPLE (Amostragem de Solo)<br>
-                    CONSERVATION_PROGRAM (Programa de Conservação)<br>
-                    ENERGY_AND_FUEL (Energia e Combustíveis)<br>
-                    PRECISION_AGRICULTURE (Agricultura de Precisão)<br>
+                
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">Analysis (Entidade Base) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">id</span>: long<br>
+                        <span class="highlight">analysisType</span>: enum (PLANTING_OPERATION, HARVEST...)<br>
+                        <span class="highlight">startDate</span>: date<br>
+                        <span class="highlight">endDate</span>: date<br>
+                        <span class="highlight">notes</span>: string<br>
+                        <span class="highlight">collectedBy</span>: string<br>
+                        <span class="highlight">createdAt</span>: datetime<br>
+                        <span class="highlight">updatedAt</span>: datetime<br>
+                        <span class="highlight">attachments</span>: list&lt;string&gt; (URLs)<br>
+                        <span class="comment">// + Campos específicos de cada subtipo</span>
+                    </div>
                 </div>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">Analysis Types (Opções do Enum) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        PLANTING_OPERATION (Plantio)<br>
+                        HARVEST (Colheita)<br>
+                        SOIL_PREPARATION (Preparo de Solo)<br>
+                        FERTILIZER_APPLICATION (Fertilizantes)<br>
+                        CROP_CORRECTIVE_APPLICATION (Corretivos)<br>
+                        CROP_PROTECTION_APPLICATION (Defensivos)<br>
+                        IRRIGATION (Irrigação)<br>
+                        MANAGEMENT_GRAZING (Manejo de Pastagem)<br>
+                        COVER_CROPPING (Cultivo de Cobertura)<br>
+                        SOIL_SAMPLE (Amostragem de Solo)<br>
+                        CONSERVATION_PROGRAM (Programa de Conservação)<br>
+                        ENERGY_AND_FUEL (Energia e Combustíveis)<br>
+                        PRECISION_AGRICULTURE (Agricultura de Precisão)<br>
+                    </div>
+                </div>
+        
+            <!-- 3. Fechamento da div que criamos no passo 2 -->
             </div>
-
+        
         </div>
 
         </div>
@@ -4285,80 +4350,91 @@
 
         <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas (Modelos de Dados GHG)</div>
             
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">BatchFarmRequest (Criar Lote) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="comment">// Campos Genéricos Desembrulhados (Unwrapped)</span><br>
-                    <span class="highlight">farmId</span>: <span class="number">long</span> (obrigatório)<br>
-                    <span class="highlight">startDate</span>: <span class="string">date</span> (obrigatório, yyyy-MM-dd)<br>
-                    <span class="highlight">endDate</span>: <span class="string">date</span> (obrigatório, yyyy-MM-dd, >= startDate)<br>
-                    <span class="highlight">batchName</span>: <span class="string">string</span> (obrigatório)<br>
-                    <span class="highlight">manager</span>: <span class="string">string</span> (opcional)<br>
-                    <span class="highlight">note</span>: <span class="string">string</span> (opcional)
-                </div>
+            <!-- 1. Título clicável com a setinha adicionada -->
+            <div class="op-block-tag" onclick="toggleSection('schemas-ghg')">
+                <span>Schemas (Modelos de Dados GHG)</span>
+                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">EmissionBatchGhg (Entidade Lote Final) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">id</span>: <span class="number">long</span><br>
-                    <span class="highlight">batchName</span>: <span class="string">string</span><br>
-                    <span class="highlight">startDate</span>: <span class="string">date</span><br>
-                    <span class="highlight">endDate</span>: <span class="string">date</span><br>
-                    <span class="highlight">isComplete</span>: <span class="boolean">boolean</span><br>
-                    <span class="comment">// Totais calculados</span><br>
-                    <span class="highlight">co2</span>: <span class="number">float</span><br>
-                    <span class="highlight">ch4</span>: <span class="number">float</span><br>
-                    <span class="highlight">hfc</span>: <span class="number">float</span><br>
-                    <span class="highlight">pfc</span>: <span class="number">float</span><br>
-                    <span class="highlight">sf6</span>: <span class="number">float</span><br>
-                    <span class="highlight">nf3</span>: <span class="number">float</span><br>
-                    <span class="highlight">n2ho</span>: <span class="number">float</span><br>
-                    <span class="highlight">co2eTotal</span>: <span class="number">float</span><br>
-                    <span class="highlight">biogenicCo2Emissions</span>: <span class="number">float</span><br>
-                    <span class="highlight">biogenicCo2Removals</span>: <span class="number">float</span><br>
+        
+            <!-- 2. Div que "abraça" todos os seus containers para colapsar -->
+            <div id="schemas-ghg" style="display: block;">
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">BatchFarmRequest (Criar Lote) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="comment">// Campos Genéricos Desembrulhados (Unwrapped)</span><br>
+                        <span class="highlight">farmId</span>: <span class="number">long</span> (obrigatório)<br>
+                        <span class="highlight">startDate</span>: <span class="string">date</span> (obrigatório, yyyy-MM-dd)<br>
+                        <span class="highlight">endDate</span>: <span class="string">date</span> (obrigatório, yyyy-MM-dd, >= startDate)<br>
+                        <span class="highlight">batchName</span>: <span class="string">string</span> (obrigatório)<br>
+                        <span class="highlight">manager</span>: <span class="string">string</span> (opcional)<br>
+                        <span class="highlight">note</span>: <span class="string">string</span> (opcional)
+                    </div>
                 </div>
-            </div>
-            
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">EmissionGHGRequest (Requisição de Gases) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="highlight">batchId</span>: <span class="number">long</span> (Obrigatório)<br>
-                    <span class="highlight">emissionType</span>: <span class="string">enum</span> (Obrigatório)<br>
-                    <span class="highlight">note</span>: <span class="string">string</span><br>
-                    <span class="comment">// Todos abaixo são do tipo float >= 0. Apenas co2 é obrigatório.</span><br>
-                    <span class="highlight">co2</span>, <span class="highlight">ch4</span>, <span class="highlight">sf6</span>, <span class="highlight">nf3</span>, <span class="highlight">n2o</span>, <span class="highlight">emiCo2Bio</span>, <span class="highlight">remoCo2Bio</span><br>
-                    <span class="comment">// HFCs</span><br>
-                    <span class="highlight">hfc23</span>, <span class="highlight">hfc32</span>, <span class="highlight">hfc41</span>, <span class="highlight">hfc125</span>, <span class="highlight">hfc134</span>, <span class="highlight">hfc134a</span>, <span class="highlight">hfc143</span>, <span class="highlight">hfc143a</span>, <span class="highlight">hfc152</span>, <span class="highlight">hfc152a</span>, <span class="highlight">hfc161</span>, <span class="highlight">hfc227ea</span>, <span class="highlight">hfc236cb</span>, <span class="highlight">hfc236ea</span>, <span class="highlight">hfc236fa</span>, <span class="highlight">hfc245ca</span>, <span class="highlight">hfc245fa</span>, <span class="highlight">hfc365mfc</span>, <span class="highlight">hfc4310mee</span><br>
-                    <span class="comment">// PFCs</span><br>
-                    <span class="highlight">pfc</span>, <span class="highlight">pfc14</span>, <span class="highlight">pfc116</span>, <span class="highlight">pfc218</span>, <span class="highlight">pfc318</span>, <span class="highlight">pfc3110</span>, <span class="highlight">pfc412</span>, <span class="highlight">pfc514</span>, <span class="highlight">pfc918</span>, <span class="highlight">trifluorometilPentafluoretoEnxofre</span>, <span class="highlight">perfluorociclopropano</span>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">EmissionBatchGhg (Entidade Lote Final) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">id</span>: <span class="number">long</span><br>
+                        <span class="highlight">batchName</span>: <span class="string">string</span><br>
+                        <span class="highlight">startDate</span>: <span class="string">date</span><br>
+                        <span class="highlight">endDate</span>: <span class="string">date</span><br>
+                        <span class="highlight">isComplete</span>: <span class="boolean">boolean</span><br>
+                        <span class="comment">// Totais calculados</span><br>
+                        <span class="highlight">co2</span>: <span class="number">float</span><br>
+                        <span class="highlight">ch4</span>: <span class="number">float</span><br>
+                        <span class="highlight">hfc</span>: <span class="number">float</span><br>
+                        <span class="highlight">pfc</span>: <span class="number">float</span><br>
+                        <span class="highlight">sf6</span>: <span class="number">float</span><br>
+                        <span class="highlight">nf3</span>: <span class="number">float</span><br>
+                        <span class="highlight">n2ho</span>: <span class="number">float</span><br>
+                        <span class="highlight">co2eTotal</span>: <span class="number">float</span><br>
+                        <span class="highlight">biogenicCo2Emissions</span>: <span class="number">float</span><br>
+                        <span class="highlight">biogenicCo2Removals</span>: <span class="number">float</span><br>
+                    </div>
                 </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">Emission Types (Opções de Categoria) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    GOODS_SERVICES<br>
-                    CAPITAL_GOODS<br>
-                    ENERGY_AND_FUEL<br>
-                    TRANSPORT_DISTRIBUTION_UPSTREAM<br>
-                    WASTE<br>
-                    BUSINESS_TRAVEL<br>
-                    HOME_TO_WORK_EMISSION<br>
-                    LEASED_ASSETS_LESSOR<br>
-                    PROCESSING_OF_PRODUCTS<br>
-                    FRANCHISES<br>
-                    INVESTMENTS<br>
-                    UNCLASSIFIABLE<br>
-                    TRANSPORT_DISTRIBUTION_DOWN_STREAM<br>
-                    USE_OF_SOLD_PRODUCTS<br>
-                    END_OF_LIFE_TREATMENT<br>
-                    LEASED_ASSETS_AS_LESSEE
+                
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">EmissionGHGRequest (Requisição de Gases) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="highlight">batchId</span>: <span class="number">long</span> (Obrigatório)<br>
+                        <span class="highlight">emissionType</span>: <span class="string">enum</span> (Obrigatório)<br>
+                        <span class="highlight">note</span>: <span class="string">string</span><br>
+                        <span class="comment">// Todos abaixo são do tipo float >= 0. Apenas co2 é obrigatório.</span><br>
+                        <span class="highlight">co2</span>, <span class="highlight">ch4</span>, <span class="highlight">sf6</span>, <span class="highlight">nf3</span>, <span class="highlight">n2o</span>, <span class="highlight">emiCo2Bio</span>, <span class="highlight">remoCo2Bio</span><br>
+                        <span class="comment">// HFCs</span><br>
+                        <span class="highlight">hfc23</span>, <span class="highlight">hfc32</span>, <span class="highlight">hfc41</span>, <span class="highlight">hfc125</span>, <span class="highlight">hfc134</span>, <span class="highlight">hfc134a</span>, <span class="highlight">hfc143</span>, <span class="highlight">hfc143a</span>, <span class="highlight">hfc152</span>, <span class="highlight">hfc152a</span>, <span class="highlight">hfc161</span>, <span class="highlight">hfc227ea</span>, <span class="highlight">hfc236cb</span>, <span class="highlight">hfc236ea</span>, <span class="highlight">hfc236fa</span>, <span class="highlight">hfc245ca</span>, <span class="highlight">hfc245fa</span>, <span class="highlight">hfc365mfc</span>, <span class="highlight">hfc4310mee</span><br>
+                        <span class="comment">// PFCs</span><br>
+                        <span class="highlight">pfc</span>, <span class="highlight">pfc14</span>, <span class="highlight">pfc116</span>, <span class="highlight">pfc218</span>, <span class="highlight">pfc318</span>, <span class="highlight">pfc3110</span>, <span class="highlight">pfc412</span>, <span class="highlight">pfc514</span>, <span class="highlight">pfc918</span>, <span class="highlight">trifluorometilPentafluoretoEnxofre</span>, <span class="highlight">perfluorociclopropano</span>
+                    </div>
                 </div>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">Emission Types (Opções de Categoria) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        GOODS_SERVICES<br>
+                        CAPITAL_GOODS<br>
+                        ENERGY_AND_FUEL<br>
+                        TRANSPORT_DISTRIBUTION_UPSTREAM<br>
+                        WASTE<br>
+                        BUSINESS_TRAVEL<br>
+                        HOME_TO_WORK_EMISSION<br>
+                        LEASED_ASSETS_LESSOR<br>
+                        PROCESSING_OF_PRODUCTS<br>
+                        FRANCHISES<br>
+                        INVESTMENTS<br>
+                        UNCLASSIFIABLE<br>
+                        TRANSPORT_DISTRIBUTION_DOWN_STREAM<br>
+                        USE_OF_SOLD_PRODUCTS<br>
+                        END_OF_LIFE_TREATMENT<br>
+                        LEASED_ASSETS_AS_LESSEE
+                    </div>
+                </div>
+        
+            <!-- 3. Fechamento da div que criamos no passo 2 -->
             </div>
-
+        
         </div>
 
         </div>
@@ -4500,37 +4576,48 @@
 
         <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas (Estrutura de Dados Injetada nas Views HTML)</div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">FieldReportData (Estatísticas do Talhão) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="comment">// Nota: Esta estrutura NÃO é retornada como JSON na requisição. Ela é apenas a classe interna usada para montar o HTML na rota de ARVA. Documentada aqui para clareza das regras de negócio.</span><br><br>
-                    <span class="highlight">fieldName</span>: <span class="string">string</span><br>
-                    <span class="highlight">totalAreaHec</span>: <span class="number">float</span><br>
-                    <span class="highlight">farmName</span>: <span class="string">string</span><br>
-                    <span class="highlight">responsible</span>: <span class="string">string</span><br>
-                    <span class="highlight">city</span>: <span class="string">string</span><br>
-                    <span class="highlight">state</span>: <span class="string">string</span><br>
-                    <span class="highlight">arvaBatchCount</span>: <span class="number">long</span><br>
-                    <span class="highlight">totalIncompleteArvaBatchs</span>: <span class="number">long</span><br>
-                    <span class="highlight">totalArvaBatchInCurrentYear</span>: <span class="number">long</span><br>
-                    <span class="highlight">totalSojaCulture</span>: <span class="number">long</span><br>
-                    <span class="highlight">totalMilhoCulture</span>: <span class="number">long</span><br>
-                    <span class="highlight">totalCanaCulture</span>: <span class="number">long</span>
-                </div>
+            
+            <!-- 1. Título clicável com a setinha adicionada -->
+            <div class="op-block-tag" onclick="toggleSection('schemas-reports')">
+                <span>Schemas (Estrutura de Dados Injetada nas Views HTML)</span>
+                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">AnnualFieldReportData (Relatório Anual) <span class="arrow">▼</span></div>
-                <div class="model-content">
-                    <span class="comment">// Representa a contagem de lotes dividida por períodos de safra (ex: 2023/2024).</span><br><br>
-                    <span class="highlight">season</span>: <span class="string">string</span> <span class="comment">// Ex: "2023/2024"</span><br>
-                    <span class="highlight">arvaBatchCount</span>: <span class="number">long</span><br>
-                    <span class="highlight">incompleteArvabatchs</span>: <span class="number">long</span>
+        
+            <!-- 2. Div que "abraça" todos os seus containers para colapsar -->
+            <div id="schemas-reports" style="display: block;">
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">FieldReportData (Estatísticas do Talhão) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="comment">// Nota: Esta estrutura NÃO é retornada como JSON na requisição. Ela é apenas a classe interna usada para montar o HTML na rota de ARVA. Documentada aqui para clareza das regras de negócio.</span><br><br>
+                        <span class="highlight">fieldName</span>: <span class="string">string</span><br>
+                        <span class="highlight">totalAreaHec</span>: <span class="number">float</span><br>
+                        <span class="highlight">farmName</span>: <span class="string">string</span><br>
+                        <span class="highlight">responsible</span>: <span class="string">string</span><br>
+                        <span class="highlight">city</span>: <span class="string">string</span><br>
+                        <span class="highlight">state</span>: <span class="string">string</span><br>
+                        <span class="highlight">arvaBatchCount</span>: <span class="number">long</span><br>
+                        <span class="highlight">totalIncompleteArvaBatchs</span>: <span class="number">long</span><br>
+                        <span class="highlight">totalArvaBatchInCurrentYear</span>: <span class="number">long</span><br>
+                        <span class="highlight">totalSojaCulture</span>: <span class="number">long</span><br>
+                        <span class="highlight">totalMilhoCulture</span>: <span class="number">long</span><br>
+                        <span class="highlight">totalCanaCulture</span>: <span class="number">long</span>
+                    </div>
                 </div>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">AnnualFieldReportData (Relatório Anual) <span class="arrow">▼</span></div>
+                    <div class="model-content">
+                        <span class="comment">// Representa a contagem de lotes dividida por períodos de safra (ex: 2023/2024).</span><br><br>
+                        <span class="highlight">season</span>: <span class="string">string</span> <span class="comment">// Ex: "2023/2024"</span><br>
+                        <span class="highlight">arvaBatchCount</span>: <span class="number">long</span><br>
+                        <span class="highlight">incompleteArvabatchs</span>: <span class="number">long</span>
+                    </div>
+                </div>
+        
+            <!-- 3. Fechamento da div que criamos no passo 2 -->
             </div>
-
+        
         </div>
 
         </div>
