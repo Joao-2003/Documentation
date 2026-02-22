@@ -849,81 +849,93 @@
         </div>
 
         <!-- SCHEMAS -->
+        <!-- SCHEMAS -->
         <div class="models-section">
-            <div class="op-block-tag">Schemas (Modelos de Dados)</div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">
-                    JwtTokenPair (Chaves de Acesso) <span class="arrow">▼</span>
-                </div>
-                <div class="model-content">
-                    <span class="highlight">token</span>: string <span class="comment">// Token principal usado para acessar o sistema</span><br>
-                    <span class="highlight">refreshToken</span>: string <span class="comment">// Token secundário usado para renovar o acesso sem senha</span><br>
-                    <span class="highlight">tokenType</span>: string (default: "bearer")
-                </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">
-                    AuthRegisterRequest (Formulário de Cadastro) <span class="arrow">▼</span>
-                </div>
-                <div class="model-content">
-                    <span class="highlight">name</span>: string <span class="prop-req">*Obrigatório (min 3 letras)</span><br>
-                    <span class="highlight">email</span>: string <span class="prop-req">*Obrigatório (e-mail válido)</span><br>
-                    <span class="highlight">phone</span>: string <span class="prop-req">*Padrão: (XX) XXXXX-XXXX</span><br>
-                    <span class="highlight">username</span>: string <span class="prop-req">*Obrigatório (3-30 caracteres)</span><br>
-                    <span class="highlight">password</span>: string <span class="prop-req">*Obrigatório (min 6 caracteres)</span><br>
-                    <span class="highlight">birthday</span>: string <span class="prop-req">*Obrigatório (Data no passado)</span><br>
-                    <span class="highlight">state</span>: string <span class="prop-req">*Obrigatório</span><br>
-                    <span class="highlight">city</span>: string <span class="prop-req">*Obrigatório</span><br>
-                    <span class="highlight">cpfCnpj</span>: string <span class="prop-req">*CPF ou CNPJ válido</span><br>
-                    <span class="highlight">occupation</span>: string <span class="prop-req">*Min 2 caracteres</span><br>
-                    <span class="highlight">academicTitle</span>: string <span class="prop-req">*Min 2 caracteres</span><br>
-                    <span class="highlight">imageProfileUrl</span>: string <span class="prop-req">*Link da imagem de perfil</span>
-                </div>
-            </div>
-
-            <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">
-                    UserInfosResponse (Perfil Completo) <span class="arrow">▼</span>
-                </div>
-                <div class="model-content">
-                    <span class="highlight">userId</span>: integer<br>
-                    <span class="highlight">name</span>: string<br>
-                    <span class="highlight">email</span>: string<br>
-                    <span class="highlight">phone</span>: string<br>
-                    <span class="highlight">username</span>: string<br>
-                    <span class="highlight">birthday</span>: string($date)<br>
-                    <span class="highlight">state</span>: string<br>
-                    <span class="highlight">city</span>: string<br>
-                    <span class="highlight">cpfCnpj</span>: string<br>
-                    <span class="highlight">occupation</span>: string<br>
-                    <span class="highlight">academicTitle</span>: string<br>
-                    <span class="highlight">imageProfileUrl</span>: string<br>
-                    <span class="highlight">totalFarmOwnerByUser</span>: long <span class="comment">// Qtd de fazendas próprias</span><br>
-                    <span class="highlight">totalFarmsByUser</span>: long <span class="comment">// Qtd de fazendas vinculadas</span><br>
-                    <span class="highlight">createdAt</span>: string($date-time)
-                </div>
-            </div>
             
-             <div class="model-container">
-                <div class="model-title" onclick="toggleModel(this)">
-                    AuthUpdateRequest (Atualização de Perfil) <span class="arrow">▼</span>
-                </div>
-                <div class="model-content">
-                    <span class="comment">// Todos os campos são opcionais (Envie só o que mudar)</span><br>
-                    <span class="highlight">name</span>: string <span class="comment">// min 3 letras</span><br>
-                    <span class="highlight">phone</span>: string <span class="comment">// Padrão (XX) XXXXX-XXXX</span><br>
-                    <span class="highlight">state</span>: string<br>
-                    <span class="highlight">city</span>: string<br>
-                    <span class="highlight">birthday</span>: string($date)<br>
-                    <span class="highlight">cpfCnpj</span>: string <span class="comment">// CPF/CNPJ válido</span><br>
-                    <span class="highlight">occupation</span>: string <span class="comment">// min 2</span><br>
-                    <span class="highlight">academicTitle</span>: string <span class="comment">// min 2</span><br>
-                    <span class="highlight">imageProfileUrl</span>: string <span class="comment">// min 5</span>
-                </div>
+            <!-- 1. Título clicável com a setinha adicionada -->
+            <div class="op-block-tag" onclick="toggleSection('schemas-auth')">
+                <span>Schemas (Modelos de Dados)</span>
+                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
-
+        
+            <!-- 2. Div que "abraça" todos os seus containers para colapsar -->
+            <div id="schemas-auth" style="display: block;">
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">
+                        JwtTokenPair (Chaves de Acesso) <span class="arrow">▼</span>
+                    </div>
+                    <div class="model-content">
+                        <span class="highlight">token</span>: string <span class="comment">// Token principal usado para acessar o sistema</span><br>
+                        <span class="highlight">refreshToken</span>: string <span class="comment">// Token secundário usado para renovar o acesso sem senha</span><br>
+                        <span class="highlight">tokenType</span>: string (default: "bearer")
+                    </div>
+                </div>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">
+                        AuthRegisterRequest (Formulário de Cadastro) <span class="arrow">▼</span>
+                    </div>
+                    <div class="model-content">
+                        <span class="highlight">name</span>: string <span class="prop-req">*Obrigatório (min 3 letras)</span><br>
+                        <span class="highlight">email</span>: string <span class="prop-req">*Obrigatório (e-mail válido)</span><br>
+                        <span class="highlight">phone</span>: string <span class="prop-req">*Padrão: (XX) XXXXX-XXXX</span><br>
+                        <span class="highlight">username</span>: string <span class="prop-req">*Obrigatório (3-30 caracteres)</span><br>
+                        <span class="highlight">password</span>: string <span class="prop-req">*Obrigatório (min 6 caracteres)</span><br>
+                        <span class="highlight">birthday</span>: string <span class="prop-req">*Obrigatório (Data no passado)</span><br>
+                        <span class="highlight">state</span>: string <span class="prop-req">*Obrigatório</span><br>
+                        <span class="highlight">city</span>: string <span class="prop-req">*Obrigatório</span><br>
+                        <span class="highlight">cpfCnpj</span>: string <span class="prop-req">*CPF ou CNPJ válido</span><br>
+                        <span class="highlight">occupation</span>: string <span class="prop-req">*Min 2 caracteres</span><br>
+                        <span class="highlight">academicTitle</span>: string <span class="prop-req">*Min 2 caracteres</span><br>
+                        <span class="highlight">imageProfileUrl</span>: string <span class="prop-req">*Link da imagem de perfil</span>
+                    </div>
+                </div>
+        
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">
+                        UserInfosResponse (Perfil Completo) <span class="arrow">▼</span>
+                    </div>
+                    <div class="model-content">
+                        <span class="highlight">userId</span>: integer<br>
+                        <span class="highlight">name</span>: string<br>
+                        <span class="highlight">email</span>: string<br>
+                        <span class="highlight">phone</span>: string<br>
+                        <span class="highlight">username</span>: string<br>
+                        <span class="highlight">birthday</span>: string($date)<br>
+                        <span class="highlight">state</span>: string<br>
+                        <span class="highlight">city</span>: string<br>
+                        <span class="highlight">cpfCnpj</span>: string<br>
+                        <span class="highlight">occupation</span>: string<br>
+                        <span class="highlight">academicTitle</span>: string<br>
+                        <span class="highlight">imageProfileUrl</span>: string<br>
+                        <span class="highlight">totalFarmOwnerByUser</span>: long <span class="comment">// Qtd de fazendas próprias</span><br>
+                        <span class="highlight">totalFarmsByUser</span>: long <span class="comment">// Qtd de fazendas vinculadas</span><br>
+                        <span class="highlight">createdAt</span>: string($date-time)
+                    </div>
+                </div>
+                
+                <div class="model-container">
+                    <div class="model-title" onclick="toggleModel(this)">
+                        AuthUpdateRequest (Atualização de Perfil) <span class="arrow">▼</span>
+                    </div>
+                    <div class="model-content">
+                        <span class="comment">// Todos os campos são opcionais (Envie só o que mudar)</span><br>
+                        <span class="highlight">name</span>: string <span class="comment">// min 3 letras</span><br>
+                        <span class="highlight">phone</span>: string <span class="comment">// Padrão (XX) XXXXX-XXXX</span><br>
+                        <span class="highlight">state</span>: string<br>
+                        <span class="highlight">city</span>: string<br>
+                        <span class="highlight">birthday</span>: string($date)<br>
+                        <span class="highlight">cpfCnpj</span>: string <span class="comment">// CPF/CNPJ válido</span><br>
+                        <span class="highlight">occupation</span>: string <span class="comment">// min 2</span><br>
+                        <span class="highlight">academicTitle</span>: string <span class="comment">// min 2</span><br>
+                        <span class="highlight">imageProfileUrl</span>: string <span class="comment">// min 5</span>
+                    </div>
+                </div>
+        
+            <!-- 3. Fechamento da div que criamos no passo 2 -->
+            </div>
+        
         </div>
         </div>
 
