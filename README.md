@@ -41,3 +41,7 @@ https://joao-2003.github.io/Documentation/User/user_doc.html
 Reports Documentation: 
 
 https://joao-2003.github.io/Documentation/Reports/reports_doc.html
+
+History Documentation: 
+
+https://joao-2003.github.io/Documentation/AccessHistory/history_doc.html
