@@ -937,7 +937,88 @@
         
         </div>
         </div>
-
+        
+        <!-- ======================================================= -->
+        <!-- MÓDULO: SEGURANÇA E PERMISSÕES (RBAC)                   -->
+        <!-- ======================================================= -->
+        <div class="module-wrapper" id="mod-security">
+            <h2 class="module-header">Segurança e Níveis de Acesso (RBAC)</h2>
+            <p class="module-desc">
+                A API utiliza um controle de acesso granular baseado em papéis (Role-Based Access Control) focado na entidade <strong>Fazenda</strong>. 
+                As permissões são validadas dinamicamente em tempo de execução. Um usuário pode ser Gerente na "Fazenda A" e ter apenas nível de leitura na "Fazenda B".
+            </p>
+            
+            <!-- GAVETA DE MATRIZ DE ACESSOS -->
+            <div class="op-block-tag" onclick="toggleSection('security-container')">
+                <span>Matriz de Permissões da Equipe</span>
+                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+            </div>
+        
+            <div id="security-container" style="display: block;">
+                <div class="service-rule">
+                    <strong>Como a API decide se bloqueia a requisição?</strong><br>
+                    Ao tentar editar um Lote, a API intercepta o pedido e verifica a relação do seu <code>Token</code> com o dono daquele <code>Lote</code>. Se a sua Role for <code>RESTRICTED_ROLE</code> e o lote pertencer a outro usuário, o Spring Security bloqueia a ação devolvendo <strong>403 Forbidden</strong>.
+                </div>
+        
+                <table style="margin-top: 15px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Role (Papel)</th>
+                            <th style="width: 35%;">Gestão da Fazenda<br><span style="font-weight:normal; font-size:12px;">(Farms, Fields, Equipe)</span></th>
+                            <th style="width: 40%;">Dados Agrícolas / Emissões<br><span style="font-weight:normal; font-size:12px;">(Batches, Analyses ARVA, Emissions GHG)</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>MANAGER_ROLE</strong><br><span style="font-size:11px; color:#7d8492;">(Gerente Geral)</span></td>
+                            <td><span class="status-badge status-200">Acesso Total</span><br>Pode editar os dados da fazenda, criar novos talhões (fields) e convidar/expulsar membros da equipe.</td>
+                            <td><span class="status-badge status-200">Acesso Total</span><br>Pode criar, editar e excluir os Lotes, Análises e Emissões de <strong>qualquer usuário</strong> vinculado à fazenda.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MANAGER_AUX_ROLE</strong><br><span style="font-size:11px; color:#7d8492;">(Subgerente / Agrônomo Chefe)</span></td>
+                            <td><span class="status-badge status-403">Bloqueado</span><br>Nenhum controle sobre estrutura física ou equipe.</td>
+                            <td><span class="status-badge status-200">Acesso Total</span><br>Pode criar, editar e excluir os Lotes, Análises e Emissões de <strong>qualquer usuário</strong> vinculado à fazenda.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RESTRICTED_ROLE</strong><br><span style="font-size:11px; color:#7d8492;">(Técnico Operador)</span></td>
+                            <td><span class="status-badge status-403">Bloqueado</span><br>Nenhum controle sobre estrutura física ou equipe.</td>
+                            <td><span class="status-badge status-401" style="background:#fca130;">Acesso Parcial (Own Data)</span><br>Pode criar dados, mas <strong>só pode editar e excluir os Lotes/Análises que ele mesmo criou</strong>. Não pode alterar registros feitos por outros usuários.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>VIEWER_ROLE</strong><br><span style="font-size:11px; color:#7d8492;">(Leitor / Auditor)</span></td>
+                            <td><span class="status-badge status-302" style="background:#61affe;">Visualização</span><br>Listagem e visualização de dados.</td>
+                            <td><span class="status-badge status-302" style="background:#61affe;">Visualização</span><br>Apenas leitura e acesso aos relatórios (HTML/XLS). Proibido modificar dados.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- SCHEMAS -->
+            <div class="models-section">
+                <div class="op-block-tag" onclick="toggleSection('schemas-security')">
+                    <span>Schemas (Mapa de Permissões Internas)</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+        
+                <div id="schemas-security" style="display: block;">
+                    <div class="model-container">
+                        <div class="model-title" onclick="toggleModel(this)">System Permissions Enum <span class="arrow">▼</span></div>
+                        <div class="model-content">
+                            <span class="comment">// Mapeamento técnico de Authorities verificadas pelo Spring Security Evaluator</span><br><br>
+                            <span class="highlight">MANAGE_FARM</span>: Controle total sobre a entidade Farm, Field e Team.<br>
+                            <span class="highlight">CREATE_BATCH_DATA</span>: Permissão base para inserir novos Lotes, Análises e Emissões.<br>
+                            <span class="highlight">EDIT_ALL_BATCH_DATA</span>: Authority para atualizar qualquer registro de Lote/Análise/Emissão na Fazenda (Bypass no Owner).<br>
+                            <span class="highlight">EDIT_OWN_BATCH_DATA</span>: Authority para atualizar apenas os registros atrelados ao UserCreator.<br>
+                            <span class="highlight">DELETE_ALL_BATCH_DATA</span>: Authority para excluir qualquer registro na Fazenda em cascata.<br>
+                            <span class="highlight">DELETE_OWN_BATCH_DATA</span>: Authority para excluir apenas os registros atrelados ao UserCreator.<br>
+                            <span class="highlight">VIEWER</span>: Acesso global de leitura.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+        
         <!-- ======================================================= -->
         <!-- MÓDULO 2: PESQUISA DE USUÁRIOS                          -->
         <!-- ======================================================= -->
