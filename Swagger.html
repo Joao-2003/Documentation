@@ -291,7 +291,7 @@
                             <li><strong>cpfCnpj:</strong> Formato válido (ex: <code>000.000.000-00</code> ou <code>00.000.000/0000-00</code>).</li>
                             <li><strong>state, city:</strong> Obrigatórios.</li>
                             <li><strong>occupation, academicTitle:</strong> Min 2 letras.</li>
-                            <li><strong>imageProfileUrl:</strong> Min 5 letras.</li>
+                            <li><strong>imageProfileKey:</strong> Min 5 letras.</li>
                         </ul>
                     </div>
 
@@ -309,7 +309,7 @@
   <span class="highlight">"cpfCnpj"</span>: <span class="string">"123.456.789-00"</span>,
   <span class="highlight">"occupation"</span>: <span class="string">"Agrônomo"</span>,
   <span class="highlight">"academicTitle"</span>: <span class="string">"Doutor"</span>,
-  <span class="highlight">"imageProfileUrl"</span>: <span class="string">"http://..."</span>
+  <span class="highlight">"imageProfileKey"</span>: <span class="string">"http://..."</span>
 }</pre>
                     </div>
 
@@ -329,7 +329,7 @@
   "cpfCnpj": "000.000.000-00",
   "occupation": "string",
   "academicTitle": "string",
-  "imageProfileUrl": "string"
+  "imageProfileKey": "string"
 }</textarea>
                             <button class="execute-btn" onclick="executeRequest('POST', '/api/auth/register/', 'req-register', 'res-register')">Executar</button>
                             <div class="response-box" id="res-register"></div>
@@ -356,7 +356,7 @@
   <span class="highlight">"occupation"</span>: <span class="boolean">null</span>,
   <span class="highlight">"academicTitle"</span>: <span class="boolean">null</span>,
   <span class="highlight">"username"</span>: <span class="string">"joao"</span>,
-  <span class="highlight">"imageProfileUrl"</span>: <span class="boolean">null</span>
+  <span class="highlight">"imageProfileKey"</span>: <span class="boolean">null</span>
 }</pre>
                                     </div>
                                 </td>
@@ -553,7 +553,7 @@
                             <li><strong>cpfCnpj:</strong> Formato válido (ex: <code>000.000.000-00</code> ou <code>00.000.000/0000-00</code>).</li>
                             <li><strong>occupation:</strong> Mínimo 2 letras.</li>
                             <li><strong>academicTitle:</strong> Mínimo 2 letras.</li>
-                            <li><strong>imageProfileUrl:</strong> Mínimo 5 letras.</li>
+                            <li><strong>imageProfileKey:</strong> Mínimo 5 letras.</li>
                         </ul>
                     </div>
 
@@ -887,7 +887,7 @@
                         <span class="highlight">cpfCnpj</span>: string <span class="prop-req">*CPF ou CNPJ válido</span><br>
                         <span class="highlight">occupation</span>: string <span class="prop-req">*Min 2 caracteres</span><br>
                         <span class="highlight">academicTitle</span>: string <span class="prop-req">*Min 2 caracteres</span><br>
-                        <span class="highlight">imageProfileUrl</span>: string <span class="prop-req">*Link da imagem de perfil</span>
+                        <span class="highlight">imageProfileKey</span>: string <span class="prop-req">*Link da imagem de perfil</span>
                     </div>
                 </div>
         
@@ -907,7 +907,7 @@
                         <span class="highlight">cpfCnpj</span>: string<br>
                         <span class="highlight">occupation</span>: string<br>
                         <span class="highlight">academicTitle</span>: string<br>
-                        <span class="highlight">imageProfileUrl</span>: string<br>
+                        <span class="highlight">imageProfileKey</span>: string<br>
                         <span class="highlight">totalFarmOwnerByUser</span>: long <span class="comment">// Qtd de fazendas próprias</span><br>
                         <span class="highlight">totalFarmsByUser</span>: long <span class="comment">// Qtd de fazendas vinculadas</span><br>
                         <span class="highlight">createdAt</span>: string($date-time)
@@ -928,7 +928,7 @@
                         <span class="highlight">cpfCnpj</span>: string <span class="comment">// CPF/CNPJ válido</span><br>
                         <span class="highlight">occupation</span>: string <span class="comment">// min 2</span><br>
                         <span class="highlight">academicTitle</span>: string <span class="comment">// min 2</span><br>
-                        <span class="highlight">imageProfileUrl</span>: string <span class="comment">// min 5</span>
+                        <span class="highlight">imageProfileKey</span>: string <span class="comment">// min 5</span>
                     </div>
                 </div>
         
@@ -1114,7 +1114,7 @@
                         <span class="highlight">username</span>: <span class="string">string</span><br>
                         <span class="highlight">name</span>: <span class="string">string</span><br>
                         <span class="highlight">email</span>: <span class="string">string</span><br>
-                        <span class="highlight">imageProfileUrl</span>: <span class="string">string</span>
+                        <span class="highlight">imageProfileKey</span>: <span class="string">string</span>
                     </div>
                 </div>
         
@@ -1353,7 +1353,7 @@
   <span class="highlight">"city"</span>: <span class="string">"Rio Verde"</span>,
   <span class="highlight">"email"</span>: <span class="string">"contato@agrosilva.com.br"</span>,
   <span class="highlight">"birthDateFoundation"</span>: <span class="string">"1998-05-15"</span>,
-  <span class="highlight">"profileImageUrl"</span>: <span class="string">"https://linkdafoto.com"</span>
+  <span class="highlight">"profileImageKey"</span>: <span class="string">"https://linkdafoto.com"</span>
 }</pre>
                     </div>
 
@@ -1665,7 +1665,7 @@
                         <span class="highlight">city</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório</span><br>
                         <span class="highlight">email</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (Formato de e-mail)</span><br>
                         <span class="highlight">birthDateFoundation</span>: <span class="string">date</span> (yyyy-MM-dd) <span class="prop-req">*Obrigatório (No passado)</span><br>
-                        <span class="highlight">profileImageUrl</span>: <span class="string">string</span> <span class="comment">// Mínimo 5 chars</span>
+                        <span class="highlight">profileImageKey</span>: <span class="string">string</span> <span class="comment">// Mínimo 5 chars</span>
                     </div>
                 </div>
         
@@ -1680,7 +1680,7 @@
                         <span class="highlight">city</span>: <span class="string">string</span><br>
                         <span class="highlight">email</span>: <span class="string">string</span><br>
                         <span class="highlight">birthDateFoundation</span>: <span class="string">date</span><br>
-                        <span class="highlight">profileImageUrl</span>: <span class="string">string</span>
+                        <span class="highlight">profileImageKey</span>: <span class="string">string</span>
                     </div>
                 </div>
         
@@ -1697,7 +1697,7 @@
                         <span class="highlight">state</span>: <span class="string">string</span><br>
                         <span class="highlight">city</span>: <span class="string">string</span><br>
                         <span class="highlight">phone</span>: <span class="string">string</span><br>
-                        <span class="highlight">profileImageUrl</span>: <span class="string">string</span><br>
+                        <span class="highlight">profileImageKey</span>: <span class="string">string</span><br>
                         <span class="highlight">createdDate</span>: <span class="string">date</span><br>
                         <span class="highlight">qtyFarms</span>: <span class="number">integer</span> <span class="comment">// Qtd atualizada de fazendas atreladas</span><br>
                         <span class="highlight">farmsTotalAreaHectares</span>: <span class="number">float</span> <span class="comment">// Soma de hectares das fazendas</span><br>
@@ -2383,7 +2383,7 @@
                         <span class="highlight">businessEmail</span>: <span class="string">string</span> (e-mail válido)<br>
                         <span class="highlight">cpfCnpj</span>: <span class="string">string</span> (Regex Válido)<br>
                         <span class="highlight">totalAreaHectares</span>: <span class="number">float</span> <span class="prop-req">*Obrigatório na criação (Positivo)</span><br>
-                        <span class="highlight">farmImageUrl</span>: <span class="string">string</span>
+                        <span class="highlight">farmImageKey</span>: <span class="string">string</span>
                     </div>
                 </div>
         
@@ -2413,7 +2413,7 @@
                         <span class="highlight">updatedAt</span>: <span class="string">datetime</span><br>
                         <span class="highlight">userManagerName</span>: <span class="string">string</span><br>
                         <span class="highlight">color</span>: <span class="string">string</span><br>
-                        <span class="highlight">farmImageUrl</span>: <span class="string">string</span><br>
+                        <span class="highlight">farmImageKey</span>: <span class="string">string</span><br>
                         <span class="highlight">farmOwnerName</span>: <span class="string">string</span><br>
                         <span class="highlight">managerMembers</span>: <span class="string">Array&lt;FarmMemberResponse&gt;</span>
                     </div>
