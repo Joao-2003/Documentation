@@ -14,6 +14,14 @@ Pdf 3:
 
 https://joao-2003.github.io/Documentation/tecnico.html
 
+Pdf 4:
+
+https://joao-2003.github.io/Documentation/fazenda.html
+
+Pdf 5: 
+
+https://joao-2003.github.io/Documentation/fazenda1.html
+
 Authorization Documentation: 
 
 https://joao-2003.github.io/Documentation/Security/Authentication/auth_doc.html
