@@ -18,9 +18,13 @@ Talhão:
 
 https://joao-2003.github.io/Documentation/safra.html
 
-Fazenda: 
+Fazendas: 
 
 https://joao-2003.github.io/Documentation/fazenda1.html
+
+Proprietários: 
+
+https://joao-2003.github.io/Documentation/owners.html
 
 Authorization Documentation: 
 
