@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- METADADOS TÉCNICOS -->
+    <meta name="user" th:content="${reportData.userName ?: ''}">
+    
+    <title>RV Carbon - Relatório de Proprietários</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+    <!-- Fonte Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* RESET E GERAL */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e5e5e5;
+            color: #1f2937;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* CORES */
+        .text-green-dark { color: #064e3b; }
+        .text-green-main { color: #059669; }
+        .text-red { color: #dc2626; }
+        .text-black { color: #111; }
+        .text-gray { color: #6b7280; }
+        .text-gray-dark { color: #374151; }
+
+        /* PAGINA A4 */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 10mm 15mm; 
+            margin: 20px auto;
+            background: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 4px solid #059669;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            height: auto;
+        }
+        .header-title h1 { font-size: 22px; font-weight: 800; line-height: 1; text-transform: uppercase; color: #111; }
+        .header-title p { color: #047857; font-weight: 600; font-size: 13px; margin-top: 2px; }
+        .header-logo { text-align: right; }
+        .header-logo .brand { font-size: 18px; font-weight: 800; color: #064e3b; }
+        .header-logo .date { font-size: 9px; color: #6b7280; margin-top: 2px; }
+
+        /* INFO BOX */
+        .info-box {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 12px;
+            display: flex;
+        }
+        .info-col { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .info-col.right { border-left: 1px solid #d1d5db; padding-left: 20px; text-align: right; }
+        
+        .label { font-size: 8px; font-weight: 700; text-transform: uppercase; color: #9ca3af; margin-bottom: 2px; letter-spacing: 0.5px; }
+        .value { font-size: 13px; font-weight: 700; color: #1f2937; line-height: 1.2; }
+        .value-sm { font-size: 11px; font-weight: 600; color: #374151; }
+        .value-highlight { color: #059669; font-weight: 700; font-size: 15px; }
+
+        /* KPI GRID - 3 COLUNAS */
+        .kpi-grid-3 { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 10px; 
+            margin-bottom: 12px; 
+            flex-shrink: 0;
+        } 
+        
+        /* KPI CARD */
+        .kpi-card { 
+            border-radius: 8px; 
+            padding: 10px; 
+            background: white; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            min-height: 70px;
+            border: 1px solid #e5e7eb;
+        }
+        .kpi-card.success { border: 1px solid #059669; }
+        .kpi-card.success .label { color: #059669; }
+        .kpi-card.warning { border: 1px solid #dc2626; background-color: white; }
+        .kpi-card.warning .label { color: #dc2626; }
+        .kpi-card .label { font-size: 9px; margin-bottom: 3px; text-transform: uppercase; font-weight: 700; }
+        .kpi-val { font-size: 20px; font-weight: 800; margin-top: 1px; line-height: 1; color: #111; }
+
+        /* CHART BOXES */
+        .chart-box {
+            border: 1px solid #f3f4f6;
+            border-radius: 8px;
+            padding: 8px;
+            background: white;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px; 
+            page-break-inside: avoid;
+        }
+        .chart-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 8px;
+            padding-left: 8px;
+            border-left: 4px solid #f59e0b;
+            flex-shrink: 0;
+        }
+        .chart-title.green { border-color: #059669; }
+        
+        .chart-content { 
+            position: relative; 
+            width: 100%; 
+            height: 180px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* TABELA SIMPLES */
+        .simple-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+            margin-top: 5px;
+        }
+        .simple-table th {
+            background-color: #ecfdf5;
+            color: #064e3b;
+            padding: 5px 8px;
+            text-align: left;
+            font-weight: 700;
+            border-bottom: 1px solid #d1fae5;
+            text-transform: uppercase;
+            font-size: 8px;
+        }
+        .simple-table td {
+            padding: 5px 8px;
+            border-bottom: 1px solid #f3f4f6;
+            color: #374151;
+            font-weight: 500;
+        }
+        .simple-table .total-row td {
+            background-color: #f9fafb;
+            font-weight: 800;
+            color: #111;
+            border-bottom: none;
+        }
+        .dot {
+            height: 6px;
+            width: 6px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+        }
+        
+        .status-ok { color: #059669; font-weight: 700; font-size: 7px; text-transform: uppercase; }
+        .status-warn { color: #dc2626; font-weight: 700; font-size: 7px; text-transform: uppercase; }
+
+        /* DETALHES DO PROPRIETÁRIO (Grid Interno) */
+        .owner-details {
+            display: flex; 
+            gap: 15px; 
+            padding: 5px 10px; 
+            margin-bottom: 10px; 
+            border-bottom: 1px dashed #e5e7eb;
+        }
+
+        /* RODAPÉ */
+        .footer-inst {
+            margin-top: auto;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 6px;
+            font-size: 7px;
+            color: #6b7280;
+            line-height: 1.2;
+            text-align: justify;
+        }
+        .footer-meta {
+            margin-top: 4px;
+            border-top: 1px solid #f3f4f6;
+            padding-top: 4px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 7px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #9ca3af;
+        }
+
+        @media print {
+            body { background: none; margin: 0; }
+            .page { margin: 0; width: 210mm; min-height: 297mm; box-shadow: none; page-break-after: always; padding: 10mm; }
+            .no-print { display: none; }
+            button { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="no-print" style="position: fixed; top: 10px; right: 10px; z-index: 999;">
+    <button onclick="window.print()" style="background: #064e3b; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">SALVAR PDF</button>
+</div>
+
+<div class="page">
+
+    <!-- 1. Header -->
+    <header class="header">
+        <div class="header-title">
+            <h1>Relatório de Proprietários</h1>
+            <p>Gestão de Titularidade e Propriedades Rurais</p>
+        </div>
+        <div class="header-logo">
+            <div class="brand">RV Carbon</div>
+            <div class="date">Gerado em: <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy')}">24/05/2026</span></div>
+        </div>
+    </header>
+
+    <!-- 2. Info Box -->
+    <div class="info-box">
+        <div class="info-col">
+            <div style="margin-bottom: 6px;">
+                <div class="label">Usuário Gerador / Responsável</div>
+                <div class="value" th:text="${reportData.userName ?: 'Carlos Eduardo Silva'}">Carlos Eduardo Silva</div>
+            </div>
+            <div>
+                <div class="label">Total de Proprietários</div>
+                <div class="value-sm" th:text="${reportData.totalOwners ?: 2} + ' Registros'">2 Registros</div>
+            </div>
+        </div>
+
+        <div class="info-col right">
+            <div style="margin-bottom: 8px;">
+                <div class="label">Área Total Administrada</div>
+                <div class="value-highlight" th:text="${#numbers.formatDecimal(reportData.globalTotalArea ?: 8650.50, 1, 'POINT', 2, 'COMMA')} + ' ha'">8.650,50 ha</div>
+            </div>
+            <div>
+                <div class="label">Fazendas Vinculadas (Total)</div>
+                <div class="value-sm text-gray-dark" th:text="${reportData.totalFarms ?: 5} + ' Unidades'">5 Unidades</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. KPIs -->
+    <div class="kpi-grid-3">
+        <div class="kpi-card success">
+            <div class="label">Proprietários (Titulares)</div>
+            <div class="kpi-val" th:text="${reportData.totalOwners ?: 2}">2</div>
+        </div>
+        <div class="kpi-card success">
+            <div class="label">Fazendas Cadastradas</div>
+            <div class="kpi-val" th:text="${reportData.totalFarms ?: 5}">5</div>
+        </div>
+        <div class="kpi-card">
+            <div class="label">Média de Área por Proprietário</div>
+            <div class="kpi-val" th:text="${#numbers.formatDecimal((reportData.globalTotalArea ?: 8650.50) / (reportData.totalOwners ?: 2), 1, 'POINT', 2, 'COMMA')} + ' ha'">4.325,25 ha</div>
+        </div>
+    </div>
+
+    <!-- 4. Seção Gráfico e Tabela Agregada -->
+    <div class="chart-box" style="margin-bottom: 12px; flex-grow: 0;">
+        <div class="chart-title green">Distribuição de Área por Proprietário</div>
+        
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <!-- Gráfico (Esquerda) -->
+            <div class="chart-content" style="flex: 1; height: 180px;">
+                <canvas id="areaChart"></canvas>
+            </div>
+
+            <!-- Tabela Resumo (Direita) -->
+            <div style="flex: 1; padding-right: 10px;">
+                <table class="simple-table" style="margin-top: 0;">
+                    <thead>
+                        <tr>
+                            <th>Proprietário</th>
+                            <th style="text-align: right;">Área (ha)</th>
+                            <th style="text-align: right;">%</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="dot" style="background-color: #15803d;"></span> Agro Pecuária Silva</td>
+                            <td style="text-align: right;" th:text="${#numbers.formatDecimal(reportData.owner1Area ?: 4500.00, 1, 'POINT', 2, 'COMMA')}">4.500,00</td>
+                            <td style="text-align: right;" class="calc-pct-1">52%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="dot" style="background-color: #eab308;"></span> Roberto Vasconcelos</td>
+                            <td style="text-align: right;" th:text="${#numbers.formatDecimal(reportData.owner2Area ?: 4150.50, 1, 'POINT', 2, 'COMMA')}">4.150,50</td>
+                            <td style="text-align: right;" class="calc-pct-2">48%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Loop de Proprietários e suas Fazendas -->
+    
+    <!-- LÓGICA THYMELEAF: <th:block th:each="owner : ${reportData.owners}"> -->
+    
+    <!-- MOCK: PROPRIETÁRIO 1 -->
+    <div class="chart-box" style="margin-bottom: 8px; flex-grow: 0;">
+        <div class="chart-title green" th:text="${owner.name} + ' - ' + ${owner.cpfCnpj}">Agro Pecuária Silva - 12.345.678/0001-99</div>
+        
+        <!-- Detalhes do Proprietário -->
+        <div class="owner-details">
+            <div style="flex: 1;">
+                <div class="label">Localização Sede</div>
+                <div class="value-sm" style="font-weight: 500;">Rio Verde - GO</div>
+            </div>
+            <div style="flex: 1;">
+                <div class="label">Contato</div>
+                <div class="value-sm" style="font-weight: 500;">(64) 99999-1234</div>
+            </div>
+            <div style="flex: 1;">
+                <div class="label">E-mail Corporativo</div>
+                <div class="value-sm" style="font-weight: 500;">contato@agrosilva.com.br</div>
+            </div>
+            <div style="flex: 1; text-align: right;">
+                <div class="label">Área Total Vinculada</div>
+                <div class="value-sm" style="font-weight: 700; color: #064e3b;">4.500,00 ha</div>
+            </div>
+        </div>
+
+        <div style="padding: 0 10px 10px 10px;">
+            <div class="label" style="margin-bottom: 5px; color: #064e3b;">Fazendas Cadastradas</div>
+            <table class="simple-table" style="margin-top: 0;">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">Nome da Fazenda</th>
+                        <th style="width: 25%;">Localização</th>
+                        <th style="width: 20%; text-align: right;">Área Total (ha)</th>
+                        <th style="width: 15%; text-align: right;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- LÓGICA THYMELEAF: <tr th:each="farm : ${owner.farms}"> -->
+                    <tr>
+                        <td style="font-weight: 600;">Fazenda Bela Vista</td>
+                        <td>Campinas - SP</td>
+                        <td style="text-align: right;">1.500,50</td>
+                        <td style="text-align: right;" class="status-ok">ATIVA</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">Fazenda Santa Cruz</td>
+                        <td>Rio Verde - GO</td>
+                        <td style="text-align: right;">2.999,50</td>
+                        <td style="text-align: right;" class="status-ok">ATIVA</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MOCK: PROPRIETÁRIO 2 -->
+    <div class="chart-box" style="margin-bottom: 8px; flex-grow: 0;">
+        <div class="chart-title green">Roberto Vasconcelos - 000.000.000-00</div>
+        
+        <!-- Detalhes do Proprietário -->
+        <div class="owner-details">
+            <div style="flex: 1;">
+                <div class="label">Localização Sede</div>
+                <div class="value-sm" style="font-weight: 500;">Jataí - GO</div>
+            </div>
+            <div style="flex: 1;">
+                <div class="label">Contato</div>
+                <div class="value-sm" style="font-weight: 500;">(64) 98888-0000</div>
+            </div>
+            <div style="flex: 1;">
+                <div class="label">E-mail Corporativo</div>
+                <div class="value-sm" style="font-weight: 500;">roberto.v@email.com</div>
+            </div>
+            <div style="flex: 1; text-align: right;">
+                <div class="label">Área Total Vinculada</div>
+                <div class="value-sm" style="font-weight: 700; color: #064e3b;">4.150,50 ha</div>
+            </div>
+        </div>
+
+        <div style="padding: 0 10px 10px 10px;">
+            <div class="label" style="margin-bottom: 5px; color: #064e3b;">Fazendas Cadastradas</div>
+            <table class="simple-table" style="margin-top: 0;">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">Nome da Fazenda</th>
+                        <th style="width: 25%;">Localização</th>
+                        <th style="width: 20%; text-align: right;">Área Total (ha)</th>
+                        <th style="width: 15%; text-align: right;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 600;">Fazenda Esperança Matriz</td>
+                        <td>Rio Verde - GO</td>
+                        <td style="text-align: right;">1.250,00</td>
+                        <td style="text-align: right;" class="status-ok">ATIVA</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">Fazenda Alvorada</td>
+                        <td>Jataí - GO</td>
+                        <td style="text-align: right;">2.100,50</td>
+                        <td style="text-align: right;" class="status-ok">ATIVA</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">Gleba do Sol</td>
+                        <td>Montividiu - GO</td>
+                        <td style="text-align: right;">800,00</td>
+                        <td style="text-align: right;" class="status-warn">INATIVA</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- FIM LOOP PROPRIETÁRIOS: </th:block> -->
+
+    <!-- 6. Rodapé -->
+    <div style="margin-top: auto;">
+        <div class="footer-inst">
+            <strong style="color: #4b5563; text-transform: uppercase;">RV Carbon - Relatório de Proprietários e Fazendas</strong><br>
+            Este relatório consolida os dados de todos os Proprietários sob a responsabilidade do usuário gerador, listando suas informações de contato e a relação de Fazendas ativas e inativas vinculadas ao seu portfólio.
+        </div>
+        <div class="footer-meta">
+            <div>Gerado por: RV Carbon System</div>
+            <div>RV Carbon &copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2026</span> | Página 1</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- SCRIPTS -->
+<script th:inline="javascript">
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = '#374151';
+
+    /*[+
+    const area1 = [[${reportData.owner1Area}]] || 0;
+    const area2 = [[${reportData.owner2Area}]] || 0;
+    +]*/
+    
+    // Fallback Mock Data
+    if (typeof area1 === 'undefined' || (area1 === 0 && area2 === 0)) {
+        var area1 = 4500.00; 
+        var area2 = 4150.50; 
+    }
+
+    const totalArea = area1 + area2;
+    
+    // Calcula porcentagens simples para exibir na tabela via JS
+    if(totalArea > 0) {
+        if(document.querySelector('.calc-pct-1')) document.querySelector('.calc-pct-1').innerText = Math.round((area1/totalArea)*100) + '%';
+        if(document.querySelector('.calc-pct-2')) document.querySelector('.calc-pct-2').innerText = Math.round((area2/totalArea)*100) + '%';
+    }
+
+    const areaData = {
+        labels: ['Agro Pecuária Silva', 'Roberto Vasconcelos'],
+        values: [area1, area2]
+    };
+
+    const ctx = document.getElementById('areaChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut', 
+        data: {
+            labels: areaData.labels,
+            datasets: [{
+                data: areaData.values,
+                backgroundColor: [
+                    '#15803d', 
+                    '#eab308'
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            devicePixelRatio: 4,
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+                padding: 10
+            },
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 6,
+                        padding: 10,
+                        font: { size: 9, weight: '500' }
+                    }
+                },
+                datalabels: {
+                    color: '#fff',
+                    font: {
+                        weight: 'bold',
+                        size: 9
+                    },
+                    formatter: (value, ctx) => {
+                        let sum = 0;
+                        let dataArr = ctx.chart.data.datasets[0].data;
+                        dataArr.map(data => { sum += data; });
+                        if (sum === 0) return "0%";
+                        return (value*100 / sum).toFixed(0)+"%";
+                    },
+                    anchor: 'center', 
+                    align: 'center'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed.toLocaleString('pt-BR') + ' ha';
+                        }
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+</script>
+</body>
+</html>
