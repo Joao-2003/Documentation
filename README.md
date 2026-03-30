@@ -1,3 +1,7 @@
+Swagger:
+
+https://joao-2003.github.io/Documentation/Swagger.html
+
 Pdf 1: 
 
 https://joao-2003.github.io/Documentation/classico.html
