@@ -4525,182 +4525,253 @@
         <!-- ======================================================= -->
         <div class="module-wrapper" id="mod-reports">
             <h2 class="module-header">Relatórios (HTML Renderizados)</h2>
-            <p class="module-desc">Fornece as telas de relatórios visuais (text/html) prontas pelo lado do servidor via Thymeleaf. Não retorna JSON.</p>
-
-            <!-- REPORTS CONTROLLER SECTION -->
-        <div class="op-block-tag" onclick="toggleSection('reports-container')">
-            <span>Reports Controller</span>
-            <small>Geração de Telas e Relatórios Visuais</small>
-        </div>
-
-        <div id="reports-container">
-
-            <!-- GET EMISSIONS REPORT -->
-            <div class="op-block get">
-                <div class="op-block-summary" onclick="toggleBody(this)">
-                    <span class="op-block-summary-method">GET</span>
-                    <span class="op-block-summary-path">/reports/emissions/{batchId}/</span>
-                    <span class="op-block-summary-desc">Relatório de Emissões GHG (HTML)</span>
-                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
-                </div>
-                <div class="op-block-body">
-                    <div class="service-rule">
-                        <strong>Comportamento:</strong> Este endpoint carrega os dados de um Lote de Emissões Específico (<code>EmissionBatchGhg</code>) e de todas as suas análises vinculadas, injetando-os no template <code>emissionsGhg_report.html</code>.
-                        <br>Requer autenticação válida (Bearer Token) para acesso aos dados do lote.
-                    </div>
-                    
-                    <div class="section-header">Parâmetros (Path)</div>
-                    <table>
-                        <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td>batchId</td><td>Sim</td><td>O ID numérico do Lote de Emissão a ser detalhado.</td></tr>
-                    </table>
-
-                    <!-- TESTER -->
-                    <div class="try-out-wrapper">
-                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
-                        <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">ID do Lote de Emissão:</label>
-                            <input type="text" id="path-report-ghg-id" class="fake-input" style="width:100%; margin-bottom:10px;" value="10">
-                            <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
-                            <input type="text" id="token-report-ghg" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Bearer Token">
-                            
-                            <button class="execute-btn" onclick="executeRequest('GET', '/reports/emissions/' + document.getElementById('path-report-ghg-id').value + '/', null, 'res-report-ghg', 'token-report-ghg')">Renderizar View</button>
-                            <div class="response-box" id="res-report-ghg"></div>
-                        </div>
-                    </div>
-
-                    <div class="section-header">Respostas Possíveis</div>
-                    <table>
-                        <tr>
-                            <td><span class="status-badge status-200">200</span></td>
-                            <td>
-                                <strong>Sucesso (text/html):</strong> Retorna o código-fonte da página HTML construída com os relatórios GHG.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><span class="status-badge status-404">404</span></td>
-                            <td>
-                                <strong>Não Encontrado:</strong> O Lote (Batch) solicitado não existe.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><span class="status-badge status-401">401</span></td>
-                            <td><strong>Não Autorizado:</strong> Requer usuário autenticado para carregar os dados.</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <!-- GET ARVA REPORT -->
-            <div class="op-block get">
-                <div class="op-block-summary" onclick="toggleBody(this)">
-                    <span class="op-block-summary-method">GET</span>
-                    <span class="op-block-summary-path">/reports/arva/{fieldId}</span>
-                    <span class="op-block-summary-desc">Relatório ARVA por Talhão (HTML)</span>
-                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
-                </div>
-                <div class="op-block-body">
-                    <div class="service-rule">
-                        <strong>Comportamento:</strong> Busca o histórico de análises agrícolas (ARVA) de um <strong>Talhão específico</strong>, restrito a um período de tempo predeterminado pelas datas de início e fim enviadas na URL. 
-                        O resultado compõe o template <code>analysis_arva_report.html</code>.
-                    </div>
-                    
-                    <div class="section-header">Parâmetros Obrigatórios</div>
-                    <table>
-                        <tr><th>Nome</th><th>Local</th><th>Formato</th><th>Descrição</th></tr>
-                        <tr><td>fieldId</td><td>Path</td><td>Long</td><td>ID numérico do Talhão.</td></tr>
-                        <tr><td>startDate</td><td>Query</td><td>yyyy-MM-dd</td><td>Data de início da consulta estatística.</td></tr>
-                        <tr><td>endDate</td><td>Query</td><td>yyyy-MM-dd</td><td>Data de fim da consulta estatística.</td></tr>
-                    </table>
-
-                    <!-- TESTER -->
-                    <div class="try-out-wrapper">
-                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
-                        <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">ID do Talhão:</label>
-                            <input type="text" id="path-report-arva-id" class="fake-input" style="width:50px; margin-bottom:10px;" value="2">
-                            <label style="font-size:12px; font-weight:bold;">Datas (Query):</label>
-                            <input type="text" id="query-report-arva" class="fake-input" style="width:100%; margin-bottom:10px;" value="?startDate=2023-01-01&endDate=2023-12-31">
-                            <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
-                            <input type="text" id="token-report-arva" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Bearer Token">
-                            
-                            <button class="execute-btn" onclick="executeRequest('GET', '/reports/arva/' + document.getElementById('path-report-arva-id').value + document.getElementById('query-report-arva').value, null, 'res-report-arva', 'token-report-arva')">Renderizar View</button>
-                            <div class="response-box" id="res-report-arva"></div>
-                        </div>
-                    </div>
-
-                    <div class="section-header">Respostas Possíveis</div>
-                    <table>
-                        <tr>
-                            <td><span class="status-badge status-200">200</span></td>
-                            <td>
-                                <strong>Sucesso (text/html):</strong> Página renderizada com as estatísticas do Talhão.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><span class="status-badge status-400">400</span></td>
-                            <td>
-                                <strong>Erro de Requisição:</strong> Falha de formatação. Ocorre se o formato da data não for estritamente <code>yyyy-MM-dd</code>.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><span class="status-badge status-500">500</span></td>
-                            <td>
-                                <strong>Erro Interno (Edge Case):</strong> Se nenhum lote for encontrado no período selecionado, a aplicação tentará acessar <code>arvaBatchs.get(0)</code> e lançará uma exceção (IndexOutOfBoundsException).
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- SCHEMAS -->
-        <div class="models-section">
-            
-            <!-- 1. Título clicável com a setinha adicionada -->
-            <div class="op-block-tag" onclick="toggleSection('schemas-reports')">
-                <span>Schemas (Estrutura de Dados Injetada nas Views HTML)</span>
+            <p class="module-desc">Fornece as telas de relatórios visuais (text/html) prontas pelo lado do servidor via Thymeleaf. <strong>Atenção: Estas rotas não retornam JSON.</strong></p>
+        
+            <div class="op-block-tag" onclick="toggleSection('reports-container')">
+                <span>Reports Controller</span>
+                <small>Geração de Telas e Relatórios Visuais</small>
                 <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
         
-            <!-- 2. Div que "abraça" todos os seus containers para colapsar -->
-            <div id="schemas-reports" style="display: block;">
+            <div id="reports-container" style="display: block;">
         
-                <div class="model-container">
-                    <div class="model-title" onclick="toggleModel(this)">FieldReportData (Estatísticas do Talhão) <span class="arrow">▼</span></div>
-                    <div class="model-content">
-                        <span class="comment">// Nota: Esta estrutura NÃO é retornada como JSON na requisição. Ela é apenas a classe interna usada para montar o HTML na rota de ARVA. Documentada aqui para clareza das regras de negócio.</span><br><br>
-                        <span class="highlight">fieldName</span>: <span class="string">string</span><br>
-                        <span class="highlight">totalAreaHec</span>: <span class="number">float</span><br>
-                        <span class="highlight">farmName</span>: <span class="string">string</span><br>
-                        <span class="highlight">responsible</span>: <span class="string">string</span><br>
-                        <span class="highlight">city</span>: <span class="string">string</span><br>
-                        <span class="highlight">state</span>: <span class="string">string</span><br>
-                        <span class="highlight">arvaBatchCount</span>: <span class="number">long</span><br>
-                        <span class="highlight">totalIncompleteArvaBatchs</span>: <span class="number">long</span><br>
-                        <span class="highlight">totalArvaBatchInCurrentYear</span>: <span class="number">long</span><br>
-                        <span class="highlight">totalSojaCulture</span>: <span class="number">long</span><br>
-                        <span class="highlight">totalMilhoCulture</span>: <span class="number">long</span><br>
-                        <span class="highlight">totalCanaCulture</span>: <span class="number">long</span>
+                <div class="op-block get">
+                    <div class="op-block-summary" onclick="toggleBody(this)">
+                        <span class="op-block-summary-method">GET</span>
+                        <span class="op-block-summary-path">/reports/emissions/{batchId}/</span>
+                        <span class="op-block-summary-desc">Relatório de Emissões GHG (HTML)</span>
+                        <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    </div>
+                    <div class="op-block-body">
+                        <div class="service-rule">
+                            <strong>Comportamento:</strong> Carrega os dados de um Lote de Emissões Específico (<code>EmissionBatchGhg</code>) e de todas as suas análises vinculadas, injetando-os no template <code>emissionsGhg_report.html</code>.
+                            <br>Requer autenticação válida (Bearer Token) para acesso aos dados do lote.
+                        </div>
+                        
+                        <div class="section-header">Parâmetros (Path)</div>
+                        <table>
+                            <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
+                            <tr><td>batchId</td><td>Sim</td><td>O ID numérico do Lote de Emissão a ser detalhado.</td></tr>
+                        </table>
+        
+                        <div class="try-out-wrapper">
+                            <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                            <div class="execute-panel">
+                                <label style="font-size:12px; font-weight:bold;">ID do Lote de Emissão:</label>
+                                <input type="text" id="path-report-ghg-id" class="fake-input" style="width:100%; margin-bottom:10px;" value="10">
+                                <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
+                                <input type="text" id="token-report-ghg" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Bearer Token">
+                                
+                                <button class="execute-btn" onclick="executeRequest('GET', '/reports/emissions/' + document.getElementById('path-report-ghg-id').value + '/', null, 'res-report-ghg', 'token-report-ghg')">Renderizar View</button>
+                                <div class="response-box" id="res-report-ghg"></div>
+                            </div>
+                        </div>
+        
+                        <div class="section-header">Respostas Possíveis</div>
+                        <table>
+                            <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso (text/html):</strong> Retorna o código-fonte da página HTML construída com os relatórios GHG.</td></tr>
+                            <tr><td><span class="status-badge status-404">404</span></td><td><strong>Não Encontrado:</strong> O Lote (Batch) solicitado não existe.</td></tr>
+                        </table>
                     </div>
                 </div>
         
-                <div class="model-container">
-                    <div class="model-title" onclick="toggleModel(this)">AnnualFieldReportData (Relatório Anual) <span class="arrow">▼</span></div>
-                    <div class="model-content">
-                        <span class="comment">// Representa a contagem de lotes dividida por períodos de safra (ex: 2023/2024).</span><br><br>
-                        <span class="highlight">season</span>: <span class="string">string</span> <span class="comment">// Ex: "2023/2024"</span><br>
-                        <span class="highlight">arvaBatchCount</span>: <span class="number">long</span><br>
-                        <span class="highlight">incompleteArvabatchs</span>: <span class="number">long</span>
+                <div class="op-block get">
+                    <div class="op-block-summary" onclick="toggleBody(this)">
+                        <span class="op-block-summary-method">GET</span>
+                        <span class="op-block-summary-path">/reports/arva/{fieldId}</span>
+                        <span class="op-block-summary-desc">Relatório ARVA por Talhão (HTML)</span>
+                        <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    </div>
+                    <div class="op-block-body">
+                        <div class="service-rule">
+                            <strong>Comportamento:</strong> Busca o histórico de análises agrícolas (ARVA) de um <strong>Talhão específico</strong>, restrito a um período de tempo predeterminado pelas datas na URL. Injeta no template <code>analysis_arva_report.html</code>.
+                        </div>
+                        
+                        <div class="section-header">Parâmetros Obrigatórios</div>
+                        <table>
+                            <tr><th>Nome</th><th>Local</th><th>Formato</th><th>Descrição</th></tr>
+                            <tr><td>fieldId</td><td>Path</td><td>Long</td><td>ID numérico do Talhão.</td></tr>
+                            <tr><td>startDate</td><td>Query</td><td>yyyy-MM-dd</td><td>Data de início da consulta.</td></tr>
+                            <tr><td>endDate</td><td>Query</td><td>yyyy-MM-dd</td><td>Data de fim da consulta.</td></tr>
+                        </table>
+        
+                        <div class="try-out-wrapper">
+                            <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                            <div class="execute-panel">
+                                <label style="font-size:12px; font-weight:bold;">ID do Talhão:</label>
+                                <input type="text" id="path-report-arva-id" class="fake-input" style="width:50px; margin-bottom:10px;" value="2">
+                                <label style="font-size:12px; font-weight:bold;">Datas (Query):</label>
+                                <input type="text" id="query-report-arva" class="fake-input" style="width:100%; margin-bottom:10px;" value="?startDate=2023-01-01&endDate=2023-12-31">
+                                <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
+                                <input type="text" id="token-report-arva" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Bearer Token">
+                                
+                                <button class="execute-btn" onclick="executeRequest('GET', '/reports/arva/' + document.getElementById('path-report-arva-id').value + document.getElementById('query-report-arva').value, null, 'res-report-arva', 'token-report-arva')">Renderizar View</button>
+                                <div class="response-box" id="res-report-arva"></div>
+                            </div>
+                        </div>
+        
+                        <div class="section-header">Respostas Possíveis</div>
+                        <table>
+                            <tr><td><span class="status-badge status-200">200</span></td><td><strong>Sucesso (text/html):</strong> Página renderizada com as estatísticas do Talhão.</td></tr>
+                            <tr><td><span class="status-badge status-400">400</span></td><td><strong>Erro de Requisição:</strong> Falha de formatação de data (deve ser <code>yyyy-MM-dd</code>).</td></tr>
+                        </table>
                     </div>
                 </div>
         
-            <!-- 3. Fechamento da div que criamos no passo 2 -->
+                <div class="op-block get">
+                    <div class="op-block-summary" onclick="toggleBody(this)">
+                        <span class="op-block-summary-method">GET</span>
+                        <span class="op-block-summary-path">/reports/owner/{ownerId}</span>
+                        <span class="op-block-summary-desc">Visão do Proprietário (HTML)</span>
+                        <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    </div>
+                    <div class="op-block-body">
+                        <div class="service-rule">
+                            <strong>Comportamento:</strong> Agrega e exibe um resumo com as estatísticas de um Proprietário Específico (todas as fazendas que pertencem a ele, culturas predominantes, área total). Injeta no template <code>farm_owner_report.html</code>.
+                        </div>
+                        
+                        <div class="section-header">Parâmetros Obrigatórios</div>
+                        <table>
+                            <tr><th>Nome</th><th>Local</th><th>Formato</th><th>Descrição</th></tr>
+                            <tr><td>ownerId</td><td>Path</td><td>Long</td><td>ID numérico do Proprietário (FarmOwner).</td></tr>
+                        </table>
+        
+                        <div class="try-out-wrapper">
+                            <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                            <div class="execute-panel">
+                                <label style="font-size:12px; font-weight:bold;">ID do Proprietário:</label>
+                                <input type="text" id="path-report-owner-id" class="fake-input" style="width:50px; margin-bottom:10px;" value="1">
+                                <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
+                                <input type="text" id="token-report-owner" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Bearer Token">
+                                <button class="execute-btn" onclick="executeRequest('GET', '/reports/owner/' + document.getElementById('path-report-owner-id').value, null, 'res-report-owner', 'token-report-owner')">Renderizar View</button>
+                                <div class="response-box" id="res-report-owner"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="op-block get">
+                    <div class="op-block-summary" onclick="toggleBody(this)">
+                        <span class="op-block-summary-method">GET</span>
+                        <span class="op-block-summary-path">/reports/user/{userId}</span>
+                        <span class="op-block-summary-desc">Visão Geral do Usuário (HTML)</span>
+                        <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    </div>
+                    <div class="op-block-body">
+                        <div class="service-rule">
+                            <strong>Comportamento:</strong> Relatório Macro (Raiz). Pega um usuário do sistema e compila estatísticas sobre TODOS os proprietários de fazenda que ele tem sob sua responsabilidade, construindo dados para alimentar gráficos de pizza/barras. Injeta no template <code>user_report.html</code>.
+                        </div>
+                        
+                        <div class="section-header">Parâmetros Obrigatórios</div>
+                        <table>
+                            <tr><th>Nome</th><th>Local</th><th>Formato</th><th>Descrição</th></tr>
+                            <tr><td>userId</td><td>Path</td><td>Long</td><td>ID numérico do Usuário do Sistema.</td></tr>
+                        </table>
+        
+                        <div class="try-out-wrapper">
+                            <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                            <div class="execute-panel">
+                                <label style="font-size:12px; font-weight:bold;">ID do Usuário:</label>
+                                <input type="text" id="path-report-user-id" class="fake-input" style="width:50px; margin-bottom:10px;" value="1">
+                                <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
+                                <input type="text" id="token-report-user" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Bearer Token">
+                                <button class="execute-btn" onclick="executeRequest('GET', '/reports/user/' + document.getElementById('path-report-user-id').value, null, 'res-report-user', 'token-report-user')">Renderizar View</button>
+                                <div class="response-box" id="res-report-user"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
             </div>
         
-        </div>
-
+            <div class="models-section">
+                <div class="op-block-tag" onclick="toggleSection('schemas-reports')">
+                    <span>Schemas (Estrutura de Dados Injetada nas Views HTML)</span>
+                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                </div>
+        
+                <div id="schemas-reports" style="display: block;">
+        
+                    <div class="model-container">
+                        <div class="model-title" onclick="toggleModel(this)">FieldReportData (Estatísticas do Talhão) <span class="arrow">▼</span></div>
+                        <div class="model-content">
+                            <span class="comment">// Nota: Estrutura apenas para leitura via Thymeleaf.</span><br><br>
+                            <span class="highlight">fieldName</span>: string<br>
+                            <span class="highlight">totalAreaHec</span>: float<br>
+                            <span class="highlight">farmName</span>: string<br>
+                            <span class="highlight">responsible</span>: string<br>
+                            <span class="highlight">city</span>: string<br>
+                            <span class="highlight">state</span>: string<br>
+                            <span class="highlight">arvaBatchCount</span>: long<br>
+                            <span class="highlight">totalIncompleteArvaBatchs</span>: long<br>
+                            <span class="highlight">totalArvaBatchInCurrentYear</span>: long<br>
+                            <span class="highlight">totalSojaCulture</span>: long<br>
+                            <span class="highlight">totalMilhoCulture</span>: long<br>
+                            <span class="highlight">totalCanaCulture</span>: long
+                        </div>
+                    </div>
+        
+                    <div class="model-container">
+                        <div class="model-title" onclick="toggleModel(this)">AnnualFieldReportData (Relatório Anual) <span class="arrow">▼</span></div>
+                        <div class="model-content">
+                            <span class="highlight">season</span>: string <span class="comment">// Ex: "2023/2024"</span><br>
+                            <span class="highlight">arvaBatchCount</span>: long<br>
+                            <span class="highlight">incompleteArvabatchs</span>: long
+                        </div>
+                    </div>
+        
+                    <div class="model-container">
+                        <div class="model-title" onclick="toggleModel(this)">FarmOwnerReportData (Resumo Proprietário) <span class="arrow">▼</span></div>
+                        <div class="model-content">
+                            <span class="highlight">ownerName</span>: string<br>
+                            <span class="highlight">totalFarms</span>: int<br>
+                            <span class="highlight">areaTotal</span>: double<br>
+                            <span class="highlight">farmReportData</span>: List&lt;FarmReportData&gt; <span class="comment">// Resumo dos talhões de cada fazenda</span><br>
+                            <span class="highlight">totalCultures</span>: HashMap&lt;String, Long&gt; <span class="comment">// Mapeamento dinâmico: Ex {"SOJA": 10}</span><br>
+                            <span class="highlight">totalFields()</span>: long <span class="comment">// Método para somar todos os fields vinculados.</span>
+                        </div>
+                    </div>
+        
+                    <div class="model-container">
+                        <div class="model-title" onclick="toggleModel(this)">UserReportData (Visão Macro do Usuário) <span class="arrow">▼</span></div>
+                        <div class="model-content">
+                            <span class="highlight">userName</span>: string<br>
+                            <span class="highlight">email</span>: string<br>
+                            <span class="highlight">phone</span>: string<br>
+                            <span class="highlight">cpfCnpj</span>: string<br>
+                            <span class="highlight">city</span>: string<br>
+                            <span class="highlight">state</span>: string<br>
+                            <span class="highlight">occupation</span>: string<br>
+                            <span class="highlight">academicTitle</span>: string<br>
+                            <span class="highlight">birthday</span>: date<br>
+                            <span class="highlight">membershipDuration</span>: string<br>
+                            <span class="highlight">createdAt</span>: datetime<br>
+                            <span class="highlight">totalOwners</span>: int<br>
+                            <span class="highlight">totalFarms</span>: int<br>
+                            <span class="highlight">totalAreaHectares</span>: double<br>
+                            <span class="highlight">owners</span>: List&lt;OwnerSummaryReportData&gt; <br><br>
+                            <span class="comment">// Métodos injetados:</span><br>
+                            <span class="highlight">averageAreaPerOwner()</span>: double<br>
+                            <span class="highlight">locationFormatted()</span>: string
+                        </div>
+                    </div>
+        
+                    <div class="model-container">
+                        <div class="model-title" onclick="toggleModel(this)">OwnerSummaryReportData & FarmSummaryReportData <span class="arrow">▼</span></div>
+                        <div class="model-content">
+                            <span class="comment">// Dados vitais agregados do Proprietário e suas Fazendas ativas para injeção na visão Macro.</span><br><br>
+                            <span class="highlight">ownerName</span>: string<br>
+                            <span class="highlight">cpfCnpj</span>: string<br>
+                            <span class="highlight">qtyFarms</span>: int<br>
+                            <span class="highlight">totalAreaHectares</span>: double<br>
+                            <span class="highlight">farms</span>: List&lt;FarmSummaryReportData&gt; <br>
+                        </div>
+                    </div>
+        
+                </div>
+        
+            </div>
+        
         </div>
 
     </div>
