@@ -4529,11 +4529,8 @@
         
             <!-- REPORTS CONTROLLER SECTION -->
             <div class="op-block-tag" onclick="toggleSection('reports-container')">
-                <div style="display: flex; align-items: baseline; gap: 10px;">
-                    <span>Reports Controller</span>
-                    <small style="font-size: 14px; font-weight: normal; color: #7d8492;">Geração de Telas e Relatórios Visuais</small>
-                </div>
-                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                <span>Reports Controller</span>
+                <small>Geração de Telas e Relatórios Visuais</small>
             </div>
         
             <div id="reports-container" style="display: block;">
@@ -4548,7 +4545,7 @@
                     </div>
                     <div class="op-block-body">
                         <div class="service-rule">
-                            <strong>Comportamento:</strong> Carrega os dados de um Lote de Emissões Específico (<code>EmissionBatchGhg</code>) e de todas as suas análises vinculadas, injetando-os no template <code>emissionsGhg_report.html</code>.
+                            <strong>Comportamento:</strong> Este endpoint carrega os dados de um Lote de Emissões Específico (<code>EmissionBatchGhg</code>) e de todas as suas análises vinculadas, injetando-os no template <code>emissionsGhg_report.html</code>.
                             <br>Requer autenticação válida (Bearer Token) para acesso aos dados do lote.
                         </div>
                         
@@ -4558,6 +4555,7 @@
                             <tr><td>batchId</td><td>Sim</td><td>O ID numérico do Lote de Emissão a ser detalhado.</td></tr>
                         </table>
         
+                        <!-- TESTER -->
                         <div class="try-out-wrapper">
                             <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
                             <div class="execute-panel">
@@ -4694,11 +4692,8 @@
             <!-- SCHEMAS -->
             <div class="models-section">
                 <div class="op-block-tag" onclick="toggleSection('schemas-reports')">
-                    <div style="display: flex; align-items: baseline; gap: 10px;">
-                        <span>Schemas</span>
-                        <small style="font-size: 14px; font-weight: normal; color: #7d8492;">(Estrutura de Dados Injetada nas Views HTML)</small>
-                    </div>
-                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    <span>Schemas (Estrutura de Dados Injetada nas Views HTML)</span>
+                    <span style="font-size: 16px; cursor: pointer;">▼</span>
                 </div>
         
                 <div id="schemas-reports" style="display: block;">
@@ -4706,97 +4701,96 @@
                     <div class="model-container">
                         <div class="model-title" onclick="toggleModel(this)">FieldReportData (Estatísticas do Talhão) <span class="arrow">▼</span></div>
                         <div class="model-content">
-                            <span class="comment">// Nota: Estrutura apenas para leitura via Thymeleaf.</span><br><br>
-                            <span class="highlight">fieldName</span>: string<br>
-                            <span class="highlight">totalAreaHec</span>: float<br>
-                            <span class="highlight">farmName</span>: string<br>
-                            <span class="highlight">responsible</span>: string<br>
-                            <span class="highlight">city</span>: string<br>
-                            <span class="highlight">state</span>: string<br>
-                            <span class="highlight">arvaBatchCount</span>: long<br>
-                            <span class="highlight">totalIncompleteArvaBatchs</span>: long<br>
-                            <span class="highlight">totalArvaBatchInCurrentYear</span>: long<br>
-                            <span class="highlight">totalSojaCulture</span>: long<br>
-                            <span class="highlight">totalMilhoCulture</span>: long<br>
-                            <span class="highlight">totalCanaCulture</span>: long
+                            <span class="comment">// Nota: Esta estrutura NÃO é retornada como JSON na requisição. Ela é apenas a classe interna usada para montar o HTML na rota de ARVA.</span><br><br>
+                            <span class="highlight">fieldName</span>: <span class="string">string</span><br>
+                            <span class="highlight">totalAreaHec</span>: <span class="number">float</span><br>
+                            <span class="highlight">farmName</span>: <span class="string">string</span><br>
+                            <span class="highlight">responsible</span>: <span class="string">string</span><br>
+                            <span class="highlight">city</span>: <span class="string">string</span><br>
+                            <span class="highlight">state</span>: <span class="string">string</span><br>
+                            <span class="highlight">arvaBatchCount</span>: <span class="number">long</span><br>
+                            <span class="highlight">totalIncompleteArvaBatchs</span>: <span class="number">long</span><br>
+                            <span class="highlight">totalArvaBatchInCurrentYear</span>: <span class="number">long</span><br>
+                            <span class="highlight">totalSojaCulture</span>: <span class="number">long</span><br>
+                            <span class="highlight">totalMilhoCulture</span>: <span class="number">long</span><br>
+                            <span class="highlight">totalCanaCulture</span>: <span class="number">long</span>
                         </div>
                     </div>
         
                     <div class="model-container">
                         <div class="model-title" onclick="toggleModel(this)">AnnualFieldReportData (Relatório Anual) <span class="arrow">▼</span></div>
                         <div class="model-content">
-                            <span class="highlight">season</span>: string <span class="comment">// Ex: "2023/2024"</span><br>
-                            <span class="highlight">arvaBatchCount</span>: long<br>
-                            <span class="highlight">incompleteArvabatchs</span>: long
+                            <span class="comment">// Representa a contagem de lotes dividida por períodos de safra (ex: 2023/2024).</span><br><br>
+                            <span class="highlight">season</span>: <span class="string">string</span> <span class="comment">// Ex: "2023/2024"</span><br>
+                            <span class="highlight">arvaBatchCount</span>: <span class="number">long</span><br>
+                            <span class="highlight">incompleteArvabatchs</span>: <span class="number">long</span>
                         </div>
                     </div>
         
                     <div class="model-container">
                         <div class="model-title" onclick="toggleModel(this)">FarmOwnerReportData (Resumo Proprietário) <span class="arrow">▼</span></div>
                         <div class="model-content">
-                            <span class="highlight">ownerName</span>: string<br>
-                            <span class="highlight">totalFarms</span>: int<br>
-                            <span class="highlight">areaTotal</span>: double<br>
-                            <span class="highlight">farmReportData</span>: List&lt;FarmReportData&gt; <span class="comment">// Resumo dos talhões de cada fazenda</span><br>
-                            <span class="highlight">totalCultures</span>: HashMap&lt;String, Long&gt; <span class="comment">// Mapeamento dinâmico: Ex {"SOJA": 10}</span><br>
-                            <span class="highlight">totalFields()</span>: long <span class="comment">// Método para somar todos os fields vinculados.</span>
+                            <span class="highlight">ownerName</span>: <span class="string">string</span><br>
+                            <span class="highlight">totalFarms</span>: <span class="number">int</span><br>
+                            <span class="highlight">areaTotal</span>: <span class="number">double</span><br>
+                            <span class="highlight">farmReportData</span>: <span class="string">List&lt;FarmReportData&gt;</span> <span class="comment">// Resumo dos talhões de cada fazenda</span><br>
+                            <span class="highlight">totalCultures</span>: <span class="string">HashMap&lt;String, Long&gt;</span> <span class="comment">// Mapeamento dinâmico: Ex {"SOJA": 10}</span><br>
+                            <span class="highlight">totalFields()</span>: <span class="number">long</span> <span class="comment">// Método computado</span>
                         </div>
                     </div>
         
                     <div class="model-container">
                         <div class="model-title" onclick="toggleModel(this)">UserReportData (Visão Macro do Usuário) <span class="arrow">▼</span></div>
                         <div class="model-content">
-                            <span class="highlight">userName</span>: string<br>
-                            <span class="highlight">email</span>: string<br>
-                            <span class="highlight">phone</span>: string<br>
-                            <span class="highlight">cpfCnpj</span>: string<br>
-                            <span class="highlight">city</span>: string<br>
-                            <span class="highlight">state</span>: string<br>
-                            <span class="highlight">occupation</span>: string<br>
-                            <span class="highlight">academicTitle</span>: string<br>
-                            <span class="highlight">birthday</span>: date<br>
-                            <span class="highlight">membershipDuration</span>: string<br>
-                            <span class="highlight">createdAt</span>: datetime<br>
-                            <span class="highlight">totalOwners</span>: int<br>
-                            <span class="highlight">totalFarms</span>: int<br>
-                            <span class="highlight">totalAreaHectares</span>: double<br>
-                            <span class="highlight">owners</span>: List&lt;OwnerSummaryReportData&gt; <br><br>
-                            <span class="comment">// Métodos injetados nas views:</span><br>
-                            <span class="highlight">averageAreaPerOwner()</span>: double<br>
-                            <span class="highlight">locationFormatted()</span>: string
+                            <span class="highlight">userName</span>: <span class="string">string</span><br>
+                            <span class="highlight">email</span>: <span class="string">string</span><br>
+                            <span class="highlight">phone</span>: <span class="string">string</span><br>
+                            <span class="highlight">cpfCnpj</span>: <span class="string">string</span><br>
+                            <span class="highlight">city</span>: <span class="string">string</span><br>
+                            <span class="highlight">state</span>: <span class="string">string</span><br>
+                            <span class="highlight">occupation</span>: <span class="string">string</span><br>
+                            <span class="highlight">academicTitle</span>: <span class="string">string</span><br>
+                            <span class="highlight">birthday</span>: <span class="string">date</span><br>
+                            <span class="highlight">membershipDuration</span>: <span class="string">string</span><br>
+                            <span class="highlight">createdAt</span>: <span class="string">datetime</span><br>
+                            <span class="highlight">totalOwners</span>: <span class="number">int</span><br>
+                            <span class="highlight">totalFarms</span>: <span class="number">int</span><br>
+                            <span class="highlight">totalAreaHectares</span>: <span class="number">double</span><br>
+                            <span class="highlight">owners</span>: <span class="string">List&lt;OwnerSummaryReportData&gt;</span><br><br>
+                            <span class="comment">// Métodos de formatação injetados:</span><br>
+                            <span class="highlight">averageAreaPerOwner()</span>: <span class="number">double</span><br>
+                            <span class="highlight">locationFormatted()</span>: <span class="string">string</span>
                         </div>
                     </div>
         
                     <div class="model-container">
                         <div class="model-title" onclick="toggleModel(this)">OwnerSummaryReportData <span class="arrow">▼</span></div>
                         <div class="model-content">
-                            <span class="comment">// Dados vitais do Proprietário para injeção na visão Macro.</span><br><br>
-                            <span class="highlight">ownerName</span>: string<br>
-                            <span class="highlight">cpfCnpj</span>: string<br>
-                            <span class="highlight">city</span>: string<br>
-                            <span class="highlight">state</span>: string<br>
-                            <span class="highlight">phone</span>: string<br>
-                            <span class="highlight">email</span>: string<br>
-                            <span class="highlight">qtyFarms</span>: int<br>
-                            <span class="highlight">totalAreaHectares</span>: double<br>
-                            <span class="highlight">farms</span>: List&lt;FarmSummaryReportData&gt; <br><br>
-                            <span class="comment">// Métodos injetados nas views:</span><br>
-                            <span class="highlight">locationFormatted()</span>: string
+                            <span class="highlight">ownerName</span>: <span class="string">string</span><br>
+                            <span class="highlight">cpfCnpj</span>: <span class="string">string</span><br>
+                            <span class="highlight">city</span>: <span class="string">string</span><br>
+                            <span class="highlight">state</span>: <span class="string">string</span><br>
+                            <span class="highlight">phone</span>: <span class="string">string</span><br>
+                            <span class="highlight">email</span>: <span class="string">string</span><br>
+                            <span class="highlight">qtyFarms</span>: <span class="number">int</span><br>
+                            <span class="highlight">totalAreaHectares</span>: <span class="number">double</span><br>
+                            <span class="highlight">farms</span>: <span class="string">List&lt;FarmSummaryReportData&gt;</span><br><br>
+                            <span class="comment">// Métodos injetados:</span><br>
+                            <span class="highlight">locationFormatted()</span>: <span class="string">string</span>
                         </div>
                     </div>
         
                     <div class="model-container">
                         <div class="model-title" onclick="toggleModel(this)">FarmSummaryReportData <span class="arrow">▼</span></div>
                         <div class="model-content">
-                            <span class="comment">// Dados vitais das Fazendas ativas.</span><br><br>
-                            <span class="highlight">farmName</span>: string<br>
-                            <span class="highlight">city</span>: string<br>
-                            <span class="highlight">state</span>: string<br>
-                            <span class="highlight">totalAreaHectares</span>: float<br>
-                            <span class="highlight">active</span>: boolean<br><br>
-                            <span class="comment">// Métodos injetados nas views:</span><br>
-                            <span class="highlight">locationFormatted()</span>: string<br>
-                            <span class="highlight">statusFormatted()</span>: string <span class="comment">// Retorna "ATIVA" ou "INATIVA"</span>
+                            <span class="highlight">farmName</span>: <span class="string">string</span><br>
+                            <span class="highlight">city</span>: <span class="string">string</span><br>
+                            <span class="highlight">state</span>: <span class="string">string</span><br>
+                            <span class="highlight">totalAreaHectares</span>: <span class="number">float</span><br>
+                            <span class="highlight">active</span>: <span class="boolean">boolean</span><br><br>
+                            <span class="comment">// Métodos injetados:</span><br>
+                            <span class="highlight">locationFormatted()</span>: <span class="string">string</span><br>
+                            <span class="highlight">statusFormatted()</span>: <span class="string">string</span> <span class="comment">// "ATIVA" ou "INATIVA"</span>
                         </div>
                     </div>
         
