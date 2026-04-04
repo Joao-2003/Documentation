@@ -85,7 +85,7 @@
         .validation-list li { margin-bottom: 4px; color: #0d47a1; }
         .custom-select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-size: 14px; width: 100%; margin-bottom: 15px; background-color: #fff; }
         
-        /* SCHEMAS INTERNOS DO MÓDULO */
+        /* SCHEMAS INTERNOS DO */
         .models-section { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; }
         .model-container { background: rgba(0,0,0,0.02); border: 1px solid #eee; padding: 10px; margin-bottom: 10px; border-radius: 4px; transition: all 0.2s; }
         .model-container:hover { background: rgba(0,0,0,0.05); }
@@ -112,7 +112,7 @@
         /* Evita que blocos sejam cortados no meio da página */
         .op-block, .model-container, table, .error-example { break-inside: avoid; margin-bottom: 20px; }
     
-        /* Quebra de página antes de cada novo Módulo */
+        /* Quebra de página antes de cada novo */
         .module-wrapper { break-before: page; margin-bottom: 30px; box-shadow: none; border: none; border-top: 3px solid #1b1b1b; padding: 10px 0;}
     }
     </style>
@@ -151,7 +151,7 @@
         </div>
 
         <!-- ======================================================= -->
-        <!-- MÓDULO 1: AUTH & PROFILE                                -->
+        <!-- 1: AUTH & PROFILE                                -->
         <!-- ======================================================= -->
         <div class="module-wrapper" id="mod-auth">
             <h2 class="module-header">Autenticação e Perfil</h2>
@@ -1020,7 +1020,7 @@
         </div>
         
         <!-- ======================================================= -->
-        <!-- MÓDULO 2: PESQUISA DE USUÁRIOS                          -->
+        <!-- 2: PESQUISA DE USUÁRIOS                          -->
         <!-- ======================================================= -->
         <div class="module-wrapper" id="mod-users">
             <h2 class="module-header">Busca de Usuários</h2>
@@ -1126,7 +1126,7 @@
         </div>
 
         <!-- ======================================================= -->
-        <!-- MÓDULO 3: HISTÓRICO DE ACESSOS                          -->
+        <!-- 3: HISTÓRICO DE ACESSOS                          -->
         <!-- ======================================================= -->
         <div class="module-wrapper" id="mod-history">
             <h2 class="module-header">Histórico de Acessos</h2>
@@ -1305,7 +1305,7 @@
         </div>
 
         <!-- ======================================================= -->
-        <!-- MÓDULO 4: PROPRIETÁRIOS DE FAZENDAS (FARM OWNERS)       -->
+        <!-- 4: PROPRIETÁRIOS DE FAZENDAS (FARM OWNERS)       -->
         <!-- ======================================================= -->
         <div class="module-wrapper" id="mod-owners">
             <h2 class="module-header">Proprietários (Farm Owners)</h2>
@@ -1720,7 +1720,7 @@
         </div>
 
         <!-- ======================================================= -->
-        <!-- MÓDULO 5: FAZENDAS (FARMS) E EQUIPE                     -->
+        <!-- 5: FAZENDAS (FARMS) E EQUIPE                     -->
         <!-- ======================================================= -->
         <div class="module-wrapper" id="mod-farms">
             <h2 class="module-header">Fazendas (Farms) e Equipe</h2>
@@ -2438,7 +2438,7 @@
         </div>
 
         <!-- ======================================================= -->
-        <!-- MÓDULO 6: TALHÕES (FIELDS)                              -->
+        <!-- 6: TALHÕES (FIELDS)                              -->
         <!-- ======================================================= -->
         <div class="module-wrapper" id="mod-fields">
             <h2 class="module-header">Talhões (Fields)</h2>
@@ -2923,7 +2923,7 @@
         </div>
 
         <!-- ======================================================= -->
-        <!-- MÓDULO 7: PROTOCOLO ARVA (BATCHES E ANÁLISES)           -->
+        <!-- 7: PROTOCOLO ARVA (BATCHES E ANÁLISES)           -->
         <!-- ======================================================= -->
         <div class="module-wrapper" id="mod-arva">
             <h2 class="module-header">Protocolo ARVA</h2>
@@ -3834,7 +3834,7 @@
         </div>
 
         <!-- ======================================================= -->
-        <!-- MÓDULO 8: PROTOCOLO GHG (EMISSÕES)                      -->
+        <!-- 8: PROTOCOLO GHG (EMISSÕES)                      -->
         <!-- ======================================================= -->
         <div class="module-wrapper" id="mod-ghg">
             <h2 class="module-header">Protocolo GHG (Emissões)</h2>
@@ -4527,14 +4527,18 @@
             <h2 class="module-header">Relatórios (HTML Renderizados)</h2>
             <p class="module-desc">Fornece as telas de relatórios visuais (text/html) prontas pelo lado do servidor via Thymeleaf. <strong>Atenção: Estas rotas não retornam JSON.</strong></p>
         
+            <!-- REPORTS CONTROLLER SECTION -->
             <div class="op-block-tag" onclick="toggleSection('reports-container')">
-                <span>Reports Controller</span>
-                <small>Geração de Telas e Relatórios Visuais</small>
+                <div style="display: flex; align-items: baseline; gap: 10px;">
+                    <span>Reports Controller</span>
+                    <small style="font-size: 14px; font-weight: normal; color: #7d8492;">Geração de Telas e Relatórios Visuais</small>
+                </div>
                 <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
             </div>
         
             <div id="reports-container" style="display: block;">
         
+                <!-- GET EMISSIONS REPORT -->
                 <div class="op-block get">
                     <div class="op-block-summary" onclick="toggleBody(this)">
                         <span class="op-block-summary-method">GET</span>
@@ -4575,6 +4579,7 @@
                     </div>
                 </div>
         
+                <!-- GET ARVA REPORT -->
                 <div class="op-block get">
                     <div class="op-block-summary" onclick="toggleBody(this)">
                         <span class="op-block-summary-method">GET</span>
@@ -4618,6 +4623,7 @@
                     </div>
                 </div>
         
+                <!-- GET OWNER REPORT -->
                 <div class="op-block get">
                     <div class="op-block-summary" onclick="toggleBody(this)">
                         <span class="op-block-summary-method">GET</span>
@@ -4650,6 +4656,7 @@
                     </div>
                 </div>
         
+                <!-- GET USER REPORT -->
                 <div class="op-block get">
                     <div class="op-block-summary" onclick="toggleBody(this)">
                         <span class="op-block-summary-method">GET</span>
@@ -4684,9 +4691,13 @@
         
             </div>
         
+            <!-- SCHEMAS -->
             <div class="models-section">
                 <div class="op-block-tag" onclick="toggleSection('schemas-reports')">
-                    <span>Schemas (Estrutura de Dados Injetada nas Views HTML)</span>
+                    <div style="display: flex; align-items: baseline; gap: 10px;">
+                        <span>Schemas</span>
+                        <small style="font-size: 14px; font-weight: normal; color: #7d8492;">(Estrutura de Dados Injetada nas Views HTML)</small>
+                    </div>
                     <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
                 </div>
         
@@ -4750,21 +4761,42 @@
                             <span class="highlight">totalFarms</span>: int<br>
                             <span class="highlight">totalAreaHectares</span>: double<br>
                             <span class="highlight">owners</span>: List&lt;OwnerSummaryReportData&gt; <br><br>
-                            <span class="comment">// Métodos injetados:</span><br>
+                            <span class="comment">// Métodos injetados nas views:</span><br>
                             <span class="highlight">averageAreaPerOwner()</span>: double<br>
                             <span class="highlight">locationFormatted()</span>: string
                         </div>
                     </div>
         
                     <div class="model-container">
-                        <div class="model-title" onclick="toggleModel(this)">OwnerSummaryReportData & FarmSummaryReportData <span class="arrow">▼</span></div>
+                        <div class="model-title" onclick="toggleModel(this)">OwnerSummaryReportData <span class="arrow">▼</span></div>
                         <div class="model-content">
-                            <span class="comment">// Dados vitais agregados do Proprietário e suas Fazendas ativas para injeção na visão Macro.</span><br><br>
+                            <span class="comment">// Dados vitais do Proprietário para injeção na visão Macro.</span><br><br>
                             <span class="highlight">ownerName</span>: string<br>
                             <span class="highlight">cpfCnpj</span>: string<br>
+                            <span class="highlight">city</span>: string<br>
+                            <span class="highlight">state</span>: string<br>
+                            <span class="highlight">phone</span>: string<br>
+                            <span class="highlight">email</span>: string<br>
                             <span class="highlight">qtyFarms</span>: int<br>
                             <span class="highlight">totalAreaHectares</span>: double<br>
-                            <span class="highlight">farms</span>: List&lt;FarmSummaryReportData&gt; <br>
+                            <span class="highlight">farms</span>: List&lt;FarmSummaryReportData&gt; <br><br>
+                            <span class="comment">// Métodos injetados nas views:</span><br>
+                            <span class="highlight">locationFormatted()</span>: string
+                        </div>
+                    </div>
+        
+                    <div class="model-container">
+                        <div class="model-title" onclick="toggleModel(this)">FarmSummaryReportData <span class="arrow">▼</span></div>
+                        <div class="model-content">
+                            <span class="comment">// Dados vitais das Fazendas ativas.</span><br><br>
+                            <span class="highlight">farmName</span>: string<br>
+                            <span class="highlight">city</span>: string<br>
+                            <span class="highlight">state</span>: string<br>
+                            <span class="highlight">totalAreaHectares</span>: float<br>
+                            <span class="highlight">active</span>: boolean<br><br>
+                            <span class="comment">// Métodos injetados nas views:</span><br>
+                            <span class="highlight">locationFormatted()</span>: string<br>
+                            <span class="highlight">statusFormatted()</span>: string <span class="comment">// Retorna "ATIVA" ou "INATIVA"</span>
                         </div>
                     </div>
         
