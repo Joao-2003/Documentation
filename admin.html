@@ -243,7 +243,7 @@
         </div>
     </div>
 
-    <!-- 6 KPIs Consolidados (Sem GHG e Nomes Limpos) -->
+    <!-- 6 KPIs Consolidados -->
     <div class="kpi-grid-3">
         <div class="kpi-card success">
             <div class="label">Usuários Cadastrados</div>
@@ -277,11 +277,11 @@
         </div>
     </div>
 
-    <!-- Bloco 1: Gráfico Donut (Culturas) com Tabela Lateral -->
-    <div class="chart-box">
+    <!-- Bloco 1: Gráfico Donut (Culturas) com Tabela Lateral (Expandido com Flex) -->
+    <div class="chart-box" style="flex-grow: 1; display: flex; flex-direction: column;">
         <div class="chart-title">Distribuição de Culturas</div>
-        <div style="display: flex; gap: 40px; align-items: center; padding: 5px 15px;">
-            <div class="chart-content" style="flex: 0 0 35%; height: 140px;">
+        <div style="display: flex; gap: 40px; align-items: center; padding: 5px 15px; flex-grow: 1;">
+            <div class="chart-content" style="flex: 0 0 35%; height: 100%; min-height: 160px;">
                 <canvas id="culturePieChart"></canvas>
             </div>
             <div style="flex: 1;">
@@ -315,18 +315,18 @@
         </div>
     </div>
 
-    <!-- Bloco 2: Ranking Top Fazendas (Área) -->
-    <div class="chart-box">
+    <!-- Bloco 2: Ranking Top Fazendas (Área) (Expandido com Flex) -->
+    <div class="chart-box" style="flex-grow: 1; display: flex; flex-direction: column;">
         <div class="chart-title">Ranking: Fazendas com Maior Área (ha)</div>
-        <div class="chart-content" style="height: 140px;">
+        <div class="chart-content" style="flex-grow: 1; height: 100%; min-height: 160px;">
             <canvas id="topAreaFarmsChart"></canvas>
         </div>
     </div>
 
-    <!-- Bloco 3: Ranking Top Fazendas (Registros) -->
-    <div class="chart-box">
+    <!-- Bloco 3: Ranking Top Fazendas (Registros) (Expandido com Flex) -->
+    <div class="chart-box" style="flex-grow: 1; display: flex; flex-direction: column;">
         <div class="chart-title">Ranking: Principais Fazendas em Quantidade de Registros</div>
-        <div class="chart-content" style="height: 140px;">
+        <div class="chart-content" style="flex-grow: 1; height: 100%; min-height: 160px;">
             <canvas id="topFarmsChart"></canvas>
         </div>
     </div>
@@ -475,7 +475,8 @@
                     devicePixelRatio: 4,
                     responsive: true,
                     maintainAspectRatio: false,
-                    layout: { padding: 10 },
+                    // Deslocamento intencional do mapa para a direita com padding à esquerda
+                    layout: { padding: { left: 60, right: 10, top: 10, bottom: 10 } },
                     plugins: {
                         legend: { display: false },
                         datalabels: { display: false } 
