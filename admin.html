@@ -245,7 +245,7 @@
                 <div class="value-highlight" th:text="${#numbers.formatDecimal(reportData.globalTotalArea ?: 154500.50, 1, 'POINT', 2, 'COMMA')} + ' ha'">154.500,50 ha</div>
             </div>
             <div>
-                <div class="label">Emissões Totais Rastreadas (GHG)</div>
+                <div class="label">Emissões Totais Rastreadas (GHG + ARVA)</div>
                 <div class="value-sm text-gray-dark" th:text="${#numbers.formatDecimal(reportData.totalEmissionsGhg ?: 2150400.00, 1, 'POINT', 2, 'COMMA')} + ' tCO₂e'">2.150.400,00 tCO₂e</div>
             </div>
         </div>
@@ -386,15 +386,15 @@
 
     <!-- Bloco 3: Ranking Top Usuários -->
     <div class="chart-box">
-        <div class="chart-title">Ranking Top Usuários em Número de Fazendas</div>
+        <div class="chart-title">Ranking Top Usuários em Número de Proprietários</div>
         <div class="chart-content" style="height: 180px;">
             <canvas id="topUsersChart"></canvas>
         </div>
     </div>
 
-    <!-- Bloco 4: Ranking Top Fazendas (Substituído Vermelho pelo Dourado/Amarelo) -->
+    <!-- Bloco 4: Ranking Top Fazendas (Registros) -->
     <div class="chart-box">
-        <div class="chart-title">Ranking Principais Fazendas em Relação às Emissões (tCO₂e)</div>
+        <div class="chart-title">Ranking Principais Fazendas em Quantidade de Registros (ARVA + GHG)</div>
         <div class="chart-content" style="height: 180px;">
             <canvas id="topFarmsChart"></canvas>
         </div>
@@ -459,7 +459,7 @@
                     devicePixelRatio: 4,
                     responsive: true,
                     maintainAspectRatio: false,
-                    layout: { padding: 0 },
+                    layout: { padding: { right: 30 } }, // Adicionado padding à direita para não cortar os zeros da legenda
                     plugins: {
                         legend: { display: false },
                         datalabels: { display: false } 
@@ -511,7 +511,7 @@
     // 2. DONUT: ARVA vs GHG
     // ==========================================
     new Chart(document.getElementById('arvaGhgPieChart'), {
-        type: 'doughnut', // Alterado para Doughnut padronizando
+        type: 'doughnut',
         data: {
             labels: ['Operações ARVA', 'Inventários GHG'],
             datasets: [{
@@ -564,8 +564,8 @@
         data: {
             labels: ['Agro Silva', 'G. Vasconcelos', 'Fazendas BR', 'Coop. Sul', 'Mato Grosso Ag'],
             datasets: [{
-                label: 'Qtd. Fazendas',
-                data: [45, 38, 29, 21, 15],
+                label: 'Qtd. Proprietários',
+                data: [15, 12, 9, 6, 4], // Ajustado para refletir a quantidade de donos
                 backgroundColor: '#064e3b',
                 borderRadius: 4
             }]
@@ -578,36 +578,36 @@
             },
             scales: {
                 x: { grid: { display: false }, ticks: { font: {size: 10, weight: '500'} } },
-                y: { display: false, max: 55 } 
+                y: { display: false, max: 20 } 
             }
         },
         plugins: [ChartDataLabels]
     });
 
     // ==========================================
-    // 5. RANKING: TOP FAZENDAS (Emissões)
+    // 5. RANKING: TOP FAZENDAS (Registros ARVA + GHG)
     // ==========================================
     new Chart(document.getElementById('topFarmsChart'), {
         type: 'bar',
         data: {
             labels: ['Esperança', 'Alvorada', 'Santa Cruz', 'Bela Vista', 'Gleba Sol'],
             datasets: [{
-                label: 'tCO2e',
-                data: [85000, 72000, 64000, 58000, 41000],
-                backgroundColor: '#eab308', // Alterado do vermelho para o Amarelo/Dourado do sistema
+                label: 'Qtd. Registros (ARVA + GHG)',
+                data: [450, 380, 290, 210, 150], // Ajustado para refletir a quantidade de registros
+                backgroundColor: '#eab308',
                 borderRadius: 4
             }]
         },
         options: {
-            indexAxis: 'x', // Colocado em colunas verticais como o anterior
+            indexAxis: 'x',
             devicePixelRatio: 4, responsive: true, maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
-                datalabels: { anchor: 'end', align: 'top', color: '#374151', font: {weight: 'bold', size: 9}, formatter: v => (v/1000).toFixed(1) + 'k' }
+                datalabels: { anchor: 'end', align: 'top', color: '#374151', font: {weight: 'bold', size: 9} } // Removido o formatador "k"
             },
             scales: {
                 x: { grid: { display: false }, ticks: { font: {size: 10, weight: '500'} } }, 
-                y: { display: false, max: 100000 } 
+                y: { display: false, max: 550 } // Ajustado o limite máximo para dar respiro visual
             }
         },
         plugins: [ChartDataLabels]
