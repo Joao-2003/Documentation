@@ -277,11 +277,11 @@
         </div>
     </div>
 
-    <!-- Bloco 1: Gráfico Donut (Culturas) com Tabela Lateral (Expandido com Flex) -->
-    <div class="chart-box" style="flex-grow: 1; display: flex; flex-direction: column;">
+    <!-- Bloco 1: Gráfico Donut (Culturas) com Tabela Lateral (Reduzido com Flex) -->
+    <div class="chart-box" style="flex: 0.9; min-height: 130px; display: flex; flex-direction: column;">
         <div class="chart-title">Distribuição de Culturas</div>
         <div style="display: flex; gap: 40px; align-items: center; padding: 5px 15px; flex-grow: 1;">
-            <div class="chart-content" style="flex: 0 0 35%; height: 100%; min-height: 160px;">
+            <div class="chart-content" style="flex: 0 0 35%; height: 100%; min-height: 120px;">
                 <canvas id="culturePieChart"></canvas>
             </div>
             <div style="flex: 1;">
@@ -316,17 +316,17 @@
     </div>
 
     <!-- Bloco 2: Ranking Top Fazendas (Área) (Expandido com Flex) -->
-    <div class="chart-box" style="flex-grow: 1; display: flex; flex-direction: column;">
+    <div class="chart-box" style="flex: 1.3; min-height: 180px; display: flex; flex-direction: column;">
         <div class="chart-title">Ranking: Fazendas com Maior Área (ha)</div>
-        <div class="chart-content" style="flex-grow: 1; height: 100%; min-height: 160px;">
+        <div class="chart-content" style="flex-grow: 1; height: 100%; min-height: 140px;">
             <canvas id="topAreaFarmsChart"></canvas>
         </div>
     </div>
 
     <!-- Bloco 3: Ranking Top Fazendas (Registros) (Expandido com Flex) -->
-    <div class="chart-box" style="flex-grow: 1; display: flex; flex-direction: column;">
+    <div class="chart-box" style="flex: 1.3; min-height: 180px; display: flex; flex-direction: column;">
         <div class="chart-title">Ranking: Principais Fazendas em Quantidade de Registros</div>
-        <div class="chart-content" style="flex-grow: 1; height: 100%; min-height: 160px;">
+        <div class="chart-content" style="flex-grow: 1; height: 100%; min-height: 140px;">
             <canvas id="topFarmsChart"></canvas>
         </div>
     </div>
@@ -356,57 +356,6 @@
             <div class="date">Gerado em: <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}">24/05/2026 09:15</span></div>
         </div>
     </header>
-
-    <!-- Info Box Repetido -->
-    <div class="info-box">
-        <div class="info-col">
-            <div>
-                <div class="label">Administrador Solicitante</div>
-                <div class="value" th:text="${reportData.adminName ?: 'Admin Root'}">Admin Root</div>
-            </div>
-        </div>
-
-        <div class="info-col right">
-            <div>
-                <div class="label">Área Total Administrada (Plataforma)</div>
-                <div class="value-highlight" th:text="${#numbers.formatDecimal(reportData.globalTotalArea ?: 154500.50, 1, 'POINT', 2, 'COMMA')} + ' ha'">154.500,50 ha</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 6 KPIs Consolidados Repetidos -->
-    <div class="kpi-grid-3">
-        <div class="kpi-card success">
-            <div class="label">Usuários Cadastrados</div>
-            <div class="kpi-val" th:text="${reportData.totalUsers ?: 342}">342</div>
-            <div class="kpi-sub">Contas ativas na plataforma</div>
-        </div>
-        <div class="kpi-card success">
-            <div class="label">Proprietários</div>
-            <div class="kpi-val" th:text="${reportData.totalOwners ?: 125}">125</div>
-            <div class="kpi-sub">Titulares cadastrados</div>
-        </div>
-        <div class="kpi-card success">
-            <div class="label">Fazendas Ativas</div>
-            <div class="kpi-val" th:text="${reportData.totalFarms ?: 412}">412</div>
-            <div class="kpi-sub">Unidades de produção</div>
-        </div>
-        <div class="kpi-card success">
-            <div class="label">Talhões Mapeados</div>
-            <div class="kpi-val" th:text="${#numbers.formatDecimal(reportData.totalFields ?: 3450, 0, 'POINT', 0, 'COMMA')}">3.450</div>
-            <div class="kpi-sub">Polígonos registrados</div>
-        </div>
-        <div class="kpi-card success">
-            <div class="label">Lotes ARVA</div>
-            <div class="kpi-val" th:text="${#numbers.formatDecimal(reportData.totalBatches ?: 890, 0, 'POINT', 0, 'COMMA')}">890</div>
-            <div class="kpi-sub">Ciclos de cultivo ativos</div>
-        </div>
-        <div class="kpi-card success">
-            <div class="label">Análises ARVA</div>
-            <div class="kpi-val" th:text="${#numbers.formatDecimal(reportData.totalAnalyses ?: 15420, 0, 'POINT', 0, 'COMMA')}">15.420</div>
-            <div class="kpi-sub">Operações de campo</div>
-        </div>
-    </div>
 
     <!-- Gráfico: Mapa do Brasil (Distribuição de Fazendas) -->
     <div class="chart-box" style="flex-grow: 1; min-height: 450px; display: flex; flex-direction: column;">
@@ -475,8 +424,8 @@
                     devicePixelRatio: 4,
                     responsive: true,
                     maintainAspectRatio: false,
-                    // Deslocamento intencional do mapa para a direita com padding à esquerda
-                    layout: { padding: { left: 40, right: 10, top: 10, bottom: 10 } },
+                    // Ajuste no padding para dar espaço à legenda e não cortar os números
+                    layout: { padding: { left: 10, right: 30, top: 10, bottom: 25 } },
                     plugins: {
                         legend: { display: false },
                         datalabels: { display: false } 
@@ -489,6 +438,11 @@
                         },
                         color: {
                             axis: 'x',
+                            ticks: {
+                                display: true,
+                                color: '#374151',
+                                font: { size: 10, weight: '600' }
+                            },
                             interpolate: (value) => {
                                 const c1 = [209, 250, 229]; 
                                 const c2 = [6, 78, 59];
