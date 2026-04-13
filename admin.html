@@ -139,14 +139,14 @@
             justify-content: center;
         }
 
-        /* TABELA ESTÉTICA (Padrão Imagem de Referência) */
+        /* TABELA ESTÉTICA */
         .beauty-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;
         }
         .beauty-table th {
-            background-color: #ecfdf5; /* Fundo verde clarinho */
+            background-color: #ecfdf5;
             color: #064e3b;
             padding: 8px 12px;
             text-align: left;
@@ -157,7 +157,7 @@
         }
         .beauty-table td {
             padding: 8px 12px;
-            border-bottom: 1px solid #f3f4f6; /* Linha divisória suave */
+            border-bottom: 1px solid #f3f4f6; 
             color: #374151;
             font-weight: 500;
         }
@@ -277,7 +277,7 @@
         </div>
     </div>
 
-    <!-- Bloco 1: Gráfico Donut (Culturas) com Tabela Lateral (Reduzido com Flex) -->
+    <!-- Bloco 1: Gráfico Donut (Culturas) com Tabela Lateral -->
     <div class="chart-box" style="flex: 0.9; min-height: 130px; display: flex; flex-direction: column;">
         <div class="chart-title">Distribuição de Culturas</div>
         <div style="display: flex; gap: 40px; align-items: center; padding: 5px 15px; flex-grow: 1;">
@@ -315,7 +315,7 @@
         </div>
     </div>
 
-    <!-- Bloco 2: Ranking Top Fazendas (Área) (Expandido com Flex) -->
+    <!-- Bloco 2: Ranking Top Fazendas (Área) -->
     <div class="chart-box" style="flex: 1.3; min-height: 180px; display: flex; flex-direction: column;">
         <div class="chart-title">Ranking: Fazendas com Maior Área (ha)</div>
         <div class="chart-content" style="flex-grow: 1; height: 100%; min-height: 140px;">
@@ -323,7 +323,7 @@
         </div>
     </div>
 
-    <!-- Bloco 3: Ranking Top Fazendas (Registros) (Expandido com Flex) -->
+    <!-- Bloco 3: Ranking Top Fazendas (Registros) -->
     <div class="chart-box" style="flex: 1.3; min-height: 180px; display: flex; flex-direction: column;">
         <div class="chart-title">Ranking: Principais Fazendas em Quantidade de Registros</div>
         <div class="chart-content" style="flex-grow: 1; height: 100%; min-height: 140px;">
@@ -358,10 +358,11 @@
     </header>
 
     <!-- Gráfico: Mapa do Brasil (Distribuição de Fazendas) -->
-    <div class="chart-box" style="flex-grow: 1; min-height: 450px; display: flex; flex-direction: column;">
-        <div class="chart-title">Distribuição de Fazendas pelo Brasil (Qtd. Unidades)</div>
+    <!-- Removido o padding lateral do box e bordas para o mapa encostar no limite máximo da página -->
+    <div class="chart-box" style="flex-grow: 1; min-height: 450px; display: flex; flex-direction: column; padding-left: 0; padding-right: 0; border-left: none; border-right: none; background: transparent;">
+        <div class="chart-title" style="margin-left: 8px;">Distribuição de Fazendas pelo Brasil (Qtd. Unidades)</div>
         <div class="chart-content" style="flex-grow: 1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
-            <canvas id="brazilMapChart"></canvas>
+            <canvas id="brazilMapChart" style="width: 100%; height: 100%;"></canvas>
         </div>
     </div>
 
@@ -424,8 +425,8 @@
                     devicePixelRatio: 4,
                     responsive: true,
                     maintainAspectRatio: false,
-                    // Ajuste no padding para dar espaço à legenda e não cortar os números
-                    layout: { padding: { left: 10, right: 30, top: 10, bottom: 25 } },
+                    // Reduzido o padding lateral ao mínimo para não cortar a legenda e expandir o mapa
+                    layout: { padding: { left: 5, right: 15, top: 0, bottom: 20 } },
                     plugins: {
                         legend: { display: false },
                         datalabels: { display: false } 
@@ -434,7 +435,8 @@
                         projection: {
                             axis: 'x',
                             projection: 'mercator',
-                            padding: 10
+                            // ZERO PADDING para a projeção utilizar toda a área possível do canvas
+                            padding: 0 
                         },
                         color: {
                             axis: 'x',
