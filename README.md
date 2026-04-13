@@ -26,6 +26,10 @@ Proprietários:
 
 https://joao-2003.github.io/Documentation/owners.html
 
+Admin: 
+
+https://joao-2003.github.io/Documentation/admin.html
+
 Authorization Documentation: 
 
 https://joao-2003.github.io/Documentation/Security/Authentication/auth_doc.html
