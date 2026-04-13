@@ -210,7 +210,7 @@
 </div>
 
 <!-- ========================================== -->
-<!-- PÁGINA 1: Visão Global e Mapa Geográfico -->
+<!-- PÁGINA 1: Visão Global e Rankings          -->
 <!-- ========================================== -->
 <div class="page">
 
@@ -229,32 +229,29 @@
     <!-- Info Box -->
     <div class="info-box">
         <div class="info-col">
-            <div style="margin-bottom: 6px;">
+            <div>
                 <div class="label">Administrador Solicitante</div>
                 <div class="value" th:text="${reportData.adminName ?: 'Admin Root'}">Admin Root</div>
-            </div>
-            <div>
-                <div class="label">Total de Usuários Cadastrados</div>
-                <div class="value-sm" th:text="${reportData.totalUsers ?: 342} + ' Usuários Ativos'">342 Usuários Ativos</div>
             </div>
         </div>
 
         <div class="info-col right">
-            <div style="margin-bottom: 8px;">
+            <div>
                 <div class="label">Área Total Administrada (Plataforma)</div>
                 <div class="value-highlight" th:text="${#numbers.formatDecimal(reportData.globalTotalArea ?: 154500.50, 1, 'POINT', 2, 'COMMA')} + ' ha'">154.500,50 ha</div>
-            </div>
-            <div>
-                <div class="label">Emissões Totais Rastreadas (GHG + ARVA)</div>
-                <div class="value-sm text-gray-dark" th:text="${#numbers.formatDecimal(reportData.totalEmissionsGhg ?: 2150400.00, 1, 'POINT', 2, 'COMMA')} + ' tCO₂e'">2.150.400,00 tCO₂e</div>
             </div>
         </div>
     </div>
 
-    <!-- 6 KPIs Consolidados (2 Linhas de 3) -->
+    <!-- 6 KPIs Consolidados (Sem GHG e Nomes Limpos) -->
     <div class="kpi-grid-3">
         <div class="kpi-card success">
-            <div class="label">Proprietários Raiz</div>
+            <div class="label">Usuários Cadastrados</div>
+            <div class="kpi-val" th:text="${reportData.totalUsers ?: 342}">342</div>
+            <div class="kpi-sub">Contas ativas na plataforma</div>
+        </div>
+        <div class="kpi-card success">
+            <div class="label">Proprietários</div>
             <div class="kpi-val" th:text="${reportData.totalOwners ?: 125}">125</div>
             <div class="kpi-sub">Titulares cadastrados</div>
         </div>
@@ -268,89 +265,23 @@
             <div class="kpi-val" th:text="${#numbers.formatDecimal(reportData.totalFields ?: 3450, 0, 'POINT', 0, 'COMMA')}">3.450</div>
             <div class="kpi-sub">Polígonos registrados</div>
         </div>
-        <div class="kpi-card warning">
-            <div class="label">Lotes ARVA (Batches)</div>
+        <div class="kpi-card success">
+            <div class="label">Lotes ARVA</div>
             <div class="kpi-val" th:text="${#numbers.formatDecimal(reportData.totalBatches ?: 890, 0, 'POINT', 0, 'COMMA')}">890</div>
             <div class="kpi-sub">Ciclos de cultivo ativos</div>
         </div>
-        <div class="kpi-card warning">
-            <div class="label">Atividades (Analysis)</div>
+        <div class="kpi-card success">
+            <div class="label">Análises ARVA</div>
             <div class="kpi-val" th:text="${#numbers.formatDecimal(reportData.totalAnalyses ?: 15420, 0, 'POINT', 0, 'COMMA')}">15.420</div>
             <div class="kpi-sub">Operações de campo</div>
         </div>
-        <div class="kpi-card warning">
-            <div class="label">Inventários GHG (Escopo 3)</div>
-            <div class="kpi-val" th:text="${reportData.totalGhgReports ?: 315}">315</div>
-            <div class="kpi-sub">Relatórios gerados</div>
-        </div>
     </div>
 
-    <!-- Gráfico 1: Mapa do Brasil (Intensidade de Emissões / Atividades) -->
-    <div class="chart-box" style="flex-grow: 1; min-height: 450px; display: flex; flex-direction: column;">
-        <div class="chart-title">Concentração Geográfica de Emissões e Atividades (tCO₂e)</div>
-        <div class="chart-content" style="flex-grow: 1; width: 100%; height: 100%;">
-            <canvas id="brazilMapChart"></canvas>
-        </div>
-    </div>
-
-    <!-- Rodapé Página 1 -->
-    <div style="margin-top: auto;">
-        <div class="footer-meta">
-            <div>Gerado por: RV Carbon System (Admin)</div>
-            <div>Página 1 de 2</div>
-        </div>
-    </div>
-</div>
-
-<!-- ========================================== -->
-<!-- PÁGINA 2: Distribuições e Rankings         -->
-<!-- ========================================== -->
-<div class="page">
-
-    <!-- Header Simplificado -->
-    <div style="border-bottom: 2px solid #059669; padding-bottom: 5px; margin-bottom: 15px; display: flex; justify-content: space-between;">
-        <span style="font-weight: 800; font-size: 14px; color: #111;">Detalhamento e Rankings de Uso</span>
-        <span style="font-size: 10px; color: #6b7280; font-weight: 600;">RV Carbon</span>
-    </div>
-
-    <!-- Bloco 1: Gráfico Donut (ARVA vs GHG) com Tabela Lateral -->
-    <div class="chart-box">
-        <div class="chart-title">Distribuição Analises ARVA vs Emissões GHG</div>
-        <div style="display: flex; gap: 40px; align-items: center; padding: 5px 15px;">
-            <div class="chart-content" style="flex: 0 0 35%; height: 160px;">
-                <canvas id="arvaGhgPieChart"></canvas>
-            </div>
-            <div style="flex: 1;">
-                <table class="beauty-table">
-                    <thead>
-                        <tr>
-                            <th>CATEGORIA</th>
-                            <th style="text-align: right;">QTD.</th>
-                            <th style="text-align: right;">%</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="dot" style="background-color: #0ea5e9;"></span> Operações ARVA</td>
-                            <td style="text-align: right;">15.420</td>
-                            <td style="text-align: right;">83%</td>
-                        </tr>
-                        <tr>
-                            <td><span class="dot" style="background-color: #f59e0b;"></span> Inventários GHG</td>
-                            <td style="text-align: right;">3.150</td>
-                            <td style="text-align: right;">17%</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bloco 2: Gráfico Donut (Culturas) com Tabela Lateral -->
+    <!-- Bloco 1: Gráfico Donut (Culturas) com Tabela Lateral -->
     <div class="chart-box">
         <div class="chart-title">Distribuição de Culturas</div>
         <div style="display: flex; gap: 40px; align-items: center; padding: 5px 15px;">
-            <div class="chart-content" style="flex: 0 0 35%; height: 160px;">
+            <div class="chart-content" style="flex: 0 0 35%; height: 140px;">
                 <canvas id="culturePieChart"></canvas>
             </div>
             <div style="flex: 1;">
@@ -384,19 +315,104 @@
         </div>
     </div>
 
-    <!-- Bloco 3: Ranking Top Usuários -->
+    <!-- Bloco 2: Ranking Top Fazendas (Área) -->
     <div class="chart-box">
-        <div class="chart-title">Ranking Top Usuários em Número de Proprietários</div>
-        <div class="chart-content" style="height: 180px;">
-            <canvas id="topUsersChart"></canvas>
+        <div class="chart-title">Ranking: Fazendas com Maior Área (ha)</div>
+        <div class="chart-content" style="height: 140px;">
+            <canvas id="topAreaFarmsChart"></canvas>
         </div>
     </div>
 
-    <!-- Bloco 4: Ranking Top Fazendas (Registros) -->
+    <!-- Bloco 3: Ranking Top Fazendas (Registros) -->
     <div class="chart-box">
-        <div class="chart-title">Ranking Principais Fazendas em Quantidade de Registros (ARVA + GHG)</div>
-        <div class="chart-content" style="height: 180px;">
+        <div class="chart-title">Ranking: Principais Fazendas em Quantidade de Registros</div>
+        <div class="chart-content" style="height: 140px;">
             <canvas id="topFarmsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Rodapé Página 1 -->
+    <div style="margin-top: auto;">
+        <div class="footer-meta">
+            <div>Gerado por: RV Carbon System (Admin)</div>
+            <div>Página 1 de 2</div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- PÁGINA 2: Mapa Geográfico                  -->
+<!-- ========================================== -->
+<div class="page">
+
+    <!-- Header Repetido -->
+    <header class="header">
+        <div class="header-title">
+            <h1>Visão Geográfica</h1>
+            <p>Painel Consolidado do Sistema - RV Carbon</p>
+        </div>
+        <div class="header-logo">
+            <div class="brand">RV Carbon</div>
+            <div class="date">Gerado em: <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}">24/05/2026 09:15</span></div>
+        </div>
+    </header>
+
+    <!-- Info Box Repetido -->
+    <div class="info-box">
+        <div class="info-col">
+            <div>
+                <div class="label">Administrador Solicitante</div>
+                <div class="value" th:text="${reportData.adminName ?: 'Admin Root'}">Admin Root</div>
+            </div>
+        </div>
+
+        <div class="info-col right">
+            <div>
+                <div class="label">Área Total Administrada (Plataforma)</div>
+                <div class="value-highlight" th:text="${#numbers.formatDecimal(reportData.globalTotalArea ?: 154500.50, 1, 'POINT', 2, 'COMMA')} + ' ha'">154.500,50 ha</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6 KPIs Consolidados Repetidos -->
+    <div class="kpi-grid-3">
+        <div class="kpi-card success">
+            <div class="label">Usuários Cadastrados</div>
+            <div class="kpi-val" th:text="${reportData.totalUsers ?: 342}">342</div>
+            <div class="kpi-sub">Contas ativas na plataforma</div>
+        </div>
+        <div class="kpi-card success">
+            <div class="label">Proprietários</div>
+            <div class="kpi-val" th:text="${reportData.totalOwners ?: 125}">125</div>
+            <div class="kpi-sub">Titulares cadastrados</div>
+        </div>
+        <div class="kpi-card success">
+            <div class="label">Fazendas Ativas</div>
+            <div class="kpi-val" th:text="${reportData.totalFarms ?: 412}">412</div>
+            <div class="kpi-sub">Unidades de produção</div>
+        </div>
+        <div class="kpi-card success">
+            <div class="label">Talhões Mapeados</div>
+            <div class="kpi-val" th:text="${#numbers.formatDecimal(reportData.totalFields ?: 3450, 0, 'POINT', 0, 'COMMA')}">3.450</div>
+            <div class="kpi-sub">Polígonos registrados</div>
+        </div>
+        <div class="kpi-card success">
+            <div class="label">Lotes ARVA</div>
+            <div class="kpi-val" th:text="${#numbers.formatDecimal(reportData.totalBatches ?: 890, 0, 'POINT', 0, 'COMMA')}">890</div>
+            <div class="kpi-sub">Ciclos de cultivo ativos</div>
+        </div>
+        <div class="kpi-card success">
+            <div class="label">Análises ARVA</div>
+            <div class="kpi-val" th:text="${#numbers.formatDecimal(reportData.totalAnalyses ?: 15420, 0, 'POINT', 0, 'COMMA')}">15.420</div>
+            <div class="kpi-sub">Operações de campo</div>
+        </div>
+    </div>
+
+    <!-- Gráfico: Mapa do Brasil (Distribuição de Fazendas) -->
+    <div class="chart-box" style="flex-grow: 1; min-height: 450px; display: flex; flex-direction: column;">
+        <div class="chart-title">Distribuição de Fazendas pelo Brasil (Qtd. Unidades)</div>
+        <div class="chart-content" style="flex-grow: 1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+            <canvas id="brazilMapChart"></canvas>
         </div>
     </div>
 
@@ -420,7 +436,7 @@
     Chart.defaults.color = '#374151';
 
     // ==========================================
-    // 1. GRÁFICO DO MAPA DO BRASIL (Choropleth)
+    // 1. GRÁFICO DO MAPA DO BRASIL (Qtd Fazendas)
     // ==========================================
     async function renderBrazilMap() {
         const ctxMap = document.getElementById('brazilMapChart').getContext('2d');
@@ -430,14 +446,14 @@
             const brStates = await response.json();
             
             const mockStateData = {
-                'Mato Grosso': 85000,
-                'Goiás': 120000,
-                'São Paulo': 45000,
-                'Minas Gerais': 62000,
-                'Paraná': 51000,
-                'Mato Grosso do Sul': 98000,
-                'Bahia': 71000,
-                'Tocantins': 58000
+                'Mato Grosso': 115,
+                'Goiás': 150,
+                'São Paulo': 45,
+                'Minas Gerais': 52,
+                'Paraná': 35,
+                'Mato Grosso do Sul': 80,
+                'Bahia': 60,
+                'Tocantins': 25
             };
 
             const features = brStates.features;
@@ -447,11 +463,11 @@
                 data: {
                     labels: features.map(d => d.properties.name),
                     datasets: [{
-                        label: 'Emissões (tCO2e)',
+                        label: 'Qtd. Fazendas',
                         outline: features,
                         data: features.map(d => ({
                             feature: d,
-                            value: mockStateData[d.properties.name] || Math.floor(Math.random() * 20000)
+                            value: mockStateData[d.properties.name] || Math.floor(Math.random() * 10)
                         }))
                     }]
                 },
@@ -459,7 +475,7 @@
                     devicePixelRatio: 4,
                     responsive: true,
                     maintainAspectRatio: false,
-                    layout: { padding: { right: 30 } }, // Adicionado padding à direita para não cortar os zeros da legenda
+                    layout: { padding: 10 },
                     plugins: {
                         legend: { display: false },
                         datalabels: { display: false } 
@@ -468,7 +484,7 @@
                         projection: {
                             axis: 'x',
                             projection: 'mercator',
-                            padding: 0
+                            padding: 10
                         },
                         color: {
                             axis: 'x',
@@ -491,8 +507,8 @@
                 data: {
                     labels: ['Goiás', 'Mato Grosso do Sul', 'Mato Grosso', 'Bahia', 'Minas Gerais'],
                     datasets: [{
-                        label: 'Emissões por Estado',
-                        data: [120000, 98000, 85000, 71000, 62000],
+                        label: 'Fazendas por Estado',
+                        data: [150, 80, 115, 60, 52],
                         backgroundColor: '#059669'
                     }]
                 },
@@ -508,33 +524,7 @@
     renderBrazilMap();
 
     // ==========================================
-    // 2. DONUT: ARVA vs GHG
-    // ==========================================
-    new Chart(document.getElementById('arvaGhgPieChart'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Operações ARVA', 'Inventários GHG'],
-            datasets: [{
-                data: [15420, 3150], 
-                backgroundColor: ['#0ea5e9', '#f59e0b'],
-                borderWidth: 2, borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            devicePixelRatio: 4, responsive: true, maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }, 
-                datalabels: { color: '#fff', font: {weight: 'bold', size: 12}, formatter: (value, ctx) => {
-                    let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                    return (value*100 / sum).toFixed(0)+"%";
-                }}
-            }
-        },
-        plugins: [ChartDataLabels]
-    });
-
-    // ==========================================
-    // 3. DONUT: CULTURAS
+    // 2. DONUT: CULTURAS
     // ==========================================
     new Chart(document.getElementById('culturePieChart'), {
         type: 'doughnut',
@@ -557,15 +547,15 @@
     });
 
     // ==========================================
-    // 4. RANKING: TOP USUÁRIOS
+    // 3. RANKING: FAZENDAS COM MAIOR ÁREA
     // ==========================================
-    new Chart(document.getElementById('topUsersChart'), {
+    new Chart(document.getElementById('topAreaFarmsChart'), {
         type: 'bar',
         data: {
-            labels: ['Agro Silva', 'G. Vasconcelos', 'Fazendas BR', 'Coop. Sul', 'Mato Grosso Ag'],
+            labels: ['Esperança Matriz', 'Alvorada', 'Bela Vista', 'Santa Cruz', 'Gleba do Sol'],
             datasets: [{
-                label: 'Qtd. Proprietários',
-                data: [15, 12, 9, 6, 4], // Ajustado para refletir a quantidade de donos
+                label: 'Área (ha)',
+                data: [15400, 12200, 9800, 8500, 6100],
                 backgroundColor: '#064e3b',
                 borderRadius: 4
             }]
@@ -574,26 +564,26 @@
             indexAxis: 'x', devicePixelRatio: 4, responsive: true, maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
-                datalabels: { anchor: 'end', align: 'top', color: '#374151', font: {weight: 'bold', size: 9} }
+                datalabels: { anchor: 'end', align: 'top', color: '#374151', font: {weight: 'bold', size: 9}, formatter: v => (v/1000).toFixed(1) + 'k' }
             },
             scales: {
                 x: { grid: { display: false }, ticks: { font: {size: 10, weight: '500'} } },
-                y: { display: false, max: 20 } 
+                y: { display: false, max: 18000 } 
             }
         },
         plugins: [ChartDataLabels]
     });
 
     // ==========================================
-    // 5. RANKING: TOP FAZENDAS (Registros ARVA + GHG)
+    // 4. RANKING: TOP FAZENDAS (Registros ARVA)
     // ==========================================
     new Chart(document.getElementById('topFarmsChart'), {
         type: 'bar',
         data: {
             labels: ['Esperança', 'Alvorada', 'Santa Cruz', 'Bela Vista', 'Gleba Sol'],
             datasets: [{
-                label: 'Qtd. Registros (ARVA + GHG)',
-                data: [450, 380, 290, 210, 150], // Ajustado para refletir a quantidade de registros
+                label: 'Qtd. Registros',
+                data: [450, 380, 290, 210, 150], 
                 backgroundColor: '#eab308',
                 borderRadius: 4
             }]
@@ -603,11 +593,11 @@
             devicePixelRatio: 4, responsive: true, maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
-                datalabels: { anchor: 'end', align: 'top', color: '#374151', font: {weight: 'bold', size: 9} } // Removido o formatador "k"
+                datalabels: { anchor: 'end', align: 'top', color: '#374151', font: {weight: 'bold', size: 9} } 
             },
             scales: {
                 x: { grid: { display: false }, ticks: { font: {size: 10, weight: '500'} } }, 
-                y: { display: false, max: 550 } // Ajustado o limite máximo para dar respiro visual
+                y: { display: false, max: 550 } 
             }
         },
         plugins: [ChartDataLabels]
