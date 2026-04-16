@@ -227,7 +227,6 @@
         </div>
         <div class="header-logo">
             <div class="brand">RV Carbon</div>
-            <div class="date">Safra: <strong th:text="${reportData.safra ?: '2025/2026'}">2025/2026</strong></div>
             <div class="date">Gerado em: <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}">24/05/2026 09:15</span></div>
         </div>
     </header>
@@ -238,6 +237,13 @@
             <div>
                 <div class="label">Administrador Solicitante</div>
                 <div class="value" th:text="${reportData.adminName ?: 'Admin Root'}">Admin Root</div>
+            </div>
+        </div>
+
+        <div class="info-col" style="border-left: 1px solid #d1d5db; padding-left: 20px;">
+            <div>
+                <div class="label">Safra</div>
+                <div class="value" th:text="${reportData.safra ?: '2025/2026'}">2025/2026</div>
             </div>
         </div>
 
@@ -359,16 +365,52 @@
         </div>
         <div class="header-logo">
             <div class="brand">RV Carbon</div>
-            <div class="date">Safra: <strong th:text="${reportData.safra ?: '2025/2026'}">2025/2026</strong></div>
             <div class="date">Gerado em: <span th:text="${#temporals.format(#temporals.createNow(), 'dd/MM/yyyy HH:mm')}">24/05/2026 09:15</span></div>
         </div>
     </header>
 
+    <!-- Info Box (Cabeçalho Secundário adicionado à Página 2) -->
+    <div class="info-box">
+        <div class="info-col">
+            <div>
+                <div class="label">Administrador Solicitante</div>
+                <div class="value" th:text="${reportData.adminName ?: 'Admin Root'}">Admin Root</div>
+            </div>
+        </div>
+
+        <div class="info-col" style="border-left: 1px solid #d1d5db; padding-left: 20px;">
+            <div>
+                <div class="label">Safra</div>
+                <div class="value" th:text="${reportData.safra ?: '2025/2026'}">2025/2026</div>
+            </div>
+        </div>
+
+        <div class="info-col right">
+            <div>
+                <div class="label">Área Total Administrada (Plataforma)</div>
+                <div class="value-highlight" th:text="${#numbers.formatDecimal(reportData.globalTotalArea ?: 154500.50, 1, 'POINT', 2, 'COMMA')} + ' ha'">154.500,50 ha</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Gráfico: Mapa do Brasil (Distribuição de Fazendas por Mesorregião) -->
-    <div class="chart-box" style="flex-grow: 1; min-height: 450px; display: flex; flex-direction: column; padding-left: 0; padding-right: 0; border-left: none; border-right: none; background: transparent;">
-        <div class="chart-title" style="margin-left: 8px;">Distribuição de Fazendas por Mesorregião (Qtd. Unidades)</div>
-        <div class="chart-content" style="flex-grow: 1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
-            <canvas id="brazilMapChart" style="width: 100%; height: 100%;"></canvas>
+    <div class="chart-box" style="flex-grow: 1; min-height: 450px; display: flex; flex-direction: column; padding-left: 0; padding-right: 0; border-left: none; border-right: none; background: transparent; position: relative;">
+        <div class="chart-title" style="margin-left: 8px; z-index: 2;">Distribuição de Fazendas por Mesorregião (Qtd. Unidades)</div>
+        
+        <!-- Mapa com zoom ajustado (1.20). Legenda nativa desativada via JS para não vazar -->
+        <div class="chart-content" style="flex-grow: 1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; padding-left: 60px;">
+            <canvas id="brazilMapChart" style="width: 100%; height: 100%; transform: scale(1.20);"></canvas>
+        </div>
+
+        <!-- LEGENDA FLUTUANTE CUSTOMIZADA (Canto inferior direito sobre o oceano) -->
+        <div style="position: absolute; bottom: 30px; right: 30px; background: rgba(255, 255, 255, 0.95); padding: 12px 14px; border-radius: 6px; border: 1px solid #d1d5db; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 10; width: 150px;">
+            <div style="font-size: 9px; font-weight: 800; color: #374151; margin-bottom: 8px; text-align: center; text-transform: uppercase;">Unidades (Fazendas)</div>
+            <div style="width: 100%; height: 12px; background: linear-gradient(to right, rgb(209, 250, 229), rgb(6, 78, 59)); border-radius: 3px; border: 1px solid #9ca3af; margin-bottom: 4px;"></div>
+            <div style="display: flex; justify-content: space-between; font-size: 9px; font-weight: 700; color: #4b5563;">
+                <span>0</span>
+                <span>50</span>
+                <span>100</span>
+            </div>
         </div>
     </div>
 
@@ -445,6 +487,7 @@
                             padding: 0 
                         },
                         color: {
+                            display: false, // <-- ISTO DESATIVA A LEGENDA NATIVA QUE VAZAVA A PÁGINA
                             axis: 'x',
                             ticks: {
                                 display: true,
