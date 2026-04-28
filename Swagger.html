@@ -4801,214 +4801,215 @@
         </div>
 
         <!-- ======================================================= -->
-        <!-- MÓDULO 10: ARQUIVOS                                     -->
+        <!-- MÓDULO: ARQUIVOS E UPLOADS                              -->
         <!-- ======================================================= -->
         <div class="module-wrapper" id="mod-files">
-        <h2 class="module-header">Manejo de Arquivos (Storage)</h2>
-        <p class="module-desc">Serviço de emissão de URLs pré-assinadas (Presigned URLs) para comunicação direta e segura entre o Client (Navegador/App) e o Google Cloud Storage (GCP).</p>
-    
-        <div class="op-block-tag" onclick="toggleSection('files-container')">
-            <div style="display: flex; align-items: baseline; gap: 10px;">
+            <h2 class="module-header">Arquivos e Uploads</h2>
+            <p class="module-desc">
+                Módulo responsável pelo envio e leitura de arquivos pesados (como fotos de perfil, documentos PDF e malhas de talhões GeoJSON). 
+                Para garantir alta performance, o sistema utiliza links seguros temporários, permitindo que o aplicativo envie o arquivo diretamente para a nuvem sem sobrecarregar a API principal.
+            </p>
+
+            <!-- FILE CONTROLLER SECTION -->
+            <div class="op-block-tag" onclick="toggleSection('files-container')">
                 <span>File Controller</span>
-                <small style="font-size: 14px; font-weight: normal; color: #7d8492;">Geração de chaves para Upload e Leitura</small>
+                <small>Geração de links para Upload e Leitura</small>
             </div>
-            <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
-        </div>
-    
-        <div id="files-container" style="display: block;">
-    
-            <div class="flow-diagram">
-                <strong>Como funciona o fluxo de Upload Seguro:</strong>
-                <div class="flow-step" style="margin-top:10px;">
-                    <span class="step-num">1</span>
-                    <div>O Client solicita permissão enviando o nome do arquivo, tipo e contexto para <code>POST /api/files/signed-url/</code>.</div>
-                </div>
-                <div class="flow-step">
-                    <span class="step-num">2</span>
-                    <div>A API valida (ex: "É um PDF? Não passou de 50MB?"). Se aprovado, devolve um formulário com uma assinatura do Google Cloud.</div>
-                </div>
-                <div class="flow-step">
-                    <span class="step-num">3</span>
-                    <div>O Client faz um <code>POST</code> (FormData) diretamente para a URL do GCP contendo os fields recebidos e o arquivo físico.</div>
-                </div>
-                <div class="flow-step">
-                    <span class="step-num">4</span>
-                    <div>O Client salva a <code>key</code> retornada no passo 2 e a utiliza nos cadastros da API (ex: <code>imageProfileKey</code>).</div>
-                </div>
-            </div>
-    
-            <div class="op-block post">
-                <div class="op-block-summary" onclick="toggleBody(this)">
-                    <span class="op-block-summary-method">POST</span>
-                    <span class="op-block-summary-path">/api/files/signed-url/</span>
-                    <span class="op-block-summary-desc">Gerar URL e Assinatura para Upload</span>
-                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
-                </div>
-                <div class="op-block-body">
-                    <div class="validation-list">
-                        <strong>⚠️ Validações Estritas:</strong>
-                        <ul>
-                            <li>O <code>contentType</code> (ex: <code>image/png</code>) fornecido deve corresponder exatamente ao arquivo e estar na lista de extensões permitidas do Contexto escolhido.</li>
-                            <li>O token gerado expira em exatos <strong>5 Minutos</strong>. O Client deve realizar o upload do arquivo para o GCP dentro dessa janela.</li>
-                        </ul>
+
+            <div id="files-container" style="display: block;">
+
+                <div class="flow-diagram">
+                    <strong>Como funciona o fluxo de Envio Seguro de Arquivos:</strong>
+                    <div class="flow-step" style="margin-top:10px;">
+                        <span class="step-num">1</span>
+                        <div>O aplicativo solicita permissão enviando o nome do arquivo, o tipo (ex: image/png) e o destino (contexto) para a rota <code>POST /api/files/signed-url/</code>.</div>
                     </div>
-                    
-                    <div class="section-header">Dados para Envio (JSON)</div>
-                    <div class="model-box">
-    <pre>{
-      <span class="highlight">"contentType"</span>: <span class="string">"image/png"</span>,
-      <span class="highlight">"fileName"</span>: <span class="string">"minha_foto.png"</span>,
-      <span class="highlight">"context"</span>: <span class="string">"PROFILE"</span>
-    }</pre>
+                    <div class="flow-step">
+                        <span class="step-num">2</span>
+                        <div>A API valida se o formato é aceito e se não ultrapassa o limite de tamanho. Se aprovado, devolve um link de envio seguro e uma "chave" única (caminho).</div>
                     </div>
-    
-                    <div class="try-out-wrapper">
-                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
-                        <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
-                            <input type="text" id="token-presigned" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Bearer Token">
-                            <textarea class="req-editor" id="req-presigned">{
-      "contentType": "image/png",
-      "fileName": "avatar.png",
-      "context": "PROFILE"
-    }</textarea>
-                            <button class="execute-btn" onclick="executeRequest('POST', '/api/files/signed-url/', 'req-presigned', 'res-presigned', 'token-presigned')">Executar</button>
-                            <div class="response-box" id="res-presigned"></div>
+                    <div class="flow-step">
+                        <span class="step-num">3</span>
+                        <div>O aplicativo faz o upload do arquivo diretamente para a nuvem usando o link seguro recebido no passo 2.</div>
+                    </div>
+                    <div class="flow-step">
+                        <span class="step-num">4</span>
+                        <div>Por fim, o aplicativo pega aquela "chave" única do passo 2 e a utiliza nos formulários normais da API (ex: preenchendo o campo <code>imageProfileUrl</code> no cadastro).</div>
+                    </div>
+                </div>
+
+                <!-- POST SIGNED URL (UPLOAD) -->
+                <div class="op-block post">
+                    <div class="op-block-summary" onclick="toggleBody(this)">
+                        <span class="op-block-summary-method">POST</span>
+                        <span class="op-block-summary-path">/api/files/signed-url/</span>
+                        <span class="op-block-summary-desc">Gerar Link de Envio (Upload)</span>
+                        <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    </div>
+                    <div class="op-block-body">
+                        <div class="validation-list">
+                            <strong>⚠️ Regras Importantes:</strong>
+                            <ul>
+                                <li>O <code>contentType</code> (ex: <code>image/png</code>) enviado deve corresponder exatamente ao formato do arquivo real.</li>
+                                <li>O link de permissão gerado expira em exatos <strong>5 Minutos</strong>. O aplicativo deve realizar o envio nesse meio-tempo.</li>
+                            </ul>
                         </div>
+                        
+                        <div class="section-header">Dados para Pedir a Permissão (JSON)</div>
+                        <div class="model-box">
+<pre>{
+  <span class="highlight">"contentType"</span>: <span class="string">"image/png"</span>,
+  <span class="highlight">"fileName"</span>: <span class="string">"minha_foto.png"</span>,
+  <span class="highlight">"context"</span>: <span class="string">"PROFILE"</span>
+}</pre>
+                        </div>
+
+                        <!-- TESTER -->
+                        <div class="try-out-wrapper">
+                            <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                            <div class="execute-panel">
+                                <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
+                                <input type="text" id="token-presigned" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Bearer Token">
+                                <textarea class="req-editor" id="req-presigned">{
+  "contentType": "image/png",
+  "fileName": "avatar.png",
+  "context": "PROFILE"
+}</textarea>
+                                <button class="execute-btn" onclick="executeRequest('POST', '/api/files/signed-url/', 'req-presigned', 'res-presigned', 'token-presigned')">Executar</button>
+                                <div class="response-box" id="res-presigned"></div>
+                            </div>
+                        </div>
+
+                        <div class="section-header">Respostas Possíveis</div>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td><span class="status-badge status-200">200</span></td>
+                                    <td>
+                                        <strong>Sucesso:</strong> Retorna o link de upload, a chave final e os dados de assinatura.
+                                        <div class="model-box" style="margin-top:5px;">
+<pre>{
+  <span class="highlight">"url"</span>: <span class="string">"https://storage.googleapis.com/..."</span>,
+  <span class="highlight">"key"</span>: <span class="string">"uploads/profile/uuid-avatar.png"</span>,
+  <span class="highlight">"fields"</span>: {
+    <span class="highlight">"key"</span>: <span class="string">"uploads/profile/uuid-avatar.png"</span>,
+    <span class="highlight">"Content-Type"</span>: <span class="string">"image/png"</span>,
+    <span class="highlight">"x-goog-signature"</span>: <span class="string">"..."</span>,
+    <span class="highlight">"policy"</span>: <span class="string">"..."</span>
+  }
+}</pre>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="status-badge status-400">400</span></td>
+                                    <td>
+                                        <strong>Erro de Validação:</strong> Ocorre se você tentar pedir um link para uma extensão não permitida no destino selecionado.
+                                        <div class="error-example">
+<pre>{
+  <span class="highlight">"contentType"</span>: <span class="string">"contentType not Allowed! Allowed content type: [image/png, image/jpeg, image/webp]"</span>
+}</pre>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-    
-                    <div class="section-header">Respostas Possíveis</div>
-                    <table>
-                        <tbody>
+                </div>
+
+                <!-- GET READ SIGNED URL -->
+                <div class="op-block get">
+                    <div class="op-block-summary" onclick="toggleBody(this)">
+                        <span class="op-block-summary-method">GET</span>
+                        <span class="op-block-summary-path">/api/files/signed-url/</span>
+                        <span class="op-block-summary-desc">Gerar Link para Visualizar Arquivo</span>
+                        <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
+                    </div>
+                    <div class="op-block-body">
+                        <div class="service-rule">
+                            Como os arquivos em nuvem são privados por segurança, o aplicativo precisa usar esta rota para pedir um link temporário legível, permitindo que a imagem apareça na tela do usuário. 
+                            O link gerado aqui fica ativo por <strong>1 hora</strong>.
+                        </div>
+                        
+                        <div class="section-header">Parâmetros (Query Params)</div>
+                        <table>
+                            <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
+                            <tr><td>key</td><td>Sim</td><td>A chave (caminho) do arquivo que está no banco de dados. Ex: <code>uploads/profile/xxxxx-foto.png</code>.</td></tr>
+                        </table>
+
+                        <!-- TESTER -->
+                        <div class="try-out-wrapper">
+                            <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
+                            <div class="execute-panel">
+                                <label style="font-size:12px; font-weight:bold;">Query Params:</label>
+                                <input type="text" id="query-read-url" class="fake-input" style="width:100%; margin-bottom:10px;" value="?key=uploads/profile/minhafoto.png">
+                                <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
+                                <input type="text" id="token-read-url" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Bearer Token">
+                                
+                                <button class="execute-btn" onclick="executeRequest('GET', '/api/files/signed-url/' + document.getElementById('query-read-url').value, null, 'res-read-url', 'token-read-url')">Gerar Link</button>
+                                <div class="response-box" id="res-read-url"></div>
+                            </div>
+                        </div>
+
+                        <div class="section-header">Respostas Possíveis</div>
+                        <table>
                             <tr>
                                 <td><span class="status-badge status-200">200</span></td>
                                 <td>
-                                    <strong>Sucesso:</strong> Retorna as políticas de upload assinadas e a <code>key</code> final.
+                                    <strong>Sucesso:</strong> Retorna o link temporário para visualizar ou baixar o arquivo.
                                     <div class="model-box" style="margin-top:5px;">
-    <pre>{
-      <span class="highlight">"url"</span>: <span class="string">"https://storage.googleapis.com/seu-bucket"</span>,
-      <span class="highlight">"key"</span>: <span class="string">"uploads/profile/uuid-avatar.png"</span>,
-      <span class="highlight">"fields"</span>: {
-        <span class="highlight">"key"</span>: <span class="string">"uploads/profile/uuid-avatar.png"</span>,
-        <span class="highlight">"Content-Type"</span>: <span class="string">"image/png"</span>,
-        <span class="highlight">"x-goog-signature"</span>: <span class="string">"..."</span>,
-        <span class="highlight">"policy"</span>: <span class="string">"..."</span>
-      }
-    }</pre>
+<pre>{
+  <span class="highlight">"url"</span>: <span class="string">"https://storage.googleapis.com/.../uploads/profile/minhafoto.png?X-Goog-Algorithm=..."</span>
+}</pre>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td><span class="status-badge status-400">400</span></td>
-                                <td>
-                                    <strong>Erro de Validação:</strong> Ocorre caso você tente enviar um <code>contentType</code> não permitido para o <code>context</code> especificado.
-                                    <div class="error-example">
-    <pre>{
-      <span class="highlight">"contentType"</span>: <span class="string">"contentType not Allowed! Allowed content type: [image/png, image/jpeg, image/webp]"</span>
-    }</pre>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-    
-            <div class="op-block get">
-                <div class="op-block-summary" onclick="toggleBody(this)">
-                    <span class="op-block-summary-method">GET</span>
-                    <span class="op-block-summary-path">/api/files/signed-url/</span>
-                    <span class="op-block-summary-desc">Gerar URL Pública de Leitura (Download/View)</span>
-                    <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
-                </div>
-                <div class="op-block-body">
-                    <div class="service-rule">
-                        Uma vez que os arquivos do Bucket são privados por segurança, o front-end deve solicitar uma URL assinada de leitura para conseguir exibir o arquivo na tela (ex: Carregar a foto de perfil do usuário). 
-                        A URL retornada tem duração de <strong>1 hora</strong>.
+                        </table>
                     </div>
-                    
-                    <div class="section-header">Parâmetros (Query Params)</div>
-                    <table>
-                        <tr><th>Nome</th><th>Obrigatório</th><th>Descrição</th></tr>
-                        <tr><td>key</td><td>Sim</td><td>A chave de salvamento do arquivo completa. Ex: <code>uploads/profile/xxxxx-foto.png</code>.</td></tr>
-                    </table>
-    
-                    <div class="try-out-wrapper">
-                        <button class="try-btn" onclick="toggleExecute(this)">Testar Endpoint</button>
-                        <div class="execute-panel">
-                            <label style="font-size:12px; font-weight:bold;">Query Params:</label>
-                            <input type="text" id="query-read-url" class="fake-input" style="width:100%; margin-bottom:10px;" value="?key=uploads/profile/minhafoto.png">
-                            <label style="font-size:12px; font-weight:bold;">Token de Acesso:</label>
-                            <input type="text" id="token-read-url" class="fake-input" style="width:100%; margin-bottom:10px;" placeholder="Bearer Token">
-                            
-                            <button class="execute-btn" onclick="executeRequest('GET', '/api/files/signed-url/' + document.getElementById('query-read-url').value, null, 'res-read-url', 'token-read-url')">Gerar Link</button>
-                            <div class="response-box" id="res-read-url"></div>
+                </div>
+
+            </div>
+
+            <!-- SCHEMAS -->
+            <div class="models-section">
+                <div class="op-block-tag" onclick="toggleSection('schemas-files')">
+                    <span>Schemas (Contextos e Formatos)</span>
+                </div>
+
+                <div id="schemas-files" style="display: block;">
+
+                    <div class="model-container">
+                        <div class="model-title" onclick="toggleModel(this)">FileUrlPresignedRequest (Requisição de Upload) <span class="arrow">▼</span></div>
+                        <div class="model-content">
+                            <span class="highlight">contentType</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (MimeType)</span><br>
+                            <span class="highlight">fileName</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (Nome original do arquivo)</span><br>
+                            <span class="highlight">context</span>: <span class="string">enum</span> (FileContext) <span class="prop-req">*Obrigatório</span>
                         </div>
                     </div>
-    
-                    <div class="section-header">Respostas Possíveis</div>
-                    <table>
-                        <tr>
-                            <td><span class="status-badge status-200">200</span></td>
-                            <td>
-                                <strong>Sucesso:</strong> Retorna o link que pode ser utilizado no atributo <code>src</code> de tags de imagem ou links de download.
-                                <div class="model-box" style="margin-top:5px;">
-    <pre>{
-      <span class="highlight">"url"</span>: <span class="string">"https://storage.googleapis.com/seu-bucket/uploads/profile/minhafoto.png?X-Goog-Algorithm=..."</span>
-    }</pre>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-    
-        </div>
 
-        <!-- SCHEMAS -->
-        <div class="models-section">
-            <div class="op-block-tag" onclick="toggleSection('schemas-files')">
-                <div style="display: flex; align-items: baseline; gap: 10px;">
-                    <span>Schemas</span>
-                    <small style="font-size: 14px; font-weight: normal; color: #7d8492;">(Contextos e Formatos)</small>
-                </div>
-                <svg class="arrow" viewBox="0 0 20 20"><path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z"></path></svg>
-            </div>
-    
-            <div id="schemas-files" style="display: block;">
-    
-                <div class="model-container">
-                    <div class="model-title" onclick="toggleModel(this)">FileUrlPresignedRequest (Requisição de Upload) <span class="arrow">▼</span></div>
-                    <div class="model-content">
-                        <span class="highlight">contentType</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (MimeType)</span><br>
-                        <span class="highlight">fileName</span>: <span class="string">string</span> <span class="prop-req">*Obrigatório (Nome original)</span><br>
-                        <span class="highlight">context</span>: <span class="string">enum</span> (FileContext) <span class="prop-req">*Obrigatório</span>
+                    <div class="model-container">
+                        <div class="model-title" onclick="toggleModel(this)">FileContext (Limites e Extensões) <span class="arrow">▼</span></div>
+                        <div class="model-content">
+                            <span class="comment">// Define para onde o arquivo vai, qual o seu tamanho máximo aceito e os formatos permitidos.</span><br><br>
+                            <span class="highlight">PROFILE</span><br>
+                            &nbsp;&nbsp;Pasta: <code>uploads/profile</code><br>
+                            &nbsp;&nbsp;Tamanho Máximo: <code>~75 MB</code><br>
+                            &nbsp;&nbsp;Formatos Permitidos: <code>image/png, image/jpeg, image/webp</code><br><br>
+                            <span class="highlight">ATTACHMENTS</span><br>
+                            &nbsp;&nbsp;Pasta: <code>uploads/attachments</code><br>
+                            &nbsp;&nbsp;Tamanho Máximo: <code>~50 MB</code><br>
+                            &nbsp;&nbsp;Formatos Permitidos: <code>application/pdf, documentos word (.docx), planilhas excel (.xlsx)</code><br><br>
+                            <span class="highlight">GEOJSON</span><br>
+                            &nbsp;&nbsp;Pasta: <code>uploads/geojson</code><br>
+                            &nbsp;&nbsp;Tamanho Máximo: <code>~100 MB</code><br>
+                            &nbsp;&nbsp;Formatos Permitidos: <code>application/geo+json, application/json</code>
+                        </div>
                     </div>
+
                 </div>
-    
-                <div class="model-container">
-                    <div class="model-title" onclick="toggleModel(this)">FileContext (Limites e Extensões) <span class="arrow">▼</span></div>
-                    <div class="model-content">
-                        <span class="comment">// Determina as validações internas na GCP dependendo do destino do arquivo.</span><br><br>
-                        <span class="highlight">PROFILE</span><br>
-                        &nbsp;&nbsp;Path: <code>uploads/profile</code><br>
-                        &nbsp;&nbsp;Tamanho Máximo: <code>~75 MB</code><br>
-                        &nbsp;&nbsp;Tipos Aceitos: <code>image/png, image/jpeg, image/webp</code><br><br>
-                        <span class="highlight">ATTACHMENTS</span><br>
-                        &nbsp;&nbsp;Path: <code>uploads/attachments</code><br>
-                        &nbsp;&nbsp;Tamanho Máximo: <code>~50 MB</code><br>
-                        &nbsp;&nbsp;Tipos Aceitos: <code>application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document (docx), application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (xlsx)</code><br><br>
-                        <span class="highlight">GEOJSON</span><br>
-                        &nbsp;&nbsp;Path: <code>uploads/geojson</code><br>
-                        &nbsp;&nbsp;Tamanho Máximo: <code>~100 MB</code><br>
-                        &nbsp;&nbsp;Tipos Aceitos: <code>application/geo+json, application/json</code>
-                    </div>
-                </div>
-    
             </div>
+
         </div>
-    
-    </div>
 
     </div>
 
